@@ -1,0 +1,84 @@
+#!/bin/sh
+d=${PWD}
+bd=${d}/../
+id=${bd}/install
+ed=${d}/../
+rd=${d}/../reference/
+of=${d}/../of
+d=${PWD}
+is_debug="n"
+build_dir="build_unix"
+cmake_build_type="Release"
+cmake_config="Release"
+debug_flag=""
+debugger=""
+cmake_generator=""
+
+# Detect OS.
+if [ "$(uname)" == "Darwin" ]; then
+    if [ "${cmake_generator}" = "" ] ; then
+        cmake_generator="Unix Makefiles"
+    fi
+    os="mac"
+elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+    if [ "${cmake_generator}" = "" ] ; then
+        cmake_generator="Unix Makefiles"
+    fi
+    os="linux"
+else
+    if [ "${cmake_generator}" = "" ] ; then
+        cmake_generator="Visual Studio 14 2015 Win64"
+        build_dir="build_vs2015"
+    fi
+    os="win"
+fi
+
+# Detect Command Line Options
+for var in "$@"
+do
+    if [ "${var}" = "debug" ] ; then
+        is_debug="y"
+        cmake_build_type="Debug"
+        cmake_config="Debug"
+        debug_flag="_debug"
+        debugger="lldb"
+    elif [ "${var}" = "xcode" ] ; then
+        build_dir="build_xcode"
+        cmake_generator="Xcode"
+        build_dir="build_xcode"
+    fi
+done
+
+if [ ! -d ${of} ] ; then
+    mkdir ${of}
+    cd ${of}
+    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git .
+fi
+
+# Create unique name for this build type.
+bd="${d}/${build_dir}.${cmake_build_type}"
+
+if [ ! -d ${bd} ] ; then 
+    mkdir ${bd}
+fi
+
+# Compile the library.
+cd ${bd}
+cmake -DCMAKE_INSTALL_PREFIX=${id} \
+      -DCMAKE_BUILD_TYPE=${cmake_build_type} \
+      -DOF_DIR=${of}/ \
+      -G "${cmake_generator}" \
+      ..
+
+if [ $? -ne 0 ] ; then
+    exit
+fi
+
+cmake --build . --config ${cmake_build_type} --target install
+
+if [ $? -ne 0 ] ; then
+    exit
+fi
+
+cd ${id}/bin
+${debugger} ./test_qt${debug_flag}
