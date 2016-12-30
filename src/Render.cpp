@@ -107,7 +107,7 @@ namespace dk {
     //printf("mainloop: %p", ofGetMainLoop().get());
     /* TMP END: SETUP OPENFRAMEWORKS */
 
-    img.load("/Users/roxlu/Documents/programming/tests/101_qt/install/bin/data/scene.jpg");
+    img.load(ofFilePath::getCurrentExeDir() +"scene.jpg");
     printf("Loaded an image: %f x %f\n", img.getWidth(), img.getHeight());
     return 0;
   }

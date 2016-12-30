@@ -7,11 +7,8 @@ list(APPEND of_sources
   ${of_sd}/3d/of3dUtils.cpp
   ${of_sd}/3d/ofCamera.cpp
   ${of_sd}/3d/ofEasyCam.cpp
-#  ${of_sd}/3d/ofMesh.cpp
   ${of_sd}/3d/ofNode.cpp
   ${of_sd}/app/ofAppGLFWWindow.cpp
-#  ${of_sd}/app/ofAppGlutWindow.cpp
-#  ${of_sd}/app/ofAppNoWindow.cpp
   ${of_sd}/app/ofAppRunner.cpp
   ${of_sd}/app/ofMainLoop.cpp
   ${of_sd}/communication/ofArduino.cpp
@@ -35,7 +32,6 @@ list(APPEND of_sources
   ${of_sd}/graphics/ofImage.cpp
   ${of_sd}/graphics/ofPath.cpp
   ${of_sd}/graphics/ofPixels.cpp
-#  ${of_sd}/graphics/ofPolyline.cpp
   ${of_sd}/graphics/ofRendererCollection.cpp
   ${of_sd}/graphics/ofTessellator.cpp
   ${of_sd}/graphics/ofTrueTypeFont.cpp
@@ -127,7 +123,6 @@ list(APPEND of_libs
   ${of_ld}/uriparser/lib/osx/uriparser.a
   )
 
-# OSX dependencies
 find_library(fr_corefoundation CoreFoundation)
 find_library(fr_cocoa Cocoa)
 find_library(fr_carbon Carbon)

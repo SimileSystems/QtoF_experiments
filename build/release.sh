@@ -49,10 +49,16 @@ do
     fi
 done
 
+# Download our OF version
 if [ ! -d ${of} ] ; then
     mkdir ${of}
     cd ${of}
-    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git .
+    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
+fi
+
+if [ ! -d ${of}/libs/boost ] ; then 
+    cd ${of}/scripts/osx
+    ./download_libs.sh
 fi
 
 # Create unique name for this build type.

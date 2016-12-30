@@ -42,7 +42,6 @@ list(APPEND of_sources
 add_library(of${debug_flag} STATIC ${of_sources})
 
 add_library(render${debug_flag} STATIC ${render_sources})
-#set_target_properties(render PROPERTIES AUTOMOC TRUE)
 target_link_libraries(render${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick ${of_libs} of${debug_flag})
 add_dependencies(render${debug_flag} of${debug_flag})
 
