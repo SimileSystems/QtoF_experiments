@@ -64,6 +64,8 @@ list(APPEND of_sources
   ${of_sd}/utils/ofUtils.cpp
   ${of_sd}/utils/ofXml.cpp
   ${of_sd}/video/ofAVFoundationGrabber.mm
+  ${of_sd}/video/ofQTKitGrabber.mm
+  ${of_sd}/video/ofQTKitMovieRenderer.m
   ${of_sd}/video/ofQtUtils.cpp
   ${of_sd}/video/ofQuickTimeGrabber.cpp
   ${of_sd}/video/ofQuickTimePlayer.cpp
