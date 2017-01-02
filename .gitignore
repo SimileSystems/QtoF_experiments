@@ -76,3 +76,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+build_unix.Release/
+
+of/
+install/bin/
