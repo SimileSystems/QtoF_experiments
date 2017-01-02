@@ -63,7 +63,7 @@ namespace dk {
     printf("Render::Render()\n");
   }
 
-  int Render::init() {
+  int Render::init(int winWidth, int winHeight) {
     printf("Render::init()\n");
 
     if (0 != prog) {
@@ -99,12 +99,24 @@ namespace dk {
     glGenVertexArrays(1, &vao);
 
     /* TMP BEGIN: SETUP OPENFRAMEWORKS */
+    if (winWidth <= 0) {
+      printf("Render::init() - error: winWidth <= 0.\n");
+      return -1;
+    }
+    
+    if (winHeight <= 0) {
+      printf("Render::init() - error: winHeight <= 0.\n");
+      return -2;
+    }
+    
     printf("glCreateProgram: %p in Render.cpp.\n", glCreateProgram);
     win = std::shared_ptr<ofAppQtWindow>(new ofAppQtWindow());
     ofGetMainLoop()->addWindow(win);
+
     ofWindowSettings win_settings;
+    win_settings.width = winWidth;
+    win_settings.height = winHeight;
     win->setup(win_settings);
-    //printf("mainloop: %p", ofGetMainLoop().get());
     /* TMP END: SETUP OPENFRAMEWORKS */
 
     img.load(ofFilePath::getCurrentExeDir() +"640x480@2x.png");
@@ -121,7 +133,6 @@ namespace dk {
   }
 
   int Render::update() {
-    printf("Render::update()\n");
     win->update();
     return 0;
   }

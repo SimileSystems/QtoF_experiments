@@ -10,21 +10,19 @@ QtRender::QtRender()
   :ctx(NULL)
   ,is_init(false)
 {
-  printf("QtRender().\n");
   connect(this, &QQuickItem::windowChanged, this, &QtRender::onWindowChanged);
+
 }
 
 void QtRender::onSync() {
 
-  printf("QtRender:sync().\n");
-
   if (NULL == ctx) {
+
+    connect(window(), &QQuickWindow::beforeRendering, this, &QtRender::onPaint, Qt::DirectConnection);
 
     if (0 != render_alloc(&ctx)) {
       exit(EXIT_FAILURE);
     }
-
-    connect(window(), &QQuickWindow::beforeRendering, this, &QtRender::onPaint, Qt::DirectConnection);
 
     /* Make sure that we at least render our scene once. */
     window()->update();
@@ -32,8 +30,6 @@ void QtRender::onSync() {
 }
 
 void QtRender::onCleanup() {
-
-  printf("QtRender:clean().\n");
   
   if (NULL != ctx) {
     
@@ -49,6 +45,10 @@ void QtRender::onCleanup() {
 
 void QtRender::onPaint() {
 
+  if (NULL == window()) {
+    qFatal("window() is NULL.");
+  }
+
   if (NULL == ctx) {
     printf("ctx is NULL cannot paint.\n");
     return;
@@ -56,8 +56,11 @@ void QtRender::onPaint() {
 
   /* Initialize opengl if needed.. */
   if (false == is_init) {
+
+    int win_w = window()->width();
+    int win_h = window()->height();
     
-    if (0 != render_init(ctx)) {
+    if (0 != render_init(ctx, win_w, win_h)) {
       exit(EXIT_FAILURE);
     }
     

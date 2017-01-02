@@ -11,7 +11,7 @@ namespace dk {
   class Render {
   public:
     Render();
-    int init();
+    int init(int winWidth, int winHeight);
     int update();
     int draw();
     int shutdown();

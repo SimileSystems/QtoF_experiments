@@ -51,14 +51,14 @@ int render_dealloc(RenderContext* ctx) {
   return 0;
 }
 
-int render_init(RenderContext* ctx) {
+int render_init(RenderContext* ctx, int winWidth, int winHeight) {
   
   if (NULL == ctx) {
     printf("Error: ctx is NULL cannot render_init().\n");
     return -1;
   }
 
-  return ctx->render.init();
+  return ctx->render.init(winWidth, winHeight);
 }
 
 int render_shutdown(RenderContext* ctx) {

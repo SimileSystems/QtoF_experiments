@@ -12,6 +12,10 @@ ApplicationWindow {
   title: "Test app"
   visible: true
 
+  QtRender {
+    visible: true
+  }
+
   Rectangle {
     id: panel
     width: 300
@@ -98,9 +102,6 @@ ApplicationWindow {
     }
   }
 
-  QtRender {
-    visible: true
-  }
 
 
 

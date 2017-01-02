@@ -20,14 +20,11 @@ void ofAppQtWindow::setup(const ofWindowSettings& settings) {
 
   ofGLProgrammableRenderer* gl_renderer = NULL;
   gl_renderer = new ofGLProgrammableRenderer(this);
-  //gl_renderer->viewport(0, 0, 640, 480, false); /* QT test.*/
   gl_renderer->setup(3,3);
   curr_renderer = shared_ptr<ofGLProgrammableRenderer>(gl_renderer);
-  //curr_renderer->setupScreen();
 
-  ofSetCurrentRenderer(curr_renderer);
-  //setWindowShape(640, 480);
-  //setWindowPosition(0, 0);
+  /* It looks like we don't need to set the current renderer (!?). */
+  /* ofSetCurrentRenderer(curr_renderer); */
 }
 
 void ofAppQtWindow::update() {
@@ -40,13 +37,9 @@ void ofAppQtWindow::draw() {
     exit(EXIT_FAILURE);
   }
 
-  printf("ofAppQtWindow::draw() - start render.\n");  
   curr_renderer->startRender();
-  printf("ofAppQtWindow::draw() - start ender called.\n");
-  //curr_renderer->setupScreen();
   core_events.notifyDraw();
   curr_renderer->finishRender();
-
 }
 
 /* ---------------------------------------------------- */
