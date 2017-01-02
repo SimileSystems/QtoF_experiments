@@ -69,6 +69,8 @@ void QtRender::onPaint() {
   /* And update + render. */
   render_update(ctx);
   render_draw(ctx);
+
+  window()->update();
 }
 
 /* --------------------------------------- */

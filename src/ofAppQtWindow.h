@@ -28,10 +28,11 @@ public:
 	static bool needsPolling();
 	static void pollEvents();
 
-  /*
-  int getWidth();
-  int getHeight();
-  */
+  glm::vec2 getWindowSize(); /* Used by renderer, matrix stack to set the viewport; w/o projection matrix will be invalid.. */
+  glm::vec2 getScreenSize();  /* Not called */
+  int getWidth(); /* Not called */
+  int getHeight(); /* Not called */
+  void setWindowShape(int w, int h); /* Not called. */
 
 private:
   ofCoreEvents core_events;
@@ -49,17 +50,28 @@ inline std::shared_ptr<ofBaseRenderer>& ofAppQtWindow::renderer() {
   return curr_renderer;
 }
 
-/*
+inline glm::vec2 ofAppQtWindow::getWindowSize() {
+  return glm::vec2(640 * 2, 480 * 2);
+}
+
+inline glm::vec2 ofAppQtWindow::getScreenSize() {
+  printf("## getScreenSize()\n");
+  return glm::vec2();
+}
+
 inline int ofAppQtWindow::getWidth() {
-  printf("GET WIDTH\n");
+  printf("## GET WIDTH\n");
   return 0;
 }
 
 inline int ofAppQtWindow::getHeight() {
-  printf("GET HEGITH\n");
+  printf("## GET HEGITH\n");
   return 0;
 }
-*/
+
+inline void ofAppQtWindow::setWindowShape(int w, int h) {
+  printf("## setWindowShape: %d x %d\n", w, h);
+}
 
 /* ---------------------------------------------------- */
 

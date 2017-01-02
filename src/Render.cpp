@@ -107,8 +107,12 @@ namespace dk {
     //printf("mainloop: %p", ofGetMainLoop().get());
     /* TMP END: SETUP OPENFRAMEWORKS */
 
-    img.load("/Users/roxlu/Documents/programming/tests/101_qt/install/bin/data/scene.jpg");
+    img.load(ofFilePath::getCurrentExeDir() +"640x480@2x.png");
     printf("Loaded an image: %f x %f\n", img.getWidth(), img.getHeight());
+
+    video_grabber.listDevices();
+    video_grabber.setup(0, 640, 480);
+    
     return 0;
   }
 
@@ -139,7 +143,9 @@ namespace dk {
     
     win->draw();
 
-    img.draw(0, 0, 640, 480);
+    img.draw(0, 0);
+    video_grabber.update();
+    video_grabber.draw(0, 0, 640, 480);
     
     return 0;
   }
