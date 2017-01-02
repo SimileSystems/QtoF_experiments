@@ -124,7 +124,6 @@ list(APPEND of_libs
   ${of_ld}/uriparser/lib/osx/uriparser.a
   )
 
-# OSX dependencies
 find_library(fr_corefoundation CoreFoundation)
 find_library(fr_cocoa Cocoa)
 find_library(fr_carbon Carbon)
