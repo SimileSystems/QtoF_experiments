@@ -132,6 +132,7 @@ find_library(fr_carbon Carbon)
 find_library(fr_iokit IOKit)
 find_library(fr_coremedia CoreMedia)
 find_library(fr_avfoundation AVFoundation)
+find_library(fr_qtkit QTKit)
 find_library(fr_corevideo CoreVideo)
 find_library(fr_opengl OpenGL)
 find_library(fr_accelerate Accelerate)
@@ -145,6 +146,7 @@ list(APPEND of_libs
   ${fr_iokit}
   ${fr_opengl}
   ${fr_avfoundation}
+  ${fr_qtkit}
   ${fr_corevideo}
   ${fr_coremedia}
   ${fr_accelerate}
