@@ -1,17 +1,17 @@
 #include <QDebug>
-#include <qtof/QtOfFactories.h>
+#include <qtof/QtOfWidgets.h>
 
 /* ---------------------------------------------------- */
 
-QtOfFactories qtof_factories;
+QtOfWidgets qtof_factories;
 
 /* ---------------------------------------------------- */
 
-QtOfFactories::QtOfFactories() {
+QtOfWidgets::QtOfWidgets() {
 
 }
 
-int QtOfFactories::add(int ref, QtOfFactoryBase* fac) {
+int QtOfWidgets::add(int ref, QtOfFactoryBase* fac) {
 
   if (nullptr == fac) {
     qFatal("Given factory is NULL.");
@@ -29,7 +29,7 @@ int QtOfFactories::add(int ref, QtOfFactoryBase* fac) {
   return 0;
 }
 
-int QtOfFactories::sendEvent(int ref, const ofExternalEvent& ev) {
+int QtOfWidgets::sendEvent(int ref, const ofExternalEvent& ev) {
   std::lock_guard<std::mutex> lg(mtx_events);
   events[ref].push_back(ev);
   return 0;
@@ -37,27 +37,27 @@ int QtOfFactories::sendEvent(int ref, const ofExternalEvent& ev) {
 
 /* ---------------------------------------------------- */
 
-int qtof_factory_add(int ref, QtOfFactoryBase* fac) {
+int qtof_widget_add(int ref, QtOfFactoryBase* fac) {
   return qtof_factories.add(ref, fac);
 }
 
-int qtof_factory_create(int ref) {
+int qtof_widget_create(int ref) {
   return qtof_factories.create(ref);
 }
 
-int qtof_factory_setup(int ref) {
+int qtof_widget_setup(int ref) {
   return qtof_factories.setup(ref);
 }
 
-int qtof_factory_update(int ref) {
+int qtof_widget_update(int ref) {
   return qtof_factories.update(ref);
 }
 
-int qtof_factory_draw(int ref) {
+int qtof_widget_draw(int ref) {
   return qtof_factories.draw(ref);
 }
 
-int qtof_factory_send_event(int ref, const ofExternalEvent& ev) {
+int qtof_widget_send_event(int ref, const ofExternalEvent& ev) {
   return qtof_factories.sendEvent(ref, ev);
 }
 

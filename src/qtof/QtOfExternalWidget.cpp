@@ -27,12 +27,12 @@ void QtOfExternalWidget::onPaint() {
   
   if (false == is_created) {
     
-    if (0 != qtof_factory_create(ref)) {
+    if (0 != qtof_widget_create(ref)) {
       qFatal("Failed to create the QtOfExternalWidget.");
       return;
     }
 
-    if (0 != qtof_factory_setup(ref)) {
+    if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
       qFatal("Failed to setup the factory for reference: %d", ref);
       return;
@@ -45,12 +45,12 @@ void QtOfExternalWidget::onPaint() {
   ofExternalEvent e;
   e.type = OF_EXT_EVENT_MOUSE_MOVE;
   e.val.mouse[0] = 100;
-  qtof_factory_send_event(ref, e);
+  qtof_widget_send_event(ref, e);
   */
   
   of_external_start_render();
-  qtof_factory_update(ref);
-  qtof_factory_draw(ref);
+  qtof_widget_update(ref);
+  qtof_widget_draw(ref);
   of_external_finish_render();
 
   window()->resetOpenGLState();

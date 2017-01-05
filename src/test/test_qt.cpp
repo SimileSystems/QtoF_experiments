@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
 
-  qtof_factory_add(1, new QtOfFactory<WidgetHistogram>());
+  qtof_widget_add(1, new QtOfFactory<WidgetHistogram>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);

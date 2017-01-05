@@ -1,12 +1,12 @@
 /*
 
-  QtOfFactories
+  QtOfWidgets
   =============
 
   GENERAL INFO:
 
-    The QtOfFactories are tightly used together with our custom QML
-    item: `QtOfExternalWidget`. The `QtOfFactories` is used to create,
+    The QtOfWidgets are tightly used together with our custom QML
+    item: `QtOfExternalWidget`. The `QtOfWidgets` is used to create,
     setup, update, draw etc. your custom OF based widget (it can
     actually be any object that you want to use, but we focus on OF
     here). Qt Quick may at any point destroy or recreate a QML
@@ -26,11 +26,11 @@
     `QtOfExternalWidget` QML type. This type expects that you
     define the `ref` property. This `ref` property is a integer value
     that is used to map to a C++ type. You have create the link
-    between this `ref` value and your type using `qtof_factory_add();`.
+    between this `ref` value and your type using `qtof_widget_add();`.
     For example to map the ref value `1` to your histogram widget
     you would call:
 
-    `qtof_factory_add(1, new QtOfFactory<DepthKitHistogramWidgetPimpl>());`
+    `qtof_widget_add(1, new QtOfWidget<DepthKitHistogramWidgetPimpl>());`
 
     The QML would look something like: 
 
@@ -42,12 +42,12 @@
 
    Now, when Qt creates your `QtOfExternalWidget` item, the
    `QtOfExternalWidget` implementation will call the
-   `qtof_factory_*()` functions to create, update, draw, etc.. your
+   `qtof_widget_*()` functions to create, update, draw, etc.. your
    custom type.
 
  */
-#ifndef QT_OF_FACTORY_H
-#define QT_OF_FACTORY_H
+#ifndef QT_OF_WIDGET_H
+#define QT_OF_WIDGET_H
 
 #include <mutex>
 #include <unordered_map>
@@ -56,7 +56,7 @@
 
 /* ---------------------------------------------------- */
 
-class QtOfFactoryBase {
+class QtOfWidgetBase {
 public:
   virtual int create() = 0;
   virtual int setup() = 0;
@@ -68,9 +68,9 @@ public:
 /* ---------------------------------------------------- */
 
 template<class T>
-class QtOfFactory : public QtOfFactoryBase {
+class QtOfWidget : public QtOfWidgetBase {
 public:
-  QtOfFactory();
+  QtOfWidget();
   int create();
   int setup();
   int update();
@@ -83,10 +83,10 @@ private:
 
 /* ---------------------------------------------------- */
 
-class QtOfFactories {
+class QtOfWidgets {
 public:
-  QtOfFactories();
-  int add(int ref, QtOfFactoryBase* fac);
+  QtOfWidgets();
+  int add(int ref, QtOfWidgetBase* fac);
   int create(int ref);
   int setup(int ref);
   int update(int ref);
@@ -95,34 +95,34 @@ public:
   
 private:
   std::mutex mtx_events;
-  std::unordered_map<int, QtOfFactoryBase*> factories;
+  std::unordered_map<int, QtOfWidgetBase*> factories;
   std::unordered_map<int, std::vector<ofExternalEvent> > events;
 };
 
 /* ---------------------------------------------------- */
 
-extern QtOfFactories qtof_factories;
+extern QtOfWidgets qtof_factories;
 
-int qtof_factory_add(int ref, QtOfFactoryBase* fac);
-int qtof_factory_create(int ref);
-int qtof_factory_setup(int ref);
-int qtof_factory_update(int ref);
-int qtof_factory_draw(int ref);
-int qtof_factory_send_event(int ref, const ofExternalEvent& ev);
+int qtof_widget_add(int ref, QtOfWidgetBase* fac);
+int qtof_widget_create(int ref);
+int qtof_widget_setup(int ref);
+int qtof_widget_update(int ref);
+int qtof_widget_draw(int ref);
+int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
 
 /* ---------------------------------------------------- */
 
 template<class T>
-QtOfFactory<T>::QtOfFactory()
+QtOfWidget<T>::QtOfWidget()
   :obj(nullptr)
 {
 }
 
 template<class T>
-int QtOfFactory<T>::create() {
+int QtOfWidget<T>::create() {
   
   if (nullptr != obj) {
-    qFatal("QtOfFactory::create() - already created the object.");
+    qFatal("QtOfWidget::create() - already created the object.");
     return -1;
   }
 
@@ -132,10 +132,10 @@ int QtOfFactory<T>::create() {
 }
 
 template<class T>
-int QtOfFactory<T>::setup() {
+int QtOfWidget<T>::setup() {
   
   if (nullptr == obj) {
-    qFatal("QtOfFactory::setup() - not created.");
+    qFatal("QtOfWidget::setup() - not created.");
     return -1;
   }
 
@@ -145,10 +145,10 @@ int QtOfFactory<T>::setup() {
 }
 
 template<class T>
-int QtOfFactory<T>::update() {
+int QtOfWidget<T>::update() {
   
   if (nullptr == obj) {
-    qFatal("QtOfFactory::update() - not created.");
+    qFatal("QtOfWidget::update() - not created.");
     return -1;
   }
 
@@ -158,10 +158,10 @@ int QtOfFactory<T>::update() {
 }
 
 template<class T>
-int QtOfFactory<T>::draw() {
+int QtOfWidget<T>::draw() {
   
   if (nullptr == obj) {
-    qFatal("QtOfFactory::draw() - not created.");
+    qFatal("QtOfWidget::draw() - not created.");
     return -1;
   }
 
@@ -171,7 +171,7 @@ int QtOfFactory<T>::draw() {
 }
 
 template<class T>
-int QtOfFactory<T>::sendEvent(const ofExternalEvent& ev) {
+int QtOfWidget<T>::sendEvent(const ofExternalEvent& ev) {
   
   if (nullptr == obj) {
     qFatal("Cannot send the event because we're obj is nullptr.");
@@ -185,9 +185,9 @@ int QtOfFactory<T>::sendEvent(const ofExternalEvent& ev) {
 
 /* ---------------------------------------------------- */
 
-inline int QtOfFactories::create(int ref) {
+inline int QtOfWidgets::create(int ref) {
   
-  std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
   if (it == factories.end()) {
     qFatal("QtFactories::create() - reference not found.");
     return -1;
@@ -196,9 +196,9 @@ inline int QtOfFactories::create(int ref) {
   return it->second->create();
 }
 
-inline int QtOfFactories::setup(int ref) {
+inline int QtOfWidgets::setup(int ref) {
   
-  std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
   if (it == factories.end()) {
     qFatal("QtFactories::setup() - reference not found.");
     return -1;
@@ -207,15 +207,15 @@ inline int QtOfFactories::setup(int ref) {
   return it->second->setup();
 }
                                           
-inline int QtOfFactories::update(int ref) {
+inline int QtOfWidgets::update(int ref) {
 
   /* Find the factory for the given ref. */
-  std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
   if (it == factories.end()) {
     qFatal("QtFactories::update() - reference not found.");
     return -1;
   }
-  QtOfFactoryBase* fac = it->second;
+  QtOfWidgetBase* fac = it->second;
 
   /* Notify all collected events. */
   std::lock_guard<std::mutex> lg(mtx_events);
@@ -233,9 +233,9 @@ inline int QtOfFactories::update(int ref) {
   return fac->update();
 }
 
-inline int QtOfFactories::draw(int ref) {
+inline int QtOfWidgets::draw(int ref) {
 
-  std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
   if (it == factories.end()) {
     qFatal("QtFactories::draw() - reference not found.");
     return -1;
