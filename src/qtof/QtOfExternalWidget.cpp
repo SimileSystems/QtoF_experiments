@@ -51,6 +51,7 @@ void QtOfExternalWidget::onPaint() {
   of_external_finish_render();
 
   window()->resetOpenGLState();
+  //glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
 }
 
 /* ---------------------------------------------------- */
