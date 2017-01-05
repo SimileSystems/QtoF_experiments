@@ -114,7 +114,7 @@ int ofExternal::update() {
     switch (ev.type) {
       
       case OF_EXT_EVENT_WINDOW_RESIZED: {
-        win->setWindowSize(ev.val.size[0], ev.val.size[1]);
+        win->setWindowSize(ev.val.xy[0], ev.val.xy[1]);
         break;
       }
         

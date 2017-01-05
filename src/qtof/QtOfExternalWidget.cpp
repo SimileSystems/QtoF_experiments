@@ -33,6 +33,8 @@ void QtOfExternalWidget::onPaint() {
     }
 
     notifySize();
+    notifyPixelRatio();
+    notifyPosition();
 
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
@@ -70,6 +72,7 @@ void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
 
   connect(win, &QQuickWindow::beforeSynchronizing, this, &QtOfExternalWidget::onSync, Qt::DirectConnection);
   connect(win, &QQuickWindow::sceneGraphInvalidated, this, &QtOfExternalWidget::onCleanup, Qt::DirectConnection);
+  connect(win, &QQuickWindow::screenChanged, this, &QtOfExternalWidget::onScreenChanged);
 
   /* @todo do we want to call this here? */
   win->setClearBeforeRendering(false);
@@ -79,10 +82,29 @@ void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
 
 void QtOfExternalWidget::notifySize() {
   ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_SIZE;
-  ev.val.size[0] = width();
-  ev.val.size[1] = height();
+  ev.type = OF_EXT_EVENT_SIZE_CHANGED;
+  ev.val.xy[0] = width();
+  ev.val.xy[1] = height();
   qtof_widget_send_event(ref, ev);
+}
+
+void QtOfExternalWidget::notifyPosition() {
+  ofExternalEvent ev;
+  ev.type = OF_EXT_EVENT_POSITION_CHANGED;
+  ev.val.xy[0] = x();
+  ev.val.xy[1] = y();
+  qtof_widget_send_event(ref, ev);
+}
+
+void QtOfExternalWidget::notifyPixelRatio() {
+  ofExternalEvent ev;
+  ev.type = OF_EXT_EVENT_PIXEL_RATIO_CHANGED;
+  ev.val.f = window()->devicePixelRatio();
+  qtof_widget_send_event(ref, ev);
+}
+
+void QtOfExternalWidget::onScreenChanged(QScreen* screen) {
+  notifyPixelRatio();
 }
 
 /* ---------------------------------------------------- */

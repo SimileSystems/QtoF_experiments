@@ -16,6 +16,9 @@ public:
   ofImage img;
   int width;
   int height;
+  int x;
+  int y;
+  float pix_ratio;
 };
 
 #endif

@@ -111,16 +111,16 @@ void QtOfExternal::onWindowChanged(QQuickWindow* win) {
 void QtOfExternal::onWidthChanged(int w) {
   ofExternalEvent ev;
   ev.type = OF_EXT_EVENT_WINDOW_RESIZED;
-  ev.val.size[0] = window()->width();
-  ev.val.size[1] = window()->height();
+  ev.val.xy[0] = window()->width();
+  ev.val.xy[1] = window()->height();
   of_external_send_event(ev);
 }
 
 void QtOfExternal::onHeightChanged(int h) {
   ofExternalEvent ev;
   ev.type = OF_EXT_EVENT_WINDOW_RESIZED;
-  ev.val.size[0] = window()->width();
-  ev.val.size[1] = window()->height();
+  ev.val.xy[0] = window()->width();
+  ev.val.xy[1] = window()->height();
   of_external_send_event(ev);
 }
 

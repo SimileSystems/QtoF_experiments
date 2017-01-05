@@ -11,7 +11,8 @@
 #define OF_EXT_EVENT_MOUSE_MOVE 3   /* Sets val.mouse[0] and val.mouse[1]. */
 #define OF_EXT_EVENT_MOUSE_PRESS 4
 #define OF_EXT_EVENT_MOUSE_RELEASE 5
-#define OF_EXT_EVENT_SIZE 6 
+#define OF_EXT_EVENT_SIZE_CHANGED 6
+#define OF_EXT_EVENT_POSITION_CHANGED 7
 
 /* ------------------------------------------------------ */
 
@@ -38,7 +39,7 @@ public:
   uint32_t type;
   union {
     float f;           /* Arbitrary float val. */
-    int32_t size[2];   /* x, y */
+    int32_t xy[2];     /* x, y */
     int32_t mouse[3];  /* x, y, button. */
   } val;
 };

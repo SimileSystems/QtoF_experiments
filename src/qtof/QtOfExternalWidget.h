@@ -81,6 +81,7 @@
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickItem>
 #include <QString>
+#include <QScreen>
 
 /* ---------------------------------------------------- */
 
@@ -102,9 +103,12 @@ public:
 
 private slots:
   void onWindowChanged(QQuickWindow* win);
+  void onScreenChanged(QScreen* screen);
 
 private:
-  void notifySize();
+  void notifySize();                                /* Notifies the widget about it's size; is (also) called before we call `setup()` on the widget. */
+  void notifyPosition();                            /* Notifies the widget about it's position; is (also) called before we call `setup()` on the widget. */
+  void notifyPixelRatio();                          /* Notifies the widget about the current pixel ratio (e.g. to handle retina). is (also) called before we call `setup()` on the widget. */
 
 private:
   int ref;

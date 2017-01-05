@@ -122,9 +122,26 @@ ApplicationWindow {
   }
 
   QtOfExternalWidget {
+    id: histogram
     ref: 1
-    width: 100
-    height: 100
+    width: 320
+    height: 240
+    x: 10
+    y: 10
+    
+    Slider {
+      value: 0.5
+      x: 10
+      y: 10
+    }
+
+    /*
+    FastBlur {
+      anchors.fill: histogram
+      source: histogram
+      radius: 32
+    }
+    */
     
     /*
     Drag.active: dragArea.drag.active
