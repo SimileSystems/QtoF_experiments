@@ -11,14 +11,14 @@ QtOfWidgets::QtOfWidgets() {
 
 }
 
-int QtOfWidgets::add(int ref, QtOfFactoryBase* fac) {
+int QtOfWidgets::add(int ref, QtOfWidgetBase* fac) {
 
   if (nullptr == fac) {
     qFatal("Given factory is NULL.");
     return -1;
   }
 
-  std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
   if (it != factories.end()) {
     qFatal("There already exists a factory for the given reference");
     return -2;
@@ -37,7 +37,7 @@ int QtOfWidgets::sendEvent(int ref, const ofExternalEvent& ev) {
 
 /* ---------------------------------------------------- */
 
-int qtof_widget_add(int ref, QtOfFactoryBase* fac) {
+int qtof_widget_add(int ref, QtOfWidgetBase* fac) {
   return qtof_factories.add(ref, fac);
 }
 

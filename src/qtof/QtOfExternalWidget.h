@@ -23,11 +23,11 @@
     items. For this we have to implement a couple of functions and
     take care of how we create/destroy things. To make it easier and
     to separate the Qt features from the OF features, I created this
-    `QtOfExternalWidget` that works together with `QtOfFactories`.
+    `QtOfExternalWidget` that works together with `QtOfWidgets`.
     The `QtOfExternalWidget` is like a bridge between this custom QML
     item and your OF based widget.
 
-    The `QtOfFactories` creates, sets up, updates, draws, etc... our
+    The `QtOfWidgets` creates, sets up, updates, draws, etc... our
     custom OF based widgets. Using this setup, we don't have to create
     and define a new QML item for each widget we want to
     create. Though because this `QtOfExternalWidget` still needs to
@@ -38,7 +38,7 @@
     number with the `DepthKithHistogramWidget` type, this class
     (`QtOfExternalWidget`) will make sure that the
     `DepthKitHistogramWidget` will be created, updated, drawn,
-    etc.. at the right moments. See `QtOfFactories.h` for more info.
+    etc.. at the right moments. See `QtOfWidgets.h` for more info.
 
 
     +----------------------+
@@ -50,7 +50,7 @@
                |
     +----------v-----------+
     |                      |
-    |     QtFactories      o---| Helper to create/update/draw/destroy OF 
+    |     QtOfWidgets      o---| Helper to create/update/draw/destroy OF 
     |                      |     based PIMPL widgets. 
     +----------+-----------+
                |

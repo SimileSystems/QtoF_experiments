@@ -1,5 +1,5 @@
 #include <qtof/QtOfExternalWidget.h>
-#include <qtof/QtOfFactories.h>
+#include <qtof/QtOfWidgets.h>
 #include <qtof/ofExternal.h>
 
 /* ---------------------------------------------------- */
@@ -34,20 +34,13 @@ void QtOfExternalWidget::onPaint() {
 
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
-      qFatal("Failed to setup the factory for reference: %d", ref);
+      qFatal("Failed to setup the widgte for reference: %d", ref);
       return;
     }
     
     is_created = true;
   }
 
-  /*
-  ofExternalEvent e;
-  e.type = OF_EXT_EVENT_MOUSE_MOVE;
-  e.val.mouse[0] = 100;
-  qtof_widget_send_event(ref, e);
-  */
-  
   of_external_start_render();
   qtof_widget_update(ref);
   qtof_widget_draw(ref);

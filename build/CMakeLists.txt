@@ -39,7 +39,7 @@ list(APPEND qtof_sources
   ${sd}/qtof/ofExternal.cpp
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
-  ${sd}/qtof/QtOfFactories.cpp
+  ${sd}/qtof/QtOfWidgets.cpp
   )
 
 # openFrameworks library
