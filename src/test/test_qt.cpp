@@ -79,7 +79,7 @@
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/QtOfWidgets.h>
-#include <experimental/WidgetHistogram.h>
+#include <experimental/WidgetHistogramPimpl.h>
 
 /* ---------------------------------------------------- */
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
 
-  qtof_widget_add(1, new QtOfWidget<WidgetHistogram>());
+  qtof_widget_add(1, new QtOfWidget<WidgetHistogramPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
