@@ -22,3 +22,9 @@ void WidgetHistogram::draw() {
     ctx->draw();
   }
 }
+
+void WidgetHistogram::onExternalEvent(const ofExternalEvent& ev) {
+  if (nullptr != ctx){
+    ctx->onExternalEvent(ev);
+  }
+}

@@ -29,6 +29,12 @@ int QtOfFactories::add(int ref, QtOfFactoryBase* fac) {
   return 0;
 }
 
+int QtOfFactories::sendEvent(int ref, const ofExternalEvent& ev) {
+  std::lock_guard<std::mutex> lg(mtx_events);
+  events[ref].push_back(ev);
+  return 0;
+}
+
 /* ---------------------------------------------------- */
 
 int qtof_factory_add(int ref, QtOfFactoryBase* fac) {
@@ -49,6 +55,10 @@ int qtof_factory_update(int ref) {
 
 int qtof_factory_draw(int ref) {
   return qtof_factories.draw(ref);
+}
+
+int qtof_factory_send_event(int ref, const ofExternalEvent& ev) {
+  return qtof_factories.sendEvent(ref, ev);
 }
 
 /* ---------------------------------------------------- */

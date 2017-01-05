@@ -84,8 +84,9 @@
 /* ---------------------------------------------------- */
 
 int main(int argc, char* argv[]) {
-  //QGuiApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
-  //QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
+
+  qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{function} - %{message}");
+
   QGuiApplication app(argc, argv);
 
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");

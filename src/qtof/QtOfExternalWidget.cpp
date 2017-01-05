@@ -20,10 +20,11 @@ void QtOfExternalWidget::onSync() {
 }
 
 void QtOfExternalWidget::onCleanup() {
+  qDebug() << "CLEANUP!";
 }
 
 void QtOfExternalWidget::onPaint() {
-
+  
   if (false == is_created) {
     
     if (0 != qtof_factory_create(ref)) {
@@ -40,6 +41,13 @@ void QtOfExternalWidget::onPaint() {
     is_created = true;
   }
 
+  /*
+  ofExternalEvent e;
+  e.type = OF_EXT_EVENT_MOUSE_MOVE;
+  e.val.mouse[0] = 100;
+  qtof_factory_send_event(ref, e);
+  */
+  
   of_external_start_render();
   qtof_factory_update(ref);
   qtof_factory_draw(ref);

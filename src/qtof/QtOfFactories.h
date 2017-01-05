@@ -49,8 +49,10 @@
 #ifndef QT_OF_FACTORY_H
 #define QT_OF_FACTORY_H
 
-#include <QDebug>
+#include <mutex>
 #include <unordered_map>
+#include <QDebug>
+#include <qtof/ofExternal.h>
 
 /* ---------------------------------------------------- */
 
@@ -60,6 +62,7 @@ public:
   virtual int setup() = 0;
   virtual int update() = 0;
   virtual int draw() = 0;
+  virtual int sendEvent(const ofExternalEvent& ev) = 0;
 };
 
 /* ---------------------------------------------------- */
@@ -72,6 +75,7 @@ public:
   int setup();
   int update();
   int draw();
+  int sendEvent(const ofExternalEvent& ev);
 
 private:
   T* obj;
@@ -87,9 +91,12 @@ public:
   int setup(int ref);
   int update(int ref);
   int draw(int ref);
+  int sendEvent(int ref, const ofExternalEvent& ev);
   
 private:
+  std::mutex mtx_events;
   std::unordered_map<int, QtOfFactoryBase*> factories;
+  std::unordered_map<int, std::vector<ofExternalEvent> > events;
 };
 
 /* ---------------------------------------------------- */
@@ -101,6 +108,7 @@ int qtof_factory_create(int ref);
 int qtof_factory_setup(int ref);
 int qtof_factory_update(int ref);
 int qtof_factory_draw(int ref);
+int qtof_factory_send_event(int ref, const ofExternalEvent& ev);
 
 /* ---------------------------------------------------- */
 
@@ -162,6 +170,19 @@ int QtOfFactory<T>::draw() {
   return 0;
 }
 
+template<class T>
+int QtOfFactory<T>::sendEvent(const ofExternalEvent& ev) {
+  
+  if (nullptr == obj) {
+    qFatal("Cannot send the event because we're obj is nullptr.");
+    return -1;
+  }
+
+  obj->onExternalEvent(ev);
+
+  return 0;
+}
+
 /* ---------------------------------------------------- */
 
 inline int QtOfFactories::create(int ref) {
@@ -188,13 +209,28 @@ inline int QtOfFactories::setup(int ref) {
                                           
 inline int QtOfFactories::update(int ref) {
 
+  /* Find the factory for the given ref. */
   std::unordered_map<int, QtOfFactoryBase*>::iterator it = factories.find(ref);
   if (it == factories.end()) {
     qFatal("QtFactories::update() - reference not found.");
     return -1;
   }
+  QtOfFactoryBase* fac = it->second;
 
-  return it->second->update();
+  /* Notify all collected events. */
+  std::lock_guard<std::mutex> lg(mtx_events);
+  std::unordered_map<int, std::vector<ofExternalEvent> >::iterator ev_it = events.begin();
+  while (ev_it != events.end()) {
+    std::vector<ofExternalEvent>& obj_events = ev_it->second;
+    for (size_t i = 0; i < obj_events.size(); ++i) {
+      fac->sendEvent(obj_events[i]);
+    }
+    obj_events.clear();
+    ++ev_it;
+  }
+
+  /* And finally update(). */
+  return fac->update();
 }
 
 inline int QtOfFactories::draw(int ref) {

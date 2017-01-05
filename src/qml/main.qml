@@ -119,10 +119,60 @@ ApplicationWindow {
     visible: true
     gl_major_version: 3
     gl_minor_version: 3
-    /*  anchors.fill: parent; */
   }
 
   QtOfExternalWidget {
     ref: 1
+    width: 100
+    height: 100
+    
+    /*
+    Drag.active: dragArea.drag.active
+    Drag.hotSpot.x: 0
+    Drag.hotSpot.y: 0
+    
+    MouseArea {
+      id: dragArea
+      anchors.fill: parent
+      drag.target: parent
+    }
+    */
   }
+
+  /*
+  Item {
+    width: 200; height: 200
+
+
+    DropArea {
+      x: 75; y: 75
+      width: 50; height: 50
+      visible: true
+
+      Rectangle {
+        anchors.fill: parent
+        color: "green"
+
+        visible: parent.containsDrag
+      }
+    }
+
+    Rectangle {
+      x: 10; y: 10
+      width: 20; height: 20
+      color: "red"
+
+      Drag.active: dragArea.drag.active
+      Drag.hotSpot.x: 10
+      Drag.hotSpot.y: 10
+
+      MouseArea {
+        id: dragArea
+        anchors.fill: parent
+
+        drag.target: parent
+      }
+    }
+  }
+  */
 }
