@@ -11,10 +11,11 @@ namespace dk {
   class Render {
   public:
     Render();
-    int init(int winWidth, int winHeight);
+    int init(int winWidth, int winHeight, float pixRatio);
     int update();
     int draw();
     int shutdown();
+    int onEvent(unsigned int event, void* data); /* Handles GUI events. */
     
   private:
     GLuint prog;

@@ -5,6 +5,9 @@
 
 ofAppQtWindow::ofAppQtWindow()
   :curr_renderer(nullptr)
+  ,pixel_ratio(1.0f)
+  ,win_width(-1)
+  ,win_height(-1)
 {
 }
 
@@ -18,6 +21,19 @@ void ofAppQtWindow::setup(const ofWindowSettings& settings) {
     return;
   }
 
+  if (settings.width <= 0) {
+    printf("Error: ofWindowSettings::width <= 0.\n");
+    return;
+  }
+
+  if (settings.height <= 0) {
+    printf("Error: ofWindowSettings::height <= 0.\n");
+    return;
+  }
+
+  setWindowShape(settings.width, settings.height);
+
+  /* Create the renderer. */
   ofGLProgrammableRenderer* gl_renderer = NULL;
   gl_renderer = new ofGLProgrammableRenderer(this);
   gl_renderer->setup(3,3);

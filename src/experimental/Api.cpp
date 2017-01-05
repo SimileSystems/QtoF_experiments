@@ -51,14 +51,14 @@ int render_dealloc(RenderContext* ctx) {
   return 0;
 }
 
-int render_init(RenderContext* ctx, int winWidth, int winHeight) {
+int render_init(RenderContext* ctx, int winWidth, int winHeight, float pixRatio) {
   
   if (NULL == ctx) {
     printf("Error: ctx is NULL cannot render_init().\n");
     return -1;
   }
 
-  return ctx->render.init(winWidth, winHeight);
+  return ctx->render.init(winWidth, winHeight, pixRatio);
 }
 
 int render_shutdown(RenderContext* ctx) {
@@ -89,6 +89,18 @@ int render_draw(RenderContext* ctx) {
   }
 
   return ctx->render.draw();
+}
+
+/* ----------------------------------------- */
+
+int render_send_event(RenderContext* ctx, unsigned int event, void* data) {
+
+  if (NULL == ctx) {
+    printf("Error: ctx is NULL, cannot render_send_event.\n");
+    return -1;
+  }
+
+  return ctx->render.onEvent(event, data);
 }
 
 /* ----------------------------------------- */

@@ -28,23 +28,38 @@ include_directories(
   ${sd}
   )
 
-list(APPEND render_sources
-  ${sd}/Api.cpp
-  ${sd}/Render.cpp
-  ${sd}/QtRender.cpp
-  ${ed}/src/glad.c
-  )
-
 list(APPEND of_sources
-  ${sd}/ofAppQtWindow.cpp
+  ${sd}/experimental/WidgetHistogramImpl.cpp
+  ${sd}/experimental/WidgetHistogram.cpp
   )
 
+list(APPEND qtof_sources
+  ${ed}/src/glad.c
+  ${sd}/qtof/ofAppExternalWindow.cpp
+  ${sd}/qtof/ofExternal.cpp
+  ${sd}/qtof/QtOfExternal.cpp
+  ${sd}/qtof/QtOfExternalWidget.cpp
+  ${sd}/qtof/QtOfFactories.cpp
+  )
+
+# openFrameworks library
 add_library(of${debug_flag} STATIC ${of_sources})
 
-add_library(render${debug_flag} STATIC ${render_sources})
-target_link_libraries(render${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick ${of_libs} of${debug_flag})
-add_dependencies(render${debug_flag} of${debug_flag})
+# QtOf library
+add_library(qtof${debug_flag} STATIC ${qtof_sources})
+target_link_libraries(qtof${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick ${of_libs} of${debug_flag})
+add_dependencies(qtof${debug_flag} of${debug_flag})
 
-add_executable(test_qt${debug_flag} ${sd}/test_qt.cpp ${sd}/qml/resources.qrc) 
-target_link_libraries(test_qt${debug_flag} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick render${debug_flag})
-install(TARGETS test_qt${debug_flag} DESTINATION bin)
+# tests
+macro(create_test name)
+  set(test_name "test_${name}${debug_flag}")
+  add_executable(${test_name} ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
+  target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick qtof${debug_flag})
+  install(TARGETS ${test_name} DESTINATION bin/)
+endmacro()
+
+create_test(qt)
+
+#add_executable(test_qt${debug_flag} ${sd}/test_qt.cpp ${sd}/qml/resources.qrc) 
+#target_link_libraries(test_qt${debug_flag} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick render${debug_flag})
+#install(TARGETS test_qt${debug_flag} DESTINATION bin)

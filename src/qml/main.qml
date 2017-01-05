@@ -2,7 +2,8 @@ import QtQuick 2.4
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
-import tv.depthkit 1.0
+import QtGraphicalEffects 1.0
+import cc.openframeworks 1.0
 
 ApplicationWindow {
   id: page
@@ -12,9 +13,14 @@ ApplicationWindow {
   title: "Test app"
   visible: true
 
+  /*
   QtRender {
+    id: of
     visible: true
+    width: 640
+    height: 480
   }
+  */
 
   Rectangle {
     id: panel
@@ -25,7 +31,7 @@ ApplicationWindow {
     anchors.bottom: parent.bottom
     anchors.margins: 20
     color: "darkblue"
-    visible: false
+    visible: true
 
     PropertyAnimation {
       id: animation
@@ -36,17 +42,18 @@ ApplicationWindow {
       duration: 360
       easing.type: Easing.OutCubic
     }
-  }
-
-  MouseArea {
-    anchors.fill: parent;
-    onClicked: {
-      animation.running = true
-      panel.visible =  true
-      column.visible = true
+    /*
+    MouseArea {
+      anchors.fill: parent;
+      onClicked: {
+        animation.running = true
+        panel.visible =  true
+        column.visible = true
+      }
     }
+    */
   }
-
+  
   Column {
 
     id: column
@@ -55,7 +62,7 @@ ApplicationWindow {
     anchors.right: panel.right
     anchors.margins: 10
     spacing: 10
-    visible: false
+    visible: true
     
     Text {
       id: text
@@ -100,9 +107,22 @@ ApplicationWindow {
       anchors.left: parent.left
       model: [ ".mp4", ".mov", ".h264", ".h265" ]
     }
+
+    ComboBox {
+      anchors.right: parent.right
+      anchors.left: parent.left
+      model: [ ".mp4", ".mov", ".h264", ".h265" ]
+    }
   }
 
+  QtOfExternal {
+    visible: true
+    gl_major_version: 3
+    gl_minor_version: 3
+    /*  anchors.fill: parent; */
+  }
 
-
-
+  QtOfExternalWidget {
+    ref: 1
+  }
 }

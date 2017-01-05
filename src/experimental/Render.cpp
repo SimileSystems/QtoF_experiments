@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Render.h>
+#include <Events.h>
 #include <ofAppRunner.h>
 
 namespace dk {
@@ -63,7 +64,7 @@ namespace dk {
     printf("Render::Render()\n");
   }
 
-  int Render::init(int winWidth, int winHeight) {
+  int Render::init(int winWidth, int winHeight, float pixRatio) {
     printf("Render::init()\n");
 
     if (0 != prog) {
@@ -108,6 +109,11 @@ namespace dk {
       printf("Render::init() - error: winHeight <= 0.\n");
       return -2;
     }
+
+    if (pixRatio <= 0.0f) {
+      printf("Render::init() - error: pixRatio <= 0.0f.\n");
+      return -3;
+    }
     
     printf("glCreateProgram: %p in Render.cpp.\n", glCreateProgram);
     win = std::shared_ptr<ofAppQtWindow>(new ofAppQtWindow());
@@ -117,6 +123,9 @@ namespace dk {
     win_settings.width = winWidth;
     win_settings.height = winHeight;
     win->setup(win_settings);
+
+    win->setPixelRatio(pixRatio);
+
     /* TMP END: SETUP OPENFRAMEWORKS */
 
     img.load(ofFilePath::getCurrentExeDir() +"640x480@2x.png");
@@ -125,6 +134,7 @@ namespace dk {
     video_grabber.listDevices();
     video_grabber.setup(0, 640, 480);
     
+   
     return 0;
   }
 
@@ -151,13 +161,74 @@ namespace dk {
     glBindVertexArray(0);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
-    
-    win->draw();
 
-    img.draw(0, 0);
-    video_grabber.update();
-    video_grabber.draw(0, 0, 640, 480);
+    win->startRender();
     
+    img.draw(0, 0, 640 * win->getPixelRatio(), 480 * win->getPixelRatio());
+    video_grabber.update();
+    video_grabber.draw(0, 0, 320 * win->getPixelRatio(), 240 * win->getPixelRatio());
+
+    win->finishRender();
+    
+    return 0;
+  }
+
+  int Render::onEvent(unsigned int event, void* data) {
+
+    switch (event) {
+      case EVENT_WINDOW_RESIZED: {
+        if (nullptr == data) {
+          printf("Error: resize data is invalid (exiting).\n");
+          exit(EXIT_FAILURE);
+        }
+        int* s = (int*)data;
+        win->setWindowShape(s[0], s[1]);
+        printf("Resized: %d x %d\n", s[0], s[1]);
+        break;
+      }
+      case EVENT_PIXEL_RATIO_CHANGED: {
+        if (nullptr == data) {
+          printf("Error: pixel ratio is null (exiting). \n");
+          exit(EXIT_FAILURE);
+        }
+        win->setPixelRatio(*(float*)data);
+        printf("Pixel ratio: %f\n", *(float*)data);
+        break;
+      }
+      case EVENT_MOUSE_PRESS: {
+        if (nullptr == data) {
+          printf("Error: mouse press data null.\n");
+          exit(EXIT_FAILURE);
+        }
+        int* mp = (int*)data;
+        printf("Mouse press: %d %d\n", mp[0], mp[1]);
+        break;
+      }
+      case EVENT_MOUSE_RELEASE: {
+        if (nullptr == data) {
+          printf("Error: mouse release data null.\n");
+          exit(EXIT_FAILURE);
+        }
+        int* mp = (int*)data;
+        printf("Mouse release: %d %d\n", mp[0], mp[1]);
+        break;
+      }
+      case EVENT_MOUSE_MOVE: {
+        if (nullptr == data) {
+          printf("Error: mouse move data is null.\n");
+          exit(EXIT_FAILURE);
+        }
+        int* mp = (int*)data;
+        printf("Mouse move: %d x %d\n", mp[0], mp[1]);
+        //        glViewport(0, 0, 640,480);
+        break;
+      }
+      default: {
+        printf("Warning: unhandled event.\n");
+        break;
+      }
+    };
+
     return 0;
   }
 
