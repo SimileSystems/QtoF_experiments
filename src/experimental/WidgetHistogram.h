@@ -14,6 +14,8 @@ public:
   
 public:
   ofImage img;
+  int width;
+  int height;
 };
 
 #endif

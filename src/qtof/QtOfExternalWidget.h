@@ -104,6 +104,9 @@ private slots:
   void onWindowChanged(QQuickWindow* win);
 
 private:
+  void notifySize();
+
+private:
   int ref;
   bool is_created; 
 };

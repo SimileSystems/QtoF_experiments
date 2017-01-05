@@ -32,6 +32,8 @@ void QtOfExternalWidget::onPaint() {
       return;
     }
 
+    notifySize();
+
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
       qFatal("Failed to setup the widgte for reference: %d", ref);
@@ -71,6 +73,16 @@ void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
 
   /* @todo do we want to call this here? */
   win->setClearBeforeRendering(false);
+}
+
+/* ---------------------------------------------------- */
+
+void QtOfExternalWidget::notifySize() {
+  ofExternalEvent ev;
+  ev.type = OF_EXT_EVENT_SIZE;
+  ev.val.size[0] = width();
+  ev.val.size[1] = height();
+  qtof_widget_send_event(ref, ev);
 }
 
 /* ---------------------------------------------------- */

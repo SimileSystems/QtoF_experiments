@@ -11,6 +11,7 @@
 #define OF_EXT_EVENT_MOUSE_MOVE 3   /* Sets val.mouse[0] and val.mouse[1]. */
 #define OF_EXT_EVENT_MOUSE_PRESS 4
 #define OF_EXT_EVENT_MOUSE_RELEASE 5
+#define OF_EXT_EVENT_SIZE 6 
 
 /* ------------------------------------------------------ */
 
