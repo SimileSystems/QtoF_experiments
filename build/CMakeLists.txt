@@ -29,7 +29,7 @@ include_directories(
   )
 
 list(APPEND of_sources
-  ${sd}/experimental/WidgetHistogramImpl.cpp
+  ${sd}/experimental/WidgetHistogramPimpl.cpp
   ${sd}/experimental/WidgetHistogram.cpp
   )
 

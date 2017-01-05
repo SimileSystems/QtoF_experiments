@@ -1,30 +1,18 @@
+#include <stdio.h>
+#include <qtof/ofExternal.h>
 #include <experimental/WidgetHistogram.h>
-#include <experimental/WidgetHistogramImpl.h>
-
-WidgetHistogram::WidgetHistogram()
-  :ctx(nullptr)
-{
-}
 
 void WidgetHistogram::setup() {
-  ctx = new WidgetHistogramImpl();
-  ctx->setup();
+  img.load(ofFilePath::getCurrentExeDir() +"scene.jpg");
 }
 
 void WidgetHistogram::update() {
-  if (nullptr != ctx) {
-    ctx->update();
-  }
 }
 
 void WidgetHistogram::draw() {
-  if (nullptr != ctx) {
-    ctx->draw();
-  }
+  img.draw(10, 10, 640, 480);
 }
 
 void WidgetHistogram::onExternalEvent(const ofExternalEvent& ev) {
-  if (nullptr != ctx){
-    ctx->onExternalEvent(ev);
-  }
 }
+
