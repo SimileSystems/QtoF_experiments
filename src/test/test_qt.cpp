@@ -80,6 +80,7 @@
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/QtOfWidgets.h>
 #include <experimental/WidgetHistogramPimpl.h>
+#include <experimental/WidgetWebcamPimpl.h>
 
 /* ---------------------------------------------------- */
 
@@ -93,6 +94,7 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
 
   qtof_widget_add(1, new QtOfWidget<WidgetHistogramPimpl>());
+  qtof_widget_add(2, new QtOfWidget<WidgetWebcamPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);

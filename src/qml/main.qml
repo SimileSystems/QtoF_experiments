@@ -90,6 +90,35 @@ ApplicationWindow {
       anchors.left: parent.left
     }
 
+    /*
+    Button {
+      text: "Delete"
+      anchors.right: parent.right
+      anchors.left: parent.left
+      onClicked: {
+        histogram.destroy();
+      }
+    }
+
+    Button {
+      text: "Create"
+      anchors.right: parent.right
+      anchors.left: parent.left
+      onClicked: {
+        Qt.createQmlObject("import cc.openframeworks 1.0; QtOfExternalWidget { ref: 1; width: 120; height: 120; x: 310; y: 10;}", page, "test");
+      }
+    }
+
+    Button {
+      text: "Unset parent"
+      anchors.right: parent.right
+      anchors.left: parent.left
+      onClicked: {
+        histogram.parent = null;
+      }
+    }
+    */
+    
     CheckBox {
       text: "Enable triangulation"
     }
@@ -113,6 +142,33 @@ ApplicationWindow {
       anchors.left: parent.left
       model: [ ".mp4", ".mov", ".h264", ".h265" ]
     }
+
+    Row {
+      spacing: 10
+      Label {
+        text: "Red"
+      }
+      Slider {
+        id: red_color
+        value: 0.5
+        onValueChanged: {
+          histogram.sendExternalEventFloat(100, red_color.value);
+        }
+      }
+    }
+    Row {
+      spacing: 10
+      Label {
+        text: "Green"
+      }
+      Slider {
+        id: green_color
+        value: 0.5
+        onValueChanged: {
+          histogram.sendExternalEventFloat(101, green_color.value);
+        }
+      }
+    }
   }
 
   QtOfExternal {
@@ -126,35 +182,39 @@ ApplicationWindow {
     ref: 1
     width: 320
     height: 240
-    x: 10
-    y: 10
-    
-    Slider {
-      value: 0.5
-      x: 10
-      y: 10
-    }
+    x: 310
+    y: 20
+    focus: true // Set focus so we can accept key events. 
+  }
 
-    /*
+  QtOfExternalWidget {
+    id: webcam
+    ref: 2
+    x: 0
+    y: 0
+    width: 320
+    height: 240
+  }
+
+  /*
     FastBlur {
-      anchors.fill: histogram
-      source: histogram
-      radius: 32
+    anchors.fill: histogram
+    source: histogram
+    radius: 32
     }
-    */
-    
-    /*
+  */
+  
+  /*
     Drag.active: dragArea.drag.active
     Drag.hotSpot.x: 0
     Drag.hotSpot.y: 0
     
     MouseArea {
-      id: dragArea
-      anchors.fill: parent
-      drag.target: parent
+    id: dragArea
+    anchors.fill: parent
+    drag.target: parent
     }
-    */
-  }
+  */
 
   /*
   Item {

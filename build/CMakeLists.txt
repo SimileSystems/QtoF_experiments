@@ -31,12 +31,15 @@ include_directories(
 list(APPEND of_sources
   ${sd}/experimental/WidgetHistogramPimpl.cpp
   ${sd}/experimental/WidgetHistogram.cpp
+  ${sd}/experimental/WidgetWebcamPimpl.cpp
+  ${sd}/experimental/WidgetWebcam.cpp
   )
 
 list(APPEND qtof_sources
   ${ed}/src/glad.c
   ${sd}/qtof/ofAppExternalWindow.cpp
   ${sd}/qtof/ofExternal.cpp
+  ${sd}/qtof/ofExternalWidget.cpp
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
   ${sd}/qtof/QtOfWidgets.cpp

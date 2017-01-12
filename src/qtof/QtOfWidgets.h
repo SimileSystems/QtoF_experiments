@@ -5,12 +5,14 @@
 
   GENERAL INFO:
 
-    The QtOfWidgets are tightly used together with our custom QML
+    The QtOfWidgets is tightly used together with our custom QML
     item: `QtOfExternalWidget`. The `QtOfWidgets` is used to create,
     setup, update, draw etc. your custom OF based widget (it can
     actually be any object that you want to use, but we focus on OF
     here). Qt Quick may at any point destroy or recreate a QML
-    item. Therefore we use this helper to do just that. 
+    item. Therefore we use this helper to do just that. What we 
+    implemented with `QtOfWidgets` is a way to create and destruct
+    your types. 
 
     Lets say you have created a `DepthKitHistogramWidget` that you 
     want to render inside a QML based application. Because the 
@@ -41,9 +43,12 @@
    ```
 
    Now, when Qt creates your `QtOfExternalWidget` item, the
-   `QtOfExternalWidget` implementation will call the
-   `qtof_widget_*()` functions to create, update, draw, etc.. your
-   custom type.
+   `QtOfExternalWidget` implementation will call the `qtof_widget_*()`
+   functions to create, update, draw, etc.. your custom type. The
+   `qtof_widget_*()` functions use a single instance of
+   `QtOfWidgets`. When Qt sees the `QtOfExternalWidget` type in the
+   QML file, then the `QtOfExternalWidget` will allocate your widget
+   for you. We also take care of deallocation of your widget type.
 
  */
 #ifndef QT_OF_WIDGET_H
@@ -59,6 +64,7 @@
 class QtOfWidgetBase {
 public:
   virtual int create() = 0;
+  virtual int destroy() = 0;
   virtual int setup() = 0;
   virtual int update() = 0;
   virtual int draw() = 0;
@@ -72,6 +78,7 @@ class QtOfWidget : public QtOfWidgetBase {
 public:
   QtOfWidget();
   int create();
+  int destroy();
   int setup();
   int update();
   int draw();
@@ -86,29 +93,33 @@ private:
 class QtOfWidgets {
 public:
   QtOfWidgets();
-  int add(int ref, QtOfWidgetBase* fac);
+  int add(int ref, QtOfWidgetBase* fac); /* QtOfWidgets takes ownership. */
   int create(int ref);
+  int destroy(int ref);
   int setup(int ref);
   int update(int ref);
   int draw(int ref);
   int sendEvent(int ref, const ofExternalEvent& ev);
+  int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
   
 private:
   std::mutex mtx_events;
-  std::unordered_map<int, QtOfWidgetBase*> factories;
+  std::unordered_map<int, QtOfWidgetBase*> widgets;
   std::unordered_map<int, std::vector<ofExternalEvent> > events;
 };
 
 /* ---------------------------------------------------- */
 
-extern QtOfWidgets qtof_factories;
+extern QtOfWidgets qtof_widgets;
 
 int qtof_widget_add(int ref, QtOfWidgetBase* fac);
 int qtof_widget_create(int ref);
+int qtof_widget_destroy(int ref);
 int qtof_widget_setup(int ref);
 int qtof_widget_update(int ref);
 int qtof_widget_draw(int ref);
 int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
+int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
 
 /* ---------------------------------------------------- */
 
@@ -122,7 +133,7 @@ template<class T>
 int QtOfWidget<T>::create() {
   
   if (nullptr != obj) {
-    qFatal("QtOfWidget::create() - already created the object.");
+    qFatal("QtOfWidget<T>::create() - already created the object.");
     return -1;
   }
 
@@ -131,11 +142,27 @@ int QtOfWidget<T>::create() {
   return 0;
 }
 
+template <class T>
+int QtOfWidget<T>::destroy() {
+
+  if (nullptr == obj) {
+    qFatal("QtOfWidget<T>::destroy() - already destroyed.");
+    return -1;
+  }
+
+  obj->destroy();
+
+  delete obj;
+  obj = nullptr;
+
+  return 0;
+}
+
 template<class T>
 int QtOfWidget<T>::setup() {
-  
+qto  
   if (nullptr == obj) {
-    qFatal("QtOfWidget::setup() - not created.");
+    qFatal("QtOfWidget<T>::setup() - not created.");
     return -1;
   }
 
@@ -148,7 +175,7 @@ template<class T>
 int QtOfWidget<T>::update() {
   
   if (nullptr == obj) {
-    qFatal("QtOfWidget::update() - not created.");
+    qFatal("QtOfWidget<T>::update() - not created.");
     return -1;
   }
 
@@ -161,7 +188,7 @@ template<class T>
 int QtOfWidget<T>::draw() {
   
   if (nullptr == obj) {
-    qFatal("QtOfWidget::draw() - not created.");
+    qFatal("QtOfWidget<T>::draw() - not created.");
     return -1;
   }
 
@@ -185,41 +212,19 @@ int QtOfWidget<T>::sendEvent(const ofExternalEvent& ev) {
 
 /* ---------------------------------------------------- */
 
-inline int QtOfWidgets::create(int ref) {
-  
-  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
-  if (it == factories.end()) {
-    qFatal("QtFactories::create() - reference not found.");
-    return -1;
-  }
-
-  return it->second->create();
-}
-
-inline int QtOfWidgets::setup(int ref) {
-  
-  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
-  if (it == factories.end()) {
-    qFatal("QtFactories::setup() - reference not found.");
-    return -1;
-  }
-
-  return it->second->setup();
-}
-                                          
 inline int QtOfWidgets::update(int ref) {
 
   /* Find the factory for the given ref. */
-  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
-  if (it == factories.end()) {
-    qFatal("QtFactories::update() - reference not found.");
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
+  if (it == widgets.end()) {
+    qFatal("QtOfWidgets::update() - reference not found.");
     return -1;
   }
   QtOfWidgetBase* fac = it->second;
 
   /* Notify all collected events. */
   std::lock_guard<std::mutex> lg(mtx_events);
-  std::unordered_map<int, std::vector<ofExternalEvent> >::iterator ev_it = events.begin();
+  std::unordered_map<int, std::vector<ofExternalEvent> >::iterator ev_it = events.find(ref); 
   while (ev_it != events.end()) {
     std::vector<ofExternalEvent>& obj_events = ev_it->second;
     for (size_t i = 0; i < obj_events.size(); ++i) {
@@ -235,9 +240,9 @@ inline int QtOfWidgets::update(int ref) {
 
 inline int QtOfWidgets::draw(int ref) {
 
-  std::unordered_map<int, QtOfWidgetBase*>::iterator it = factories.find(ref);
-  if (it == factories.end()) {
-    qFatal("QtFactories::draw() - reference not found.");
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
+  if (it == widgets.end()) {
+    qFatal("QtOfWidgets::draw() - reference not found.");
     return -1;
   }
 

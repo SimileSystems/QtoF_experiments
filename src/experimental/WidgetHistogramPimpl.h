@@ -10,6 +10,7 @@ public:
   void setup();
   void update();
   void draw();
+  void destroy();
   void onExternalEvent(const ofExternalEvent& ev);
   
 public:

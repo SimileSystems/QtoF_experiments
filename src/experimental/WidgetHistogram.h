@@ -2,23 +2,20 @@
 #define WIDGET_HISTOGRAM_H
 
 #include <ofMain.h>
+#include <qtof/ofExternalWidget.h>
 
 class ofExternalEvent;
 
-class WidgetHistogram {
+class WidgetHistogram : public ofExternalWidget {
 public:
   void setup();
   void update();
   void draw();
+  void destroy();
   void onExternalEvent(const ofExternalEvent& ev);
   
 public:
   ofImage img;
-  int width;
-  int height;
-  int x;
-  int y;
-  float pix_ratio;
 };
 
 #endif

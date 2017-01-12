@@ -8,11 +8,15 @@
 #define OF_EXT_EVENT_NONE 0
 #define OF_EXT_EVENT_WINDOW_RESIZED 1
 #define OF_EXT_EVENT_PIXEL_RATIO_CHANGED 2
-#define OF_EXT_EVENT_MOUSE_MOVE 3   /* Sets val.mouse[0] and val.mouse[1]. */
+#define OF_EXT_EVENT_MOUSE_MOVE 3              /* Sets val.mouse[0] and val.mouse[1]. */
 #define OF_EXT_EVENT_MOUSE_PRESS 4
 #define OF_EXT_EVENT_MOUSE_RELEASE 5
-#define OF_EXT_EVENT_SIZE_CHANGED 6
-#define OF_EXT_EVENT_POSITION_CHANGED 7
+#define OF_EXT_EVENT_MOUSE_ENTER 6
+#define OF_EXT_EVENT_MOUSE_LEAVE 7
+#define OF_EXT_EVENT_KEY_PRESS 9
+#define OF_EXT_EVENT_KEY_RELEASE 10
+#define OF_EXT_EVENT_SIZE_CHANGED 11
+#define OF_EXT_EVENT_POSITION_CHANGED 12
 
 /* ------------------------------------------------------ */
 
@@ -38,7 +42,8 @@ public:
 public:
   uint32_t type;
   union {
-    float f;           /* Arbitrary float val. */
+    float f;           /* Arbitrary float value. */
+    int i;             /* Arbitrary int value. */
     int32_t xy[2];     /* x, y */
     int32_t mouse[3];  /* x, y, button. */
   } val;

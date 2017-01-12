@@ -23,6 +23,12 @@ void WidgetHistogramPimpl::draw() {
   }
 }
 
+void WidgetHistogramPimpl::destroy() {
+  if (nullptr != ctx) {
+    ctx->destroy();
+  }
+}
+
 void WidgetHistogramPimpl::onExternalEvent(const ofExternalEvent& ev) {
   if (nullptr != ctx){
     ctx->onExternalEvent(ev);

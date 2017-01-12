@@ -154,7 +154,7 @@ int ofExternal::startRender() {
     printf("Error: ofExternal::startRender(), win is nullptr; not initialized?\n");
     return -1;
   }
-#endif      
+#endif
 
   win->startRender();
   return 0;
@@ -170,6 +170,7 @@ int ofExternal::finishRender() {
 #endif      
 
   win->finishRender();
+  
   return 0;
 }
 

@@ -64,20 +64,76 @@
                |
     +----------v-----------+
     |                      |
-    |    ofWidgetImpl      o---| This is your OF based widget, which is
+    |      ofWidget        o---| This is your OF based widget, which is
     |                      |     exposed though your `ofWidgetPimpl`. 
     +----------------------+
-    
 
+  EVENTS:
+  
+    Ths `QtOfExternalWidget` will call the `onExternalEvent()` function
+    of the widget. Below is a list of events that are dispatched directly
+    to the widget implementation.
+
+    OF_EXT_EVENT_SIZE_CHANGED:
+      Is dispatched when the width and height of the item changes. This 
+      event is also dispatched before we call `setup` on the widget.
+
+    OF_EXT_EVENT_POSITION_CHANGED:
+      Is dispatched when the position (x,y) of the item changes. We
+      set the `xy` member of the event object. This event is also
+      dispatched before we call `setup()` on the widget so it can 
+      define it's position.
+
+    OF_EXT_EVENT_MOUSE_LEAVE:
+    OF_EXT_EVENT_MOUSE_ENTER:
+      Is dispatched when the user moves his mouse over or out of, the
+      QML item. The `x`, `y`, `width` and `height` properties are used
+      by Qt Quick to determine when the user enters an item. We set
+      the `mouse[0]` and `mouse[1]` members of the event object.
+
+    OF_EXT_EVENT_PIX_RATIO_CHANGED:
+      Is dispatched when the pixel ratio of the current screen
+      changes. E.g. this may happen when the user moves the window
+      onto another screen when the screen onto which the window is
+      being dragged has different DPI then the previous screen.
+
+  PAINTING:
+
+    For each registered widget a new `QtOfExternalWidget` will be
+    created and each `onPaint` function will be executed. In our
+    `onPaint` function we have to `start` and `finish` the
+    (programmable) renderer from openFrameworks.  This will clear the
+    framebuffer. This is not problem when we only have one widget, but
+    when we have multiple, we cannot just `finish` (and so clear) the
+    renderer when the first instance of a `QtOfExternalWidget` has
+    drawn it's contents.
+
+    For each frame, We want to start the renderer only for the first
+    `QtOfExternalWidget` instance and finish the renderer only for the
+    last instance. To make this work, I've currently added a `static
+    int paint_count` to `::onPaint()`. When `paint_count` is 0 we
+    start the renderer and when `paint_count` reaches the total number
+    of widgets we finish the renderer.
+
+    Be aware that Qt does something like this for every frame:
+
+      ````
+      foreach (QtOfExternalWidget as widget) {
+         widget->onPaint()
+      }
+      ````
+    
   REFERENCES:
 
     [0]: https://en.wikipedia.org/wiki/Opaque_pointer "Opaque pointer; aka PIMPL."
+    [1]: http://doc.qt.io/qt-5/qquickitem.html "Graphics Resource Handling"
 
  */
 
 #ifndef QT_OF_EXTERNAL_WIDGET_H
 #define QT_OF_EXTERNAL_WIDGET_H
 
+#include <stdint.h>
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickItem>
 #include <QString>
@@ -91,6 +147,7 @@ class QtOfExternalWidget : public QQuickItem {
 
 public:
   QtOfExternalWidget();
+  ~QtOfExternalWidget();                      
 
 public slots:
   void onPaint();
@@ -100,6 +157,8 @@ public slots:
 public:
   int getRef();
   void setRef(const int& v);
+  Q_INVOKABLE void sendExternalEventFloat(unsigned int eventType, const float& v);
+  Q_INVOKABLE void sendExternalEventInt(unsigned int eventType, const int& v);
 
 private slots:
   void onWindowChanged(QQuickWindow* win);
@@ -109,7 +168,15 @@ private:
   void notifySize();                                /* Notifies the widget about it's size; is (also) called before we call `setup()` on the widget. */
   void notifyPosition();                            /* Notifies the widget about it's position; is (also) called before we call `setup()` on the widget. */
   void notifyPixelRatio();                          /* Notifies the widget about the current pixel ratio (e.g. to handle retina). is (also) called before we call `setup()` on the widget. */
+  void resetOpenGlState();                          /* After rendering our own things using openFrameworks, we have to reset the GL state because Qt will run into rendering issues. Qt provides a function for this which sets some of the default state; but not all. We use or own wrapper to reset some other state too. */
 
+protected:
+  void hoverEnterEvent(QHoverEvent* ev);                                      
+  void hoverLeaveEvent(QHoverEvent* ev);
+  void keyPressEvent(QKeyEvent* ev);
+  void keyReleaseEvent(QKeyEvent* ev);
+  void releaseResources();
+  
 private:
   int ref;
   bool is_created; 

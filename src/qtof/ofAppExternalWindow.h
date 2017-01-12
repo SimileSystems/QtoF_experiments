@@ -100,7 +100,7 @@ private:
 /* ---------------------------------------------------- */
 
 inline void ofAppExternalWindow::startRender() {
-
+  
   if (nullptr == programmable_renderer) {
     ofLogWarning() << "Not initialized; renderer is nullptr. Did you call setup()?";
     return;

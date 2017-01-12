@@ -80,12 +80,10 @@ void QtOfExternal::hoverMoveEvent(QHoverEvent* ev) {
   of_external_send_event(ext_ev);
 }
 
-/* Only called when QML uses `anchors.fill: parent;` */
 void QtOfExternal::hoverEnterEvent(QHoverEvent* ev) {
   printf("ENTER: %d, %d\n", ev->pos().x(), ev->pos().y());
 }
 
-/* Only called when QML uses `anchors.fill: parent;` */
 void QtOfExternal::hoverLeaveEvent(QHoverEvent* ev) {
   printf("LEAVE: %d, %d\n", ev->pos().x(), ev->pos().y());
 }
