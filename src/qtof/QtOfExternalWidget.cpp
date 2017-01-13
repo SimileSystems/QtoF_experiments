@@ -77,9 +77,11 @@ void QtOfExternalWidget::onPaint() {
       return;
     }
 
+    /* Notify some info that's needed when setting up. */
     notifySize();
     notifyPixelRatio();
     notifyPosition();
+    qtof_widget_update(ref);
 
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */

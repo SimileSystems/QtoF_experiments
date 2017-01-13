@@ -30,7 +30,7 @@ ApplicationWindow {
     /* anchors.left: parent.left */
     anchors.bottom: parent.bottom
     anchors.margins: 20
-    color: "darkblue"
+    color: "#FFFFFF"
     visible: true
 
     PropertyAnimation {
@@ -177,6 +177,16 @@ ApplicationWindow {
     gl_minor_version: 3
   }
 
+
+  QtOfExternalWidget {
+    id: webcam
+    ref: 2
+    x: 0
+    y: 0
+    width: 640
+    height: 480
+  }
+  
   QtOfExternalWidget {
     id: histogram
     ref: 1
@@ -185,15 +195,6 @@ ApplicationWindow {
     x: 310
     y: 20
     focus: true // Set focus so we can accept key events. 
-  }
-
-  QtOfExternalWidget {
-    id: webcam
-    ref: 2
-    x: 0
-    y: 0
-    width: 320
-    height: 240
   }
 
   /*

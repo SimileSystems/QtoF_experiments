@@ -33,6 +33,7 @@ list(APPEND of_sources
   ${sd}/experimental/WidgetHistogram.cpp
   ${sd}/experimental/WidgetWebcamPimpl.cpp
   ${sd}/experimental/WidgetWebcam.cpp
+  ${sd}/experimental/GuiBlur.cpp
   )
 
 list(APPEND qtof_sources

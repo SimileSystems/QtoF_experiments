@@ -160,7 +160,7 @@ int QtOfWidget<T>::destroy() {
 
 template<class T>
 int QtOfWidget<T>::setup() {
-qto  
+  
   if (nullptr == obj) {
     qFatal("QtOfWidget<T>::setup() - not created.");
     return -1;

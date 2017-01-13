@@ -4,11 +4,13 @@
 WidgetHistogramPimpl::WidgetHistogramPimpl()
   :ctx(nullptr)
 {
+  ctx = new WidgetHistogram();
 }
 
 void WidgetHistogramPimpl::setup() {
-  ctx = new WidgetHistogram();
-  ctx->setup();
+  if (nullptr != ctx) {
+    ctx->setup();
+  }
 }
 
 void WidgetHistogramPimpl::update() {

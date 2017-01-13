@@ -4,11 +4,15 @@
 WidgetWebcamPimpl::WidgetWebcamPimpl()
   :ctx(nullptr)
 {
+  ctx = new WidgetWebcam();
+  printf("@todo WidgetWebcamPimpl: we need to handle create/destroy from QML.\n");
 }
 
 void WidgetWebcamPimpl::setup() {
-  ctx = new WidgetWebcam();
-  ctx->setup();
+  
+  if (nullptr != ctx) {
+    ctx->setup();
+  }
 }
 
 void WidgetWebcamPimpl::update() {

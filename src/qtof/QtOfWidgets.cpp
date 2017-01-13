@@ -71,10 +71,9 @@ int QtOfWidgets::setup(int ref) {
     qFatal("QtOfWidgets::setup() - reference not found.");
     return -1;
   }
-
+  
   return it->second->setup();
 }
-
 
 int QtOfWidgets::sendEvent(int ref, const ofExternalEvent& ev) {
   std::lock_guard<std::mutex> lg(mtx_events);

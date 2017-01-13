@@ -3,6 +3,7 @@
 
 #include <ofMain.h>
 #include <qtof/ofExternalWidget.h>
+#include <experimental/GuiBlur.h>
 
 class ofExternalEvent;
 
@@ -16,6 +17,7 @@ public:
   
 private:
   ofVideoGrabber video_grabber;
+  GuiBlur blur;
 };
 
 #endif
