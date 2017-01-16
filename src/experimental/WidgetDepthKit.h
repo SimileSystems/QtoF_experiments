@@ -1,13 +1,12 @@
-#ifndef WIDGET_WEBCAM_H
-#define WIDGET_WEBCAM_H
+#ifndef WIDGET_DEPTH_KIT_H
+#define WIDGET_DEPTH_KIT_H
 
 #include <ofMain.h>
 #include <qtof/ofExternalWidget.h>
-#include <experimental/GuiBlur.h>
 
 class ofExternalEvent;
 
-class WidgetWebcam : public ofExternalWidget {
+class WidgetDepthKit : public ofExternalWidget {
 public:
   void setup();
   void update();
@@ -15,10 +14,9 @@ public:
   void destroy();
   void onExternalEvent(const ofExternalEvent& v);
   void getJson(int what, std::string& json);
-  
+
 private:
   ofVideoGrabber video_grabber;
-  GuiBlur blur;
 };
 
 #endif

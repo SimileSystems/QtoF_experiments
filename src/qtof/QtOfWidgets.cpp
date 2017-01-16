@@ -85,6 +85,22 @@ int QtOfWidgets::getNumWidgets() {
   return (int) widgets.size();
 }
 
+int QtOfWidgets::getJson(int ref, int what, std::string& result) {
+  
+  std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
+  if (it == widgets.end()) {
+    qFatal("QtOfWidgets::getJson() - reference not found.");
+    return -1;
+  }
+
+  if (0 != it->second->getJson(what, result)) {
+    qFatal("QtOfWidgets::getJson() - failed.");
+    return -2;
+  }
+
+  return 0;
+}
+
 /* ---------------------------------------------------- */
 
 int qtof_widget_add(int ref, QtOfWidgetBase* fac) {
@@ -117,6 +133,10 @@ int qtof_widget_send_event(int ref, const ofExternalEvent& ev) {
 
 int qtof_widget_get_num_widgets() {
   return qtof_widgets.getNumWidgets();
+}
+
+int qtof_widget_get_json(int ref, int what, std::string& json) {
+  return qtof_widgets.getJson(ref, what, json);
 }
 
 /* ---------------------------------------------------- */

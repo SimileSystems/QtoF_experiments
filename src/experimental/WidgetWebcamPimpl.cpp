@@ -39,3 +39,8 @@ void WidgetWebcamPimpl::onExternalEvent(const ofExternalEvent& ev) {
   }
 }
 
+void WidgetWebcamPimpl::getJson(int what, std::string& result) {
+  if (nullptr != ctx) {
+    ctx->getJson(what, result);
+  }
+}

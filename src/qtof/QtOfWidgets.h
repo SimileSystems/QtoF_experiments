@@ -69,6 +69,7 @@ public:
   virtual int update() = 0;
   virtual int draw() = 0;
   virtual int sendEvent(const ofExternalEvent& ev) = 0;
+  virtual int getJson(int what, std::string& result) = 0;
 };
 
 /* ---------------------------------------------------- */
@@ -83,6 +84,7 @@ public:
   int update();
   int draw();
   int sendEvent(const ofExternalEvent& ev);
+  int getJson(int what, std::string& json);
 
 private:
   T* obj;
@@ -100,6 +102,7 @@ public:
   int update(int ref);
   int draw(int ref);
   int sendEvent(int ref, const ofExternalEvent& ev);
+  int getJson(int ref, int what, std::string& result);
   int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
   
 private:
@@ -120,6 +123,7 @@ int qtof_widget_update(int ref);
 int qtof_widget_draw(int ref);
 int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
 int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
+int qtof_widget_get_json(int ref, int what, std::string& result);
 
 /* ---------------------------------------------------- */
 
@@ -201,11 +205,24 @@ template<class T>
 int QtOfWidget<T>::sendEvent(const ofExternalEvent& ev) {
   
   if (nullptr == obj) {
-    qFatal("Cannot send the event because we're obj is nullptr.");
+    qFatal("Cannot send the event because obj is nullptr.");
     return -1;
   }
 
   obj->onExternalEvent(ev);
+
+  return 0;
+}
+
+template<class T>
+int QtOfWidget<T>::getJson(int what, std::string& result) {
+
+  if (nullptr == obj) {
+    qFatal("Cannot get json because obj is nullptr.");
+    return -1;
+  }
+
+  obj->getJson(what, result);
 
   return 0;
 }

@@ -159,6 +159,7 @@ public:
   void setRef(const int& v);
   Q_INVOKABLE void sendExternalEventFloat(unsigned int eventType, const float& v);
   Q_INVOKABLE void sendExternalEventInt(unsigned int eventType, const int& v);
+  Q_INVOKABLE QString getJson(unsigned int what);   /* Calls `getJson()` from the widget; used to exchange data between the GUI and the widget itself. */                                                                             
 
 private slots:
   void onWindowChanged(QQuickWindow* win);

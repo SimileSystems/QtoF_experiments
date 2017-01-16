@@ -143,6 +143,16 @@ ApplicationWindow {
       model: [ ".mp4", ".mov", ".h264", ".h265" ]
     }
 
+    ListModel {
+      id: webcam_model
+    }
+
+    ComboBox {
+      anchors.right: parent.right
+      anchors.left: parent.left
+      model: webcam_model
+    }
+
     Row {
       spacing: 10
       Label {
@@ -177,15 +187,6 @@ ApplicationWindow {
     gl_minor_version: 3
   }
 
-
-  QtOfExternalWidget {
-    id: webcam
-    ref: 2
-    x: 0
-    y: 0
-    width: 640
-    height: 480
-  }
   
   QtOfExternalWidget {
     id: histogram
@@ -196,6 +197,16 @@ ApplicationWindow {
     y: 20
     focus: true // Set focus so we can accept key events. 
   }
+
+  QtOfExternalWidget {
+    id: depthkit
+    ref: 3
+    width: 640
+    height: 480
+    x: 0
+    y: 0
+  }
+
 
   /*
     FastBlur {

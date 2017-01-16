@@ -14,6 +14,7 @@ void WidgetWebcam::setup() {
   }
   float m = getPixelRatio();
   blur.addRectangleToBlur(0, 20 * m, 300 * m, 440 * m);
+
 }
 
 void WidgetWebcam::update() {
@@ -35,4 +36,23 @@ void WidgetWebcam::onExternalEvent(const ofExternalEvent& ev) {
   ofExternalWidget::onExternalEvent(ev);
 }
 
+void WidgetWebcam::getJson(int what, std::string& json) {
+
+  std::vector<ofVideoDevice> devices = video_grabber.listDevices();
+  std::stringstream ss;
+
+  ss << "{\"devices\":[";
+  
+  for (size_t i = 0; i < devices.size(); ++i) {
+    ofVideoDevice& dev = devices[i];
+    ss << "{\"name\":\"" << dev.deviceName << "\"}";
+    if ((i + 1) < devices.size()) {
+      ss << ",";
+    }
+  }
+  
+  ss << "]}";
+
+  json = ss.str();
+}
 

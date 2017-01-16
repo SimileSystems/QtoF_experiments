@@ -36,3 +36,6 @@ void WidgetHistogramPimpl::onExternalEvent(const ofExternalEvent& ev) {
     ctx->onExternalEvent(ev);
   }
 }
+
+void WidgetHistogramPimpl::getJson(int what, std::string& json) {
+}

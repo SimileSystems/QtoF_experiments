@@ -12,6 +12,7 @@ public:
   ofExternalWidget();
   virtual void onExternalEvent(const ofExternalEvent& ev);
 
+
   /* Mouse */
   bool isMouseInsideWidget(); /* Returns true when the mouse is inside the x/y and width/height of the widget. */
   

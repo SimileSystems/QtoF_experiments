@@ -12,6 +12,7 @@ public:
   void draw();
   void destroy();
   void onExternalEvent(const ofExternalEvent& ev);
+  void getJson(int what, std::string& json);
   
 public:
   WidgetHistogram* ctx;

@@ -234,6 +234,18 @@ void QtOfExternalWidget::sendExternalEventInt(uint32_t eventType, const int& v) 
   qtof_widget_send_event(ref, ext_ev);
 }
 
+QString QtOfExternalWidget::getJson(unsigned int what) {
+  
+  std::string json;
+  if (0 != qtof_widget_get_json(ref, what, json)) {
+    qWarning("Failed to get json from widget.");
+    return "";
+  }
+
+  QString result(json.c_str());
+  return result;
+}
+
 /* ---------------------------------------------------- */
 
 QtOfExternalWidgetCleanupRunnable::QtOfExternalWidgetCleanupRunnable(int ref)

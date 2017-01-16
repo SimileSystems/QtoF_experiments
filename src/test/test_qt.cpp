@@ -81,6 +81,7 @@
 #include <qtof/QtOfWidgets.h>
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
+#include <experimental/WidgetDepthKitPimpl.h>
 
 /* ---------------------------------------------------- */
 
@@ -95,6 +96,7 @@ int main(int argc, char* argv[]) {
 
   qtof_widget_add(1, new QtOfWidget<WidgetHistogramPimpl>());
   qtof_widget_add(2, new QtOfWidget<WidgetWebcamPimpl>());
+  qtof_widget_add(3, new QtOfWidget<WidgetDepthKitPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
@@ -104,7 +106,8 @@ int main(int argc, char* argv[]) {
   QSurfaceFormat::setDefaultFormat(format);
   
   QQmlApplicationEngine engine;
-  engine.load(QUrl("qrc:/main.qml"));
+  engine.load(QUrl("qrc:/TestList.qml"));
+  //engine.load(QUrl("qrc:/main.qml"));
   return app.exec();
 }
 
