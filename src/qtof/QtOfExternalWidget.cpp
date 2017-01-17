@@ -178,14 +178,6 @@ void QtOfExternalWidget::onScreenChanged(QScreen* screen) {
 /* ---------------------------------------------------- */
 
 void QtOfExternalWidget::notifySize() {
-  /*
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_SIZE_CHANGED;
-  ev.val.xy[0] = width();
-  ev.val.xy[1] = height();
-  qtof_widget_send_event(ref, ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_SIZE_CHANGED;
   msg.i[0] = width();
@@ -194,14 +186,6 @@ void QtOfExternalWidget::notifySize() {
 }
 
 void QtOfExternalWidget::notifyPosition() {
-  /*
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_POSITION_CHANGED;
-  ev.val.xy[0] = x();
-  ev.val.xy[1] = y();
-  qtof_widget_send_event(ref, ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_POSITION_CHANGED;
   msg.i[0] = x();
@@ -210,13 +194,6 @@ void QtOfExternalWidget::notifyPosition() {
 }
 
 void QtOfExternalWidget::notifyPixelRatio() {
-  /*
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_PIXEL_RATIO_CHANGED;
-  ev.val.f = window()->devicePixelRatio();
-  qtof_widget_send_event(ref, ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_PIXEL_RATIO_CHANGED;
   msg.f[0] = window()->devicePixelRatio();
@@ -250,14 +227,6 @@ void QtOfExternalWidget::releaseResources() {
 }
 
 void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
-  /*
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_ENTER;
-  ext_ev.val.mouse[0] = ev->pos().x();
-  ext_ev.val.mouse[1] = ev->pos().y();
-  qtof_widget_send_event(ref, ext_ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_MOUSE_ENTER;
   msg.i[0] = ev->pos().x();
@@ -266,14 +235,6 @@ void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
 }
 
 void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
-  /*
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_LEAVE;
-  ext_ev.val.mouse[0] = ev->pos().x();
-  ext_ev.val.mouse[1] = ev->pos().y();
-  qtof_widget_send_event(ref, ext_ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_MOUSE_LEAVE;
   msg.i[0] = ev->pos().x();
@@ -282,13 +243,6 @@ void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
 }
 
 void QtOfExternalWidget::keyPressEvent(QKeyEvent* ev) {
-  /*
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_KEY_PRESS;
-  ext_ev.val.i = ev->key();
-  qtof_widget_send_event(ref, ext_ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_KEY_PRESS;
   msg.i[0] = ev->key();
@@ -296,19 +250,13 @@ void QtOfExternalWidget::keyPressEvent(QKeyEvent* ev) {
 }
 
 void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
-  /*
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_KEY_RELEASE;
-  ext_ev.val.i = ev->key();
-  qtof_widget_send_event(ref, ext_ev);
-  */
-
   UiMessage msg;
   msg.type = UI_MSG_KEY_RELEASE;
   msg.i[0] = ev->key();
   qtof_widget_send_message(ref, msg);
 }
 
+/*
 void QtOfExternalWidget::sendExternalEventFloat(uint32_t eventType, const float& v) {
   ofExternalEvent ext_ev;
   ext_ev.type = eventType;
@@ -322,6 +270,7 @@ void QtOfExternalWidget::sendExternalEventInt(uint32_t eventType, const int& v) 
   ext_ev.val.i = v;
   qtof_widget_send_event(ref, ext_ev);
 }
+*/
 
 /*
 
@@ -344,6 +293,7 @@ void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QStri
   qtof_widget_send_message(ref, msg);
 }
 
+/*
 QString QtOfExternalWidget::getJson(unsigned int what) {
   
   std::string json;
@@ -355,6 +305,7 @@ QString QtOfExternalWidget::getJson(unsigned int what) {
   QString result(json.c_str());
   return result;
 }
+*/
 
 /* ---------------------------------------------------- */
 

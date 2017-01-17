@@ -83,7 +83,7 @@ public:
   virtual int sendEvent(const ofExternalEvent& ev) = 0;
   virtual int sendUiMessage(const UiMessage& msg) = 0; /* Send a UI message from the GUI to the widget. */
   virtual int setUiMessageListener(UiMessagesListener* lis) = 0;  /* Set the message listener that receives messages from the widget. (so other direction then `sendUiMessage()`. */
-  virtual int getJson(int what, std::string& result) = 0;
+  //  virtual int getJson(int what, std::string& result) = 0;
 };
 
 /* ---------------------------------------------------- */
@@ -101,7 +101,7 @@ public:
   int sendEvent(const ofExternalEvent& ev);
   int sendUiMessage(const UiMessage& msg);
   int setUiMessageListener(UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() ? */
-  int getJson(int what, std::string& json);
+  //  int getJson(int what, std::string& json);
   void onUiMessage(const UiMessage& m);  /* Will be called by our `UiMessages` member. `UiMessages` will make sure that the received message is safe to sure between threads. */
 
 private:
@@ -122,7 +122,7 @@ public:
   int draw(int ref);
   int sendEvent(int ref, const ofExternalEvent& ev);
   int sendUiMessage(int ref, const UiMessage& msg);
-  int getJson(int ref, int what, std::string& result);
+  //  int getJson(int ref, int what, std::string& result);
   int setUiMessageListener(int ref, UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() */
   int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
 
@@ -145,7 +145,7 @@ int qtof_widget_draw(int ref);
 int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
 int qtof_widget_send_message(int ref, const UiMessage& msg);
 int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
-int qtof_widget_get_json(int ref, int what, std::string& result);
+//int qtof_widget_get_json(int ref, int what, std::string& result);
 int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis);
 
 /* ---------------------------------------------------- */
@@ -266,6 +266,7 @@ int QtOfWidget<T>::sendUiMessage(const UiMessage& msg) {
   return 0;
 }
 
+/*
 template<class T>
 int QtOfWidget<T>::getJson(int what, std::string& result) {
 
@@ -278,7 +279,7 @@ int QtOfWidget<T>::getJson(int what, std::string& result) {
 
   return 0;
 }
-
+*/
 
 template<class T>
 void QtOfWidget<T>::onUiMessage(const UiMessage& m) {

@@ -98,6 +98,7 @@ int QtOfWidgets::getNumWidgets() {
   return (int) widgets.size();
 }
 
+/*
 int QtOfWidgets::getJson(int ref, int what, std::string& result) {
   
   std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
@@ -113,6 +114,7 @@ int QtOfWidgets::getJson(int ref, int what, std::string& result) {
 
   return 0;
 }
+*/
 
 int QtOfWidgets::setUiMessageListener(int ref, UiMessagesListener* lis) {
   
