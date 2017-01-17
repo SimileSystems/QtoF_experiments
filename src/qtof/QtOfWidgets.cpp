@@ -75,12 +75,6 @@ int QtOfWidgets::setup(int ref) {
   return it->second->setup();
 }
 
-int QtOfWidgets::sendEvent(int ref, const ofExternalEvent& ev) {
-  std::lock_guard<std::mutex> lg(mtx_events);
-  events[ref].push_back(ev);
-  return 0;
-}
-
 int QtOfWidgets::sendUiMessage(int ref, const UiMessage& msg) {
 
   std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
@@ -97,24 +91,6 @@ int QtOfWidgets::sendUiMessage(int ref, const UiMessage& msg) {
 int QtOfWidgets::getNumWidgets() {
   return (int) widgets.size();
 }
-
-/*
-int QtOfWidgets::getJson(int ref, int what, std::string& result) {
-  
-  std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
-  if (it == widgets.end()) {
-    qFatal("QtOfWidgets::getJson() - reference not found.");
-    return -1;
-  }
-
-  if (0 != it->second->getJson(what, result)) {
-    qFatal("QtOfWidgets::getJson() - failed.");
-    return -2;
-  }
-
-  return 0;
-}
-*/
 
 int QtOfWidgets::setUiMessageListener(int ref, UiMessagesListener* lis) {
   
@@ -158,10 +134,6 @@ int qtof_widget_draw(int ref) {
   return qtof_widgets.draw(ref);
 }
 
-int qtof_widget_send_event(int ref, const ofExternalEvent& ev) {
-  return qtof_widgets.sendEvent(ref, ev);
-}
-
 int qtof_widget_send_message(int ref, const UiMessage& msg) {
   return qtof_widgets.sendUiMessage(ref, msg);
 }
@@ -170,11 +142,8 @@ int qtof_widget_get_num_widgets() {
   return qtof_widgets.getNumWidgets();
 }
 
-int qtof_widget_get_json(int ref, int what, std::string& json) {
-  return qtof_widgets.getJson(ref, what, json);
-}
-
 int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis) {
   return qtof_widgets.setUiMessageListener(ref, lis);
 }
+
 /* ---------------------------------------------------- */

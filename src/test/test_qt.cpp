@@ -82,6 +82,7 @@
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
 #include <experimental/WidgetDepthKitPimpl.h>
+#include <experimental/Widget3DPimpl.h>
 
 /* ---------------------------------------------------- */
 
@@ -97,6 +98,7 @@ int main(int argc, char* argv[]) {
   qtof_widget_add(1, new QtOfWidget<WidgetHistogramPimpl>());
   qtof_widget_add(2, new QtOfWidget<WidgetWebcamPimpl>());
   qtof_widget_add(3, new QtOfWidget<WidgetDepthKitPimpl>());
+  qtof_widget_add(4, new QtOfWidget<Widget3dPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);

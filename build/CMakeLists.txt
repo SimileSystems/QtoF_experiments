@@ -35,6 +35,8 @@ list(APPEND of_sources
   ${sd}/experimental/WidgetWebcam.cpp
   ${sd}/experimental/WidgetDepthKit.cpp
   ${sd}/experimental/WidgetDepthKitPimpl.cpp
+  ${sd}/experimental/Widget3d.cpp
+  ${sd}/experimental/Widget3dPimpl.cpp
   ${sd}/experimental/GuiBlur.cpp
   )
 

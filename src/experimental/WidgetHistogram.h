@@ -4,15 +4,13 @@
 #include <ofMain.h>
 #include <qtof/ofExternalWidget.h>
 
-class ofExternalEvent;
-
 class WidgetHistogram : public ofExternalWidget {
 public:
   void setup();
   void update();
   void draw();
   void destroy();
-  void onExternalEvent(const ofExternalEvent& ev);
+  void onUiMessage(const UiMessage& msg);
   
 public:
   ofImage img;

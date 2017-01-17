@@ -32,10 +32,11 @@ void WidgetWebcam::draw() {
 void WidgetWebcam::destroy() {
 }
 
-void WidgetWebcam::onExternalEvent(const ofExternalEvent& ev) {
-  ofExternalWidget::onExternalEvent(ev);
+void WidgetWebcam::onUiMessage(const UiMessage& msg) {
+  ofExternalWidget::onUiMessage(msg);
 }
 
+/*
 void WidgetWebcam::getJson(int what, std::string& json) {
 
   std::vector<ofVideoDevice> devices = video_grabber.listDevices();
@@ -55,4 +56,4 @@ void WidgetWebcam::getJson(int what, std::string& json) {
 
   json = ss.str();
 }
-
+*/

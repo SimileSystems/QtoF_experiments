@@ -10,19 +10,20 @@ ofExternal* of_external = nullptr;
 
 /* ------------------------------------------------------ */
 
-class ofExternal {
+class ofExternal : public UiMessagesListener {
 public:
   ofExternal();
   int init(const ofExternalSettings& cfg);
   int update();
+  int draw();
   int startRender();
   int finishRender();
-  int sendEvent(const ofExternalEvent& ev);
+  int sendUiMessage(const UiMessage& msg);
+  void onUiMessage(const UiMessage& msg);
   
 private:
   std::shared_ptr<ofAppExternalWindow> win;
-  std::vector<ofExternalEvent> events;
-  std::mutex mtx_events;
+  UiMessages messages;
 };
 
 /* ------------------------------------------------------ */
@@ -63,16 +64,10 @@ bool ofExternalSettings::isValid() {
 
 /* ------------------------------------------------------ */
 
-ofExternalEvent::ofExternalEvent()
-  :type(OF_EXT_EVENT_NONE)
-{
-}
-
-/* ------------------------------------------------------ */
-
 ofExternal::ofExternal()
   :win(nullptr)
 {
+  messages.setListener(this);
 }
 
 int ofExternal::init(const ofExternalSettings& cfg) {
@@ -103,47 +98,10 @@ int ofExternal::update() {
     printf("Error: ofExternal::update(), win is nullptr; not initialized?\n");
     return -1;
   }
-#endif      
+#endif
 
-  std::lock_guard<std::mutex> guard(mtx_events);
+  messages.notify();
 
-  for (size_t i = 0; i < events.size(); ++i) {
-    
-    ofExternalEvent& ev = events[i];
-    
-    switch (ev.type) {
-      
-      case OF_EXT_EVENT_WINDOW_RESIZED: {
-        win->setWindowSize(ev.val.xy[0], ev.val.xy[1]);
-        break;
-      }
-        
-      case OF_EXT_EVENT_PIXEL_RATIO_CHANGED: {
-        win->setPixelRatio(ev.val.f);
-        break;
-      }
-        
-      case OF_EXT_EVENT_MOUSE_MOVE: {
-        break;
-      }
-        
-      case OF_EXT_EVENT_MOUSE_PRESS: {
-        break;
-      }
-        
-      case OF_EXT_EVENT_MOUSE_RELEASE: {
-        break;
-      }
-        
-      default: {
-        printf("Warning, ofExternal::update(): unhandled event type.\n");
-        break;
-      }
-    }
-  }
-
-  events.clear();
-  
   return 0;
 }
 
@@ -174,12 +132,41 @@ int ofExternal::finishRender() {
   return 0;
 }
 
-int ofExternal::sendEvent(const ofExternalEvent& ev) {
-  std::lock_guard<std::mutex> guard(mtx_events);
-  events.push_back(ev);
+int ofExternal::draw() {
+  win->draw();
+}
+
+int ofExternal::sendUiMessage(const UiMessage& msg) {
+  messages.addMessage(msg);
   return 0;
 }
 
+void ofExternal::onUiMessage(const UiMessage& msg) {
+
+  switch (msg.type) {
+    
+    case UI_MSG_WINDOW_RESIZED: {
+        win->setWindowSize(msg.i[0], msg.i[1]);
+        break;
+      }
+        
+      case UI_MSG_PIXEL_RATIO_CHANGED: {
+        win->setPixelRatio(msg.f[0]);
+        break;
+      }
+        
+    case UI_MSG_MOUSE_MOVE: 
+    case UI_MSG_MOUSE_PRESS:
+    case UI_MSG_MOUSE_RELEASE: {
+      break;
+    }
+
+    default: {
+      printf("Warning: ofExternal::onUiMessge() - unhandled UiMessage.\n");
+      break;
+    }
+  }
+}
 
 /* ------------------------------------------------------ */
 
@@ -216,20 +203,22 @@ int of_external_update() {
   return of_external->update();
 }
 
+/* @todo cleanup DO NOT USE - start_render() // finish_render() is what you want. */
 int of_external_draw() {
+  of_external->draw(); 
   return 0;
 }
 
-int of_external_send_event(const ofExternalEvent& ev) {
-  
+int of_external_send_message(const UiMessage& msg) {
+
 #if !defined(NDEBUG)  
   if (0 != of_external_is_init()) {
-    printf("Error: of_external_send_event(), not initialized.\n");
+    printf("Error: of_external_send_message(), not initialized.\n");
     return -1;
   }
 #endif
 
-  return of_external->sendEvent(ev);
+  return of_external->sendUiMessage(msg);
 }
 
 int of_external_start_render() {

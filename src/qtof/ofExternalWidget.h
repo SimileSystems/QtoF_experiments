@@ -5,14 +5,9 @@
 
 /* ------------------------------------------------------ */
 
-class ofExternalEvent;
-
-/* ------------------------------------------------------ */
-
 class ofExternalWidget {
 public:
   ofExternalWidget();
-  virtual void onExternalEvent(const ofExternalEvent& ev);
   virtual void onUiMessage(const UiMessage& msg);
 
   /* Mouse */

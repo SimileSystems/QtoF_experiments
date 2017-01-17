@@ -13,9 +13,8 @@ public:
   void update();
   void draw();
   void destroy();
-  void onExternalEvent(const ofExternalEvent& v);
-  void getJson(int what, std::string& json);
-  
+  void onUiMessage(const UiMessage& msg);
+
 private:
   ofVideoGrabber video_grabber;
   GuiBlur blur;

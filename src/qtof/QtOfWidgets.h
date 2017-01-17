@@ -80,10 +80,8 @@ public:
   virtual int setup() = 0;
   virtual int update() = 0;
   virtual int draw() = 0;
-  virtual int sendEvent(const ofExternalEvent& ev) = 0;
   virtual int sendUiMessage(const UiMessage& msg) = 0; /* Send a UI message from the GUI to the widget. */
   virtual int setUiMessageListener(UiMessagesListener* lis) = 0;  /* Set the message listener that receives messages from the widget. (so other direction then `sendUiMessage()`. */
-  //  virtual int getJson(int what, std::string& result) = 0;
 };
 
 /* ---------------------------------------------------- */
@@ -98,10 +96,8 @@ public:
   int setup();
   int update();
   int draw();
-  int sendEvent(const ofExternalEvent& ev);
   int sendUiMessage(const UiMessage& msg);
   int setUiMessageListener(UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() ? */
-  //  int getJson(int what, std::string& json);
   void onUiMessage(const UiMessage& m);  /* Will be called by our `UiMessages` member. `UiMessages` will make sure that the received message is safe to sure between threads. */
 
 private:
@@ -120,16 +116,12 @@ public:
   int setup(int ref);
   int update(int ref);
   int draw(int ref);
-  int sendEvent(int ref, const ofExternalEvent& ev);
   int sendUiMessage(int ref, const UiMessage& msg);
-  //  int getJson(int ref, int what, std::string& result);
   int setUiMessageListener(int ref, UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() */
   int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
 
 private:
-  std::mutex mtx_events;
   std::unordered_map<int, QtOfWidgetBase*> widgets;
-  std::unordered_map<int, std::vector<ofExternalEvent> > events;
 };
 
 /* ---------------------------------------------------- */
@@ -142,10 +134,8 @@ int qtof_widget_destroy(int ref);
 int qtof_widget_setup(int ref);
 int qtof_widget_update(int ref);
 int qtof_widget_draw(int ref);
-int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
 int qtof_widget_send_message(int ref, const UiMessage& msg);
 int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
-//int qtof_widget_get_json(int ref, int what, std::string& result);
 int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis);
 
 /* ---------------------------------------------------- */
@@ -248,38 +238,10 @@ int QtOfWidget<T>::draw() {
 }
 
 template<class T>
-int QtOfWidget<T>::sendEvent(const ofExternalEvent& ev) {
-  
-  if (nullptr == obj) {
-    qFatal("Cannot send the event because obj is nullptr.");
-    return -1;
-  }
-
-  obj->onExternalEvent(ev);
-
-  return 0;
-}
-
-template<class T>
 int QtOfWidget<T>::sendUiMessage(const UiMessage& msg) {
   qt_messages.addMessage(msg);
   return 0;
 }
-
-/*
-template<class T>
-int QtOfWidget<T>::getJson(int what, std::string& result) {
-
-  if (nullptr == obj) {
-    qFatal("Cannot get json because obj is nullptr.");
-    return -1;
-  }
-
-  obj->getJson(what, result);
-
-  return 0;
-}
-*/
 
 template<class T>
 void QtOfWidget<T>::onUiMessage(const UiMessage& m) {
@@ -310,28 +272,13 @@ int QtOfWidget<T>::setUiMessageListener(UiMessagesListener* lis) {
 
 inline int QtOfWidgets::update(int ref) {
 
-  /* Find the factory for the given ref. */
   std::unordered_map<int, QtOfWidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("QtOfWidgets::update() - reference not found.");
     return -1;
   }
-  QtOfWidgetBase* fac = it->second;
-
-  /* Notify all collected events. */
-  std::lock_guard<std::mutex> lg(mtx_events);
-  std::unordered_map<int, std::vector<ofExternalEvent> >::iterator ev_it = events.find(ref); 
-  while (ev_it != events.end()) {
-    std::vector<ofExternalEvent>& obj_events = ev_it->second;
-    for (size_t i = 0; i < obj_events.size(); ++i) {
-      fac->sendEvent(obj_events[i]);
-    }
-    obj_events.clear();
-    ++ev_it;
-  }
-
-  /* And finally update(). */
-  return fac->update();
+  
+  return it->second->update();
 }
 
 inline int QtOfWidgets::draw(int ref) {

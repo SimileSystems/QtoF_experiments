@@ -18,6 +18,7 @@ private:
 
 QtOfExternalWidget::QtOfExternalWidget()
   :ref(-1)
+  ,layer(0)
   ,is_created(false)
 {
   connect(this, &QQuickItem::windowChanged, this, &QtOfExternalWidget::onWindowChanged);
@@ -41,7 +42,7 @@ QtOfExternalWidget::QtOfExternalWidget()
 QtOfExternalWidget::~QtOfExternalWidget() {
 
   if (nullptr != window()) {
-    window()->setClearBeforeRendering(true); 
+    window()->setClearBeforeRendering(false); 
     window()->scheduleRenderJob(new QtOfExternalWidgetCleanupRunnable(ref), QQuickWindow::BeforeSynchronizingStage);
   }
 
@@ -56,10 +57,30 @@ QtOfExternalWidget::~QtOfExternalWidget() {
   `notify()` function of the `UiMessages` member. A widget should call
   `UiMessages::notify()` from it's `update()` function, or when the 
   widget extends `ofExternalWidget` it can call `notifyUiMessages()`.
+
+  Here we copy all the default members of the `UiMessage` and store
+  it into a QVariantMap which is then handed over to the `onUiMessage()`
+  javascript function that you create in you QML. For example, you can 
+  do something like:
+
+  ````qml
+
+     QtOfExternalWidget {
+       id: depthkit
+       ref: 3
+       width: app.width
+       height: app.height
+       x: 0
+       y: 0
+       function onUiMessage(msg) {
+         console.log("onUiMessage in QML: ", msg.type, msg.i[0], msg.s);
+       }
+     }
+
+  ````
   
  */
 void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
-  printf("QtOfExternalWidget::onUiMessage() - test onEvent call.\n");
 
   QVariantMap js_msg;
   js_msg["type"] = msg.type;
@@ -79,13 +100,23 @@ void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
   float_list.insert(3, msg.i[3]);
   js_msg["f"] = float_list;
   
-  QMetaObject::invokeMethod(this, "onUiMessage", Qt::DirectConnection, Q_ARG(QVariant, QVariant::fromValue(js_msg)));
+  QMetaObject::invokeMethod(this, "onUiMessage", Qt::QueuedConnection, Q_ARG(QVariant, QVariant::fromValue(js_msg)));
 }
 
 void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
-    connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
+    
+    if (0 == layer) {
+      connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
+    }
+    else if (1 == layer) {
+      connect(window(), &QQuickWindow::afterRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
+    }
+    else {
+      qFatal("The layer you provided for the QtOfExternalWidget must be either 0 or 1.");
+    }
+    
     window()->update();
   }
 }
@@ -118,7 +149,6 @@ void QtOfExternalWidget::onPaint() {
     notifyPosition();
     qtof_widget_update(ref);
 
-
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
       qFatal("Failed to setup the widgte for reference: %d", ref);
@@ -136,14 +166,20 @@ void QtOfExternalWidget::onPaint() {
 
   qtof_widget_update(ref);
   qtof_widget_draw(ref);
-
+  //  of_external_draw(); 
   paint_count++;
+
+  /* 
+     When we've drawn the last widget, we finish the external renderer
+     and rest OpenGL state. We have to reset OpenGL state because
+     otherwise Qt will have trouble drawing it's own contents.
+  */
   if (paint_count >= qtof_widget_get_num_widgets()) {
+  //if (paint_count == 1) {
     paint_count = 0;
     of_external_finish_render();
+    resetOpenGlState();
   }
-
-  resetOpenGlState();
 }
 
 /* ---------------------------------------------------- */
@@ -257,34 +293,20 @@ void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
 }
 
 /*
-void QtOfExternalWidget::sendExternalEventFloat(uint32_t eventType, const float& v) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = eventType;
-  ext_ev.val.f = v;
-  qtof_widget_send_event(ref, ext_ev);
-}
-
-void QtOfExternalWidget::sendExternalEventInt(uint32_t eventType, const int& v) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = eventType;
-  ext_ev.val.i = v;
-  qtof_widget_send_event(ref, ext_ev);
-}
-*/
-
-/*
 
   In QML you can sent a UiMessage using `id.sendUiMessageString(100,
-  "somestring")`. We will convert the given data into a latin1 string
-  and construct a `UiMessage` that we forward to the widget. So, lets
-  say you created a histogram widget and you initialized it in your
-  QML with an id `histogram`, then you can do
+  "somestring")` where `id` is the id value that you've given to your
+  `QtOfExernalWidget` item. We will convert the given data into a
+  latin1 string and construct a `UiMessage` that we forward to the
+  widget. So, lets say you created a histogram widget and you
+  initialized it in your QML with an id `histogram`, then you can do
   `histogram.sendUiMessageString(100, "something")` and the widget
   itself (e.g. the openFramworks code) will receive the `UiMessage` in
   it's `onUiMessage()` listener function.
 
   This function was created to communicate between the GUI layer and
-  the widget layer. 
+  the widget layer.
+
  */
 void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QString& str) {
   UiMessage msg;
@@ -292,20 +314,6 @@ void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QStri
   msg.s = str.toLatin1().data();
   qtof_widget_send_message(ref, msg);
 }
-
-/*
-QString QtOfExternalWidget::getJson(unsigned int what) {
-  
-  std::string json;
-  if (0 != qtof_widget_get_json(ref, what, json)) {
-    qWarning("Failed to get json from widget.");
-    return "";
-  }
-
-  QString result(json.c_str());
-  return result;
-}
-*/
 
 /* ---------------------------------------------------- */
 

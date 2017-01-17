@@ -1,15 +1,13 @@
-#ifndef WIDGET_DEPTH_KIT_PIMPL_H
-#define WIDGET_DEPTH_KIT_PIMPL_H
+#ifndef WIDGET_3D_PIMPL_H
+#define WIDGET_3D_PIMPL_H
 
-#include <string>
-
-class WidgetDepthKit;
+class Widget3d;
 class UiMessage;
 class UiMessagesListener;
 
-class WidgetDepthKitPimpl {
+class Widget3dPimpl {
 public:
-  WidgetDepthKitPimpl();
+  Widget3dPimpl();
   void setup();
   void update();
   void draw();
@@ -18,7 +16,7 @@ public:
   void setUiMessageListener(UiMessagesListener* lis);
 
 private:
-  WidgetDepthKit* ctx;
+  Widget3d* ctx;
 };
 
 #endif

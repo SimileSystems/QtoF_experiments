@@ -18,17 +18,6 @@ ApplicationWindow {
     gl_minor_version: 3
   }
 
-  QtOfExternalWidget {
-    id: depthkit
-    ref: 3
-    width: app.width
-    height: app.height
-    x: 0
-    y: 0
-    function onUiMessage(msg) {
-      console.log("YES YES RECEIVED: ", msg.type, msg.i[0], msg.s);
-    }
-  }
 
   ListModel {
     id: scenes_model
@@ -42,6 +31,31 @@ ApplicationWindow {
       title: "Take name 002"
       duration: "02:11"
     }
+  }
+ 
+  QtOfExternalWidget {
+    id: depthkit
+    ref: 3
+    layer: 0
+    width: app.width
+    height: app.height
+    x: 0
+    y: 0
+    function onUiMessage(msg) {
+      if (msg.type == 1000) {
+        scenes_model.insert(0, {title: "TEST", number: "X", duration:"10:35"})
+      }
+    }
+  }
+  
+  QtOfExternalWidget {
+    id: tool
+    ref: 4
+    layer: 1
+    width: 100
+    height: 100
+    x: 100
+    y: 100
   }
 
   Component {
@@ -173,7 +187,7 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 20
         onClicked: {
-          scenes_model.insert(0, {title: "Scene", number: "X", duration:"10:35"})
+          depthkit.sendUiMessageString(1000, "Some scene");
         }
       }
       Button {
@@ -201,9 +215,6 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 20
         onClicked: {
-          console.log("Sending!");
-          depthkit.sendExternalEventInt(200, 10);
-          depthkit.sendExternalEventFloat(201, 1.0);
           depthkit.sendUiMessageString(203, "somestring");
         }
       }

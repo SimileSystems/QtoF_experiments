@@ -15,9 +15,7 @@ public:
   void update();
   void draw();
   void destroy();
-  void onExternalEvent(const ofExternalEvent& ev);
   void onUiMessage(const UiMessage& msg);
-  void getJson(int what, std::string& json);
   void setUiMessageListener(UiMessagesListener* lis);
   
 private:

@@ -130,6 +130,7 @@
 
  */
 
+
 #ifndef QT_OF_EXTERNAL_WIDGET_H
 #define QT_OF_EXTERNAL_WIDGET_H
 
@@ -146,6 +147,7 @@ class QtOfExternalWidget : public QQuickItem,
                            public UiMessagesListener {
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
+  Q_PROPERTY(int layer WRITE setLayer READ getLayer) /* The layer onto which we draw, 0: background, 1: foreground */
 
 public:
   QtOfExternalWidget();
@@ -159,12 +161,9 @@ public slots:
 
 public:
   int getRef();
+  int getLayer();
   void setRef(const int& v);
-#if 0  
-  Q_INVOKABLE void sendExternalEventFloat(unsigned int eventType, const float& v);
-  Q_INVOKABLE void sendExternalEventInt(unsigned int eventType, const int& v);
-  Q_INVOKABLE QString getJson(unsigned int what);   /* Calls `getJson()` from the widget; used to exchange data between the GUI and the widget itself. */
-#edif  
+  void setLayer(const int& v);
   Q_INVOKABLE void sendUiMessageString(unsigned int eventType, const QString& str);                                                
 
 private slots:
@@ -186,6 +185,7 @@ protected:
   
 private:
   int ref;
+  int layer;
   bool is_created; 
 };
 
@@ -195,8 +195,16 @@ inline int QtOfExternalWidget::getRef() {
   return ref;
 }
 
+inline int QtOfExternalWidget::getLayer() {
+  return layer;
+}
+
 inline void QtOfExternalWidget::setRef(const int& v) {
   ref = v;
+}
+
+inline void QtOfExternalWidget::setLayer(const int& v) {
+  layer = v;
 }
 
 /* ---------------------------------------------------- */

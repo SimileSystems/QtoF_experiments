@@ -33,22 +33,16 @@ void WidgetWebcamPimpl::destroy() {
   }
 }
 
-void WidgetWebcamPimpl::onExternalEvent(const ofExternalEvent& ev) {
-  if (nullptr != ctx) {
-    ctx->onExternalEvent(ev);
-  }
-}
-
 void WidgetWebcamPimpl::onUiMessage(const UiMessage& msg) {
-  printf("WidgetWebcamPimpl::onUiMessage\n");
+  if (nullptr != ctx) {
+    ctx->onUiMessage(msg);
+  }
 }
 
 void WidgetWebcamPimpl::setUiMessageListener(UiMessagesListener* lis) {
-  printf("WidgetWebcamPimpl::setUiMessageListener() - @todo\n");
-}
-
-void WidgetWebcamPimpl::getJson(int what, std::string& result) {
   if (nullptr != ctx) {
-    ctx->getJson(what, result);
+    ctx->setUiMessageListener(lis);
   }
 }
+
+

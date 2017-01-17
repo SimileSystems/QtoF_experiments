@@ -48,36 +48,36 @@ void QtOfExternal::onCleanup() {
 /* --------------------------------------- */
 
 void QtOfExternal::mousePressEvent(QMouseEvent* ev) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_PRESS;
-  ext_ev.val.mouse[0] = ev->x();
-  ext_ev.val.mouse[1] = ev->y();
-  of_external_send_event(ext_ev);
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_PRESS;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  of_external_send_message(msg);
 }
 
 void QtOfExternal::mouseReleaseEvent(QMouseEvent* ev) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_RELEASE;
-  ext_ev.val.mouse[0] = ev->x();
-  ext_ev.val.mouse[1] = ev->y();
-  of_external_send_event(ext_ev);
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_RELEASE;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  of_external_send_message(msg);
 }
 
 /* Gets called when dragging ^.^ */
 void QtOfExternal::mouseMoveEvent(QMouseEvent* ev) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_MOVE;
-  ext_ev.val.mouse[0] = ev->x();
-  ext_ev.val.mouse[1] = ev->y();
-  of_external_send_event(ext_ev);
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_MOVE;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  of_external_send_message(msg);
 }
 
 void QtOfExternal::hoverMoveEvent(QHoverEvent* ev) {
-  ofExternalEvent ext_ev;
-  ext_ev.type = OF_EXT_EVENT_MOUSE_MOVE;
-  ext_ev.val.mouse[0] = ev->pos().x();
-  ext_ev.val.mouse[1] = ev->pos().y();
-  of_external_send_event(ext_ev);
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_MOVE;
+  msg.i[0] = ev->pos().x();
+  msg.i[1] = ev->pos().y();
+  of_external_send_message(msg);
 }
 
 void QtOfExternal::hoverEnterEvent(QHoverEvent* ev) {
@@ -107,26 +107,26 @@ void QtOfExternal::onWindowChanged(QQuickWindow* win) {
 }
 
 void QtOfExternal::onWidthChanged(int w) {
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_WINDOW_RESIZED;
-  ev.val.xy[0] = window()->width();
-  ev.val.xy[1] = window()->height();
-  of_external_send_event(ev);
+  UiMessage msg;
+  msg.type = UI_MSG_WINDOW_RESIZED;
+  msg.i[0] = window()->width();
+  msg.i[1] = window()->height();
+  of_external_send_message(msg);
 }
 
 void QtOfExternal::onHeightChanged(int h) {
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_WINDOW_RESIZED;
-  ev.val.xy[0] = window()->width();
-  ev.val.xy[1] = window()->height();
-  of_external_send_event(ev);
+  UiMessage msg;
+  msg.type = UI_MSG_WINDOW_RESIZED;
+  msg.i[0] = window()->width();
+  msg.i[1] = window()->height();
+  of_external_send_message(msg);
 }
 
 void QtOfExternal::onScreenChanged(QScreen* screen) {
-  ofExternalEvent ev;
-  ev.type = OF_EXT_EVENT_PIXEL_RATIO_CHANGED;
-  ev.val.f = window()->devicePixelRatio();
-  of_external_send_event(ev);
+  UiMessage msg;
+  msg.type = UI_MSG_PIXEL_RATIO_CHANGED;
+  msg.f[0] = window()->devicePixelRatio();
+  of_external_send_message(msg);
 }
 
 /* ---------------------------------------------------- */
