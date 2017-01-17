@@ -3,6 +3,8 @@
 
 class WidgetHistogram;
 class ofExternalEvent;
+class UiMessage;
+class UiMessageListener;
 
 class WidgetHistogramPimpl {
 public:
@@ -12,7 +14,9 @@ public:
   void draw();
   void destroy();
   void onExternalEvent(const ofExternalEvent& ev);
+  void onUiMessage(const UiMessage& msg);
   void getJson(int what, std::string& json);
+  void setUiMessageListener(UiMessagesListener* lis);
   
 public:
   WidgetHistogram* ctx;

@@ -138,16 +138,19 @@
 #include <QtQuick/QQuickItem>
 #include <QString>
 #include <QScreen>
+#include <qtof/UiMessages.h>
 
 /* ---------------------------------------------------- */
 
-class QtOfExternalWidget : public QQuickItem {
+class QtOfExternalWidget : public QQuickItem,
+                           public UiMessagesListener {
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
 
 public:
   QtOfExternalWidget();
-  ~QtOfExternalWidget();                      
+  ~QtOfExternalWidget();
+  void onUiMessage(const UiMessage& msg);  /* Is called by the `UiMessages` member of the actual widget implementation. */
 
 public slots:
   void onPaint();
@@ -159,7 +162,8 @@ public:
   void setRef(const int& v);
   Q_INVOKABLE void sendExternalEventFloat(unsigned int eventType, const float& v);
   Q_INVOKABLE void sendExternalEventInt(unsigned int eventType, const int& v);
-  Q_INVOKABLE QString getJson(unsigned int what);   /* Calls `getJson()` from the widget; used to exchange data between the GUI and the widget itself. */                                                                             
+  Q_INVOKABLE QString getJson(unsigned int what);   /* Calls `getJson()` from the widget; used to exchange data between the GUI and the widget itself. */
+  Q_INVOKABLE void sendUiMessageString(unsigned int eventType, const QString& str);                                                
 
 private slots:
   void onWindowChanged(QQuickWindow* win);

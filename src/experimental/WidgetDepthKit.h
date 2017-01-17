@@ -5,6 +5,7 @@
 #include <qtof/ofExternalWidget.h>
 
 class ofExternalEvent;
+class UiMessage;
 
 class WidgetDepthKit : public ofExternalWidget {
 public:
@@ -12,8 +13,9 @@ public:
   void update();
   void draw();
   void destroy();
-  void onExternalEvent(const ofExternalEvent& v);
   void getJson(int what, std::string& json);
+  void onExternalEvent(const ofExternalEvent& v);
+  void onUiMessage(const UiMessage& msg);
 
 private:
   ofVideoGrabber video_grabber;

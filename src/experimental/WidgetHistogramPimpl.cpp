@@ -37,5 +37,16 @@ void WidgetHistogramPimpl::onExternalEvent(const ofExternalEvent& ev) {
   }
 }
 
+void WidgetHistogramPimpl::onUiMessage(const UiMessage& msg) {
+  printf("WidgetHistogramPimpl::onUiMessage\n");
+}
+
 void WidgetHistogramPimpl::getJson(int what, std::string& json) {
+}
+
+void WidgetHistogramPimpl::setUiMessageListener(UiMessagesListener* lis) {
+  printf("WidgetHistogramPimpl::setUiMessageListener.\n");
+  if (nullptr != ctx) {
+    ctx->setUiMessageListener(lis);
+  }
 }

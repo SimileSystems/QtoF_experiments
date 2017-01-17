@@ -49,6 +49,39 @@ QtOfExternalWidget::~QtOfExternalWidget() {
   is_created = false;
 }
 
+/*
+
+  This function is called by the widget (e.g. the openFrameworks
+  widget). This function will be called when the widget calls the
+  `notify()` function of the `UiMessages` member. A widget should call
+  `UiMessages::notify()` from it's `update()` function, or when the 
+  widget extends `ofExternalWidget` it can call `notifyUiMessages()`.
+  
+ */
+void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
+  printf("QtOfExternalWidget::onUiMessage() - test onEvent call.\n");
+
+  QVariantMap js_msg;
+  js_msg["type"] = msg.type;
+  js_msg["s"] = QString(msg.s.c_str());
+
+  QVariantList int_list;
+  int_list.insert(0, msg.i[0]);
+  int_list.insert(1, msg.i[1]);
+  int_list.insert(2, msg.i[2]);
+  int_list.insert(3, msg.i[3]);
+  js_msg["i"] = int_list;
+
+  QVariantList float_list;
+  float_list.insert(0, msg.i[0]);
+  float_list.insert(1, msg.i[1]);
+  float_list.insert(2, msg.i[2]);
+  float_list.insert(3, msg.i[3]);
+  js_msg["f"] = float_list;
+  
+  QMetaObject::invokeMethod(this, "onUiMessage", Qt::DirectConnection, Q_ARG(QVariant, QVariant::fromValue(js_msg)));
+}
+
 void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
@@ -77,11 +110,14 @@ void QtOfExternalWidget::onPaint() {
       return;
     }
 
+    qtof_widget_set_message_listener(ref, this);
+
     /* Notify some info that's needed when setting up. */
     notifySize();
     notifyPixelRatio();
     notifyPosition();
     qtof_widget_update(ref);
+
 
     if (0 != qtof_widget_setup(ref)) {
       /* @todo destroy the created factory. */
@@ -142,26 +178,49 @@ void QtOfExternalWidget::onScreenChanged(QScreen* screen) {
 /* ---------------------------------------------------- */
 
 void QtOfExternalWidget::notifySize() {
+  /*
   ofExternalEvent ev;
   ev.type = OF_EXT_EVENT_SIZE_CHANGED;
   ev.val.xy[0] = width();
   ev.val.xy[1] = height();
   qtof_widget_send_event(ref, ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_SIZE_CHANGED;
+  msg.i[0] = width();
+  msg.i[1] = height();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::notifyPosition() {
+  /*
   ofExternalEvent ev;
   ev.type = OF_EXT_EVENT_POSITION_CHANGED;
   ev.val.xy[0] = x();
   ev.val.xy[1] = y();
   qtof_widget_send_event(ref, ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_POSITION_CHANGED;
+  msg.i[0] = x();
+  msg.i[1] = y();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::notifyPixelRatio() {
+  /*
   ofExternalEvent ev;
   ev.type = OF_EXT_EVENT_PIXEL_RATIO_CHANGED;
   ev.val.f = window()->devicePixelRatio();
   qtof_widget_send_event(ref, ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_PIXEL_RATIO_CHANGED;
+  msg.f[0] = window()->devicePixelRatio();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::resetOpenGlState() {
@@ -191,33 +250,63 @@ void QtOfExternalWidget::releaseResources() {
 }
 
 void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
+  /*
   ofExternalEvent ext_ev;
   ext_ev.type = OF_EXT_EVENT_MOUSE_ENTER;
   ext_ev.val.mouse[0] = ev->pos().x();
   ext_ev.val.mouse[1] = ev->pos().y();
   qtof_widget_send_event(ref, ext_ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_ENTER;
+  msg.i[0] = ev->pos().x();
+  msg.i[1] = ev->pos().y();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
+  /*
   ofExternalEvent ext_ev;
   ext_ev.type = OF_EXT_EVENT_MOUSE_LEAVE;
   ext_ev.val.mouse[0] = ev->pos().x();
   ext_ev.val.mouse[1] = ev->pos().y();
   qtof_widget_send_event(ref, ext_ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_LEAVE;
+  msg.i[0] = ev->pos().x();
+  msg.i[1] = ev->pos().y();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::keyPressEvent(QKeyEvent* ev) {
+  /*
   ofExternalEvent ext_ev;
   ext_ev.type = OF_EXT_EVENT_KEY_PRESS;
   ext_ev.val.i = ev->key();
   qtof_widget_send_event(ref, ext_ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_KEY_PRESS;
+  msg.i[0] = ev->key();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
+  /*
   ofExternalEvent ext_ev;
   ext_ev.type = OF_EXT_EVENT_KEY_RELEASE;
   ext_ev.val.i = ev->key();
   qtof_widget_send_event(ref, ext_ev);
+  */
+
+  UiMessage msg;
+  msg.type = UI_MSG_KEY_RELEASE;
+  msg.i[0] = ev->key();
+  qtof_widget_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::sendExternalEventFloat(uint32_t eventType, const float& v) {
@@ -232,6 +321,27 @@ void QtOfExternalWidget::sendExternalEventInt(uint32_t eventType, const int& v) 
   ext_ev.type = eventType;
   ext_ev.val.i = v;
   qtof_widget_send_event(ref, ext_ev);
+}
+
+/*
+
+  In QML you can sent a UiMessage using `id.sendUiMessageString(100,
+  "somestring")`. We will convert the given data into a latin1 string
+  and construct a `UiMessage` that we forward to the widget. So, lets
+  say you created a histogram widget and you initialized it in your
+  QML with an id `histogram`, then you can do
+  `histogram.sendUiMessageString(100, "something")` and the widget
+  itself (e.g. the openFramworks code) will receive the `UiMessage` in
+  it's `onUiMessage()` listener function.
+
+  This function was created to communicate between the GUI layer and
+  the widget layer. 
+ */
+void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QString& str) {
+  UiMessage msg;
+  msg.type = eventType;
+  msg.s = str.toLatin1().data();
+  qtof_widget_send_message(ref, msg);
 }
 
 QString QtOfExternalWidget::getJson(unsigned int what) {

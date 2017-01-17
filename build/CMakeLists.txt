@@ -46,6 +46,7 @@ list(APPEND qtof_sources
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
   ${sd}/qtof/QtOfWidgets.cpp
+  ${sd}/qtof/UiMessages.cpp
   )
 
 # openFrameworks library

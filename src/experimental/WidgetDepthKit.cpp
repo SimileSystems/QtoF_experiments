@@ -3,9 +3,11 @@
 
 void WidgetDepthKit::setup() {
   video_grabber.setup(0, 640, 480);
+
 }
 
 void WidgetDepthKit::update() {
+  ofExternalWidget::notifyUiMessages();
   video_grabber.update();
 }
 
@@ -13,13 +15,30 @@ void WidgetDepthKit::draw() {
   glDisable(GL_DEPTH_TEST);
   //  video_grabber.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
   video_grabber.draw(0, 0, ofGetWidth() * getPixelRatio(), ofGetHeight() * getPixelRatio()); 
+  //  printf("%d x %d\n", getWidgetDrawWidth(), getWidgetDrawHeight());
 }
 
 void WidgetDepthKit::destroy() {
 }
 
 void WidgetDepthKit::onExternalEvent(const ofExternalEvent& v) {
+
+  //printf("WidgetDepthKit::onExternalEvent() - Got external event: %d\n", v.type);
+  
+  if (200 == v.type) {
+    printf("WidgetDepthKit::onExternalEvent() - create a new uimessage.");
+    UiMessage msg;
+    msg.type = 100;
+    msg.i[0] = 123;
+    msg.s = "{something}";
+    ofExternalWidget::addUiMessage(msg);
+  }
+  
   ofExternalWidget::onExternalEvent(v);
+}
+
+void WidgetDepthKit::onUiMessage(const UiMessage& msg) {
+  ofExternalWidget::onUiMessage(msg);
 }
 
 void WidgetDepthKit::getJson(int what, std::string& json) {

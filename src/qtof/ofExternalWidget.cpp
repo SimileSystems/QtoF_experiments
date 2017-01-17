@@ -12,6 +12,16 @@ ofExternalWidget::ofExternalWidget()
 {
 }
 
+int ofExternalWidget::setUiMessageListener(UiMessagesListener* lis) {
+  
+  if (nullptr == lis) {
+    printf("Error: ofExternalWidget::setUiMessageListener(): given listener is nullptr.\n");
+    return -1;
+  }
+
+  return widget_messages.setListener(lis);
+}
+
 void ofExternalWidget::onExternalEvent(const ofExternalEvent& ev) {
 
   switch (ev.type) {
@@ -37,6 +47,60 @@ void ofExternalWidget::onExternalEvent(const ofExternalEvent& ev) {
       widget_is_mouse_inside = false;
       break;
     }
+    default: {
+      break;
+    }
+  }
+}
+
+void ofExternalWidget::onUiMessage(const UiMessage& msg) {
+  
+  printf("ofExternalWidget::onUiMessage(): %d\n", msg.type);
+
+  switch (msg.type) {
+
+    case UI_MSG_SIZE_CHANGED: {
+      printf("UI_MSG_SIZE_CHANGED: %d x %d\n", msg.i[0], msg.i[1]);
+      widget_width = msg.i[0];
+      widget_height = msg.i[1];
+      break;
+    }
+      
+    case UI_MSG_POSITION_CHANGED: {
+      printf("UI_MSG_POSITION_CHANGED: %d x %d\n", msg.i[0], msg.i[1]);
+      widget_x = msg.i[0];
+      widget_y = msg.i[1];
+      break;
+    }
+
+    case UI_MSG_PIXEL_RATIO_CHANGED: {
+      printf("UI_MSG_PIXEL_RATIO_CHANGED: %f\n", msg.f[0]);
+      widget_pixel_ratio = msg.f[0];
+      break;
+    }
+
+    case UI_MSG_MOUSE_ENTER: {
+      widget_is_mouse_inside = true;
+      printf("UI_MSG_MOUSE_ENTER\n");
+      break;
+    }
+      
+    case UI_MSG_MOUSE_LEAVE: {
+      widget_is_mouse_inside = false;
+      printf("UI_MSG_MOUSE_LEAVE\n");
+      break;
+    }
+
+    case UI_MSG_KEY_PRESS: {
+      printf("UI_MSG_KEY_PRESS\n");
+      break;
+    }
+
+    case UI_MSG_KEY_RELEASE: {
+      printf("UI_MSG_KEy_RELEASE\n");
+      break;
+    }
+
     default: {
       break;
     }

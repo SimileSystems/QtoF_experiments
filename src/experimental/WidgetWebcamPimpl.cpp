@@ -39,6 +39,14 @@ void WidgetWebcamPimpl::onExternalEvent(const ofExternalEvent& ev) {
   }
 }
 
+void WidgetWebcamPimpl::onUiMessage(const UiMessage& msg) {
+  printf("WidgetWebcamPimpl::onUiMessage\n");
+}
+
+void WidgetWebcamPimpl::setUiMessageListener(UiMessagesListener* lis) {
+  printf("WidgetWebcamPimpl::setUiMessageListener() - @todo\n");
+}
+
 void WidgetWebcamPimpl::getJson(int what, std::string& result) {
   if (nullptr != ctx) {
     ctx->getJson(what, result);

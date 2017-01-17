@@ -37,6 +37,18 @@ void WidgetDepthKitPimpl::onExternalEvent(const ofExternalEvent& ev) {
   }
 }
 
+void WidgetDepthKitPimpl::onUiMessage(const UiMessage& msg) {
+  if (nullptr != ctx) {
+    ctx->onUiMessage(msg);
+  }
+}
+
+void WidgetDepthKitPimpl::setUiMessageListener(UiMessagesListener* lis) {
+  if (nullptr != ctx) {
+    ctx->setUiMessageListener(lis);
+  }
+}
+
 void WidgetDepthKitPimpl::getJson(int what, std::string& result) {
   if (nullptr != ctx) {
     ctx->getJson(what, result);

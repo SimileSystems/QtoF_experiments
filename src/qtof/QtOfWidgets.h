@@ -50,6 +50,12 @@
    QML file, then the `QtOfExternalWidget` will allocate your widget
    for you. We also take care of deallocation of your widget type.
 
+  NOTES / TODO
+
+  sendUiMessage():
+    This will add a ui message to a queue which gets handed over
+    to the external widget. 
+
  */
 #ifndef QT_OF_WIDGET_H
 #define QT_OF_WIDGET_H
@@ -58,6 +64,12 @@
 #include <unordered_map>
 #include <QDebug>
 #include <qtof/ofExternal.h>
+#include <qtof/UiMessages.h>
+
+/* ---------------------------------------------------- */
+
+template<class T>
+class QtOfWidget;
 
 /* ---------------------------------------------------- */
 
@@ -69,13 +81,16 @@ public:
   virtual int update() = 0;
   virtual int draw() = 0;
   virtual int sendEvent(const ofExternalEvent& ev) = 0;
+  virtual int sendUiMessage(const UiMessage& msg) = 0; /* Send a UI message from the GUI to the widget. */
+  virtual int setUiMessageListener(UiMessagesListener* lis) = 0;  /* Set the message listener that receives messages from the widget. (so other direction then `sendUiMessage()`. */
   virtual int getJson(int what, std::string& result) = 0;
 };
 
 /* ---------------------------------------------------- */
 
 template<class T>
-class QtOfWidget : public QtOfWidgetBase {
+class QtOfWidget : public QtOfWidgetBase,
+                   public UiMessagesListener {
 public:
   QtOfWidget();
   int create();
@@ -84,10 +99,14 @@ public:
   int update();
   int draw();
   int sendEvent(const ofExternalEvent& ev);
+  int sendUiMessage(const UiMessage& msg);
+  int setUiMessageListener(UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() ? */
   int getJson(int what, std::string& json);
+  void onUiMessage(const UiMessage& m);  /* Will be called by our `UiMessages` member. `UiMessages` will make sure that the received message is safe to sure between threads. */
 
 private:
   T* obj;
+  UiMessages qt_messages;
 };
 
 /* ---------------------------------------------------- */
@@ -102,9 +121,11 @@ public:
   int update(int ref);
   int draw(int ref);
   int sendEvent(int ref, const ofExternalEvent& ev);
+  int sendUiMessage(int ref, const UiMessage& msg);
   int getJson(int ref, int what, std::string& result);
+  int setUiMessageListener(int ref, UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() */
   int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
-  
+
 private:
   std::mutex mtx_events;
   std::unordered_map<int, QtOfWidgetBase*> widgets;
@@ -122,8 +143,10 @@ int qtof_widget_setup(int ref);
 int qtof_widget_update(int ref);
 int qtof_widget_draw(int ref);
 int qtof_widget_send_event(int ref, const ofExternalEvent& ev);
+int qtof_widget_send_message(int ref, const UiMessage& msg);
 int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
 int qtof_widget_get_json(int ref, int what, std::string& result);
+int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis);
 
 /* ---------------------------------------------------- */
 
@@ -131,6 +154,7 @@ template<class T>
 QtOfWidget<T>::QtOfWidget()
   :obj(nullptr)
 {
+  qt_messages.setListener(this);
 }
 
 template<class T>
@@ -175,6 +199,26 @@ int QtOfWidget<T>::setup() {
   return 0;
 }
 
+/*
+
+  @todo UPDATE!!!
+
+  This function will call the `update()` function of the widget that
+  the user implemented. This can be a widget that draws a histogram
+  for example. We also call `qt_messages.notify()` which will lock the
+  internal buffer and then calls `QtOfWidget<T>::onUiMessage()` for
+  each of the messages which have been added. We simply forward these
+  `UiMessages` to the widget too in our `onUiMessage()` handler. So
+  we're making an extra step here, but hiding synchronisation
+  implementation of `UiMessages`. We can simply assume that we can do
+  whatever we want with the `UiMessage`s that we receive in
+  `onUiMessage`.
+
+  `messages->notify()` will call `QtOfWidget<T>::onUiMessage()` and we
+  forward the received message to `obj->onUiMessage()`.
+
+ */
+
 template<class T>
 int QtOfWidget<T>::update() {
   
@@ -183,6 +227,8 @@ int QtOfWidget<T>::update() {
     return -1;
   }
 
+  qt_messages.notify();
+  
   obj->update();
   
   return 0;
@@ -215,6 +261,12 @@ int QtOfWidget<T>::sendEvent(const ofExternalEvent& ev) {
 }
 
 template<class T>
+int QtOfWidget<T>::sendUiMessage(const UiMessage& msg) {
+  qt_messages.addMessage(msg);
+  return 0;
+}
+
+template<class T>
 int QtOfWidget<T>::getJson(int what, std::string& result) {
 
   if (nullptr == obj) {
@@ -223,6 +275,32 @@ int QtOfWidget<T>::getJson(int what, std::string& result) {
   }
 
   obj->getJson(what, result);
+
+  return 0;
+}
+
+
+template<class T>
+void QtOfWidget<T>::onUiMessage(const UiMessage& m) {
+
+  if (nullptr == obj) {
+    qFatal("Received a UiMessage but obj is nullptr.");
+    return;
+  }
+  
+  obj->onUiMessage(m);
+}
+
+
+template<class T>
+int QtOfWidget<T>::setUiMessageListener(UiMessagesListener* lis) {
+
+  if (nullptr == obj) {
+    qFatal("Cannot set UiMessageListener because obj is nullptr.");
+    return -1;
+  }
+
+  obj->setUiMessageListener(lis);
 
   return 0;
 }

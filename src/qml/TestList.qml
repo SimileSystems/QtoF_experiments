@@ -25,6 +25,9 @@ ApplicationWindow {
     height: app.height
     x: 0
     y: 0
+    function onUiMessage(msg) {
+      console.log("YES YES RECEIVED: ", msg.type, msg.i[0], msg.s);
+    }
   }
 
   ListModel {
@@ -147,7 +150,6 @@ ApplicationWindow {
         NumberAnimation { property: "opacity"; to: 1.0}
       }
     }
-    
   }
 
   Rectangle {
@@ -191,6 +193,18 @@ ApplicationWindow {
         anchors.margins: 20
         onClicked: {
           scenes_lv.state = "show"
+        }
+      }
+      Button {
+        text: "Tigger UiMessage"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 20
+        onClicked: {
+          console.log("Sending!");
+          depthkit.sendExternalEventInt(200, 10);
+          depthkit.sendExternalEventFloat(201, 1.0);
+          depthkit.sendUiMessageString(203, "somestring");
         }
       }
     }
