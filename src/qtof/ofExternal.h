@@ -1,6 +1,7 @@
 /*
 
   EXTERNAL OPENFRAMEWORKS
+  =======================
 
     This header defines an opaque way to use the openFrameworks
     library into your own code. This is basically a pimpl around

@@ -1,7 +1,7 @@
 #include <QRunnable>
 #include <qtof/QtOfExternalWidget.h>
-#include <qtof/QtOfWidgets.h>
 #include <qtof/ofExternal.h>
+#include <qtof/Widgets.h>
 
 /* ---------------------------------------------------- */
 
@@ -29,7 +29,7 @@ QtOfExternalWidget::QtOfExternalWidget()
 
    When Qt decides to remove this QML item, we have to make sure that
    the OF widget also cleans up any of it's GL resources (textures,
-   shaders, etc.). We provide a function `qtof_widget_destroy()` that
+   shaders, etc.). We provide a function `widgets_destroy()` that
    calls `destroy()` on the OF based widget. But we have to make sure
    that this is called from the render thread when there is an GL
    context active. We're scheduling a render job for this purpose as
@@ -107,20 +107,20 @@ void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
 
-    if (0 != qtof_widget_create(ref)) {
+    if (0 != widgets_create(ref)) {
       qFatal("Failed to create the QtOfExternalWidget.");
       return;
     }
 
-    qtof_widget_set_message_listener(ref, this);
+    widgets_set_message_listener(ref, this);
 
     /* Notify some info that's needed when setting up. */
     notifySize();
     notifyPixelRatio();
     notifyPosition();
-    qtof_widget_update(ref);
+    widgets_update(ref);
 
-    if (0 != qtof_widget_setup(ref)) {
+    if (0 != widgets_setup(ref)) {
       /* @todo destroy the created factory. */
       qFatal("Failed to setup the widgte for reference: %d", ref);
       return;
@@ -173,8 +173,8 @@ void QtOfExternalWidget::onPaint() {
   
   of_external_start_render();
   {
-    qtof_widget_update(ref);
-    qtof_widget_draw(ref);
+    widgets_update(ref);
+    widgets_draw(ref);
   }
   of_external_finish_render();
 
@@ -217,7 +217,7 @@ void QtOfExternalWidget::notifySize() {
   msg.type = UI_MSG_SIZE_CHANGED;
   msg.i[0] = width();
   msg.i[1] = height();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 /*
@@ -232,14 +232,14 @@ void QtOfExternalWidget::notifyPosition() {
   msg.type = UI_MSG_POSITION_CHANGED;
   msg.i[0] = pos.x();
   msg.i[1] = pos.y();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::notifyPixelRatio() {
   UiMessage msg;
   msg.type = UI_MSG_PIXEL_RATIO_CHANGED;
   msg.f[0] = window()->devicePixelRatio();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::resetOpenGlState() {
@@ -251,7 +251,7 @@ void QtOfExternalWidget::resetOpenGlState() {
 
 /*
   @todo atm I'm not sure how to handle this situation. When 
-  I would remove the widget (qtof_widget_destroy) this results
+  I would remove the widget (widgets_destroy) this results
   in a crash because `onPaint` is still being called. 
 
   You can test this by setting the parent of the QML node 
@@ -273,7 +273,7 @@ void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
   msg.type = UI_MSG_MOUSE_ENTER;
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
@@ -281,7 +281,7 @@ void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
   msg.type = UI_MSG_MOUSE_LEAVE;
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::hoverMoveEvent(QHoverEvent* ev) {
@@ -289,21 +289,21 @@ void QtOfExternalWidget::hoverMoveEvent(QHoverEvent* ev) {
   msg.type = UI_MSG_MOUSE_MOVE;
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::keyPressEvent(QKeyEvent* ev) {
   UiMessage msg;
   msg.type = UI_MSG_KEY_PRESS;
   msg.i[0] = ev->key();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
   UiMessage msg;
   msg.type = UI_MSG_KEY_RELEASE;
   msg.i[0] = ev->key();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 /*
@@ -326,7 +326,7 @@ void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QStri
   UiMessage msg;
   msg.type = eventType;
   msg.s = str.toLatin1().data();
-  qtof_widget_send_message(ref, msg);
+  widgets_send_message(ref, msg);
 }
 
 /* ---------------------------------------------------- */
@@ -337,7 +337,7 @@ QtOfExternalWidgetCleanupRunnable::QtOfExternalWidgetCleanupRunnable(int ref)
 }
 
 void QtOfExternalWidgetCleanupRunnable::run() {
-  qtof_widget_destroy(ref);
+  widgets_destroy(ref);
 }
 
 /* ---------------------------------------------------- */

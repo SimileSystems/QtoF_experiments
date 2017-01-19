@@ -43,7 +43,6 @@ list(APPEND of_sources
   ${sd}/experimental/WidgetDebug.cpp
   ${sd}/experimental/WidgetDebugPimpl.cpp
   ${sd}/experimental/GuiBlur.cpp
-#  ${sd}/experimental/OpenGlUtils.cpp
   )
 
 list(APPEND qtof_sources
@@ -53,7 +52,7 @@ list(APPEND qtof_sources
   ${sd}/qtof/ofExternalWidget.cpp
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
-  ${sd}/qtof/QtOfWidgets.cpp
+  ${sd}/qtof/Widgets.cpp
   ${sd}/qtof/UiMessages.cpp
   )
 

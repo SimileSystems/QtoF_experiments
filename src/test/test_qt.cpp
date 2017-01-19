@@ -78,7 +78,7 @@
 #include <QQmlApplicationEngine>
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>
-#include <qtof/QtOfWidgets.h>
+#include <qtof/Widgets.h>
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
 #include <experimental/WidgetDepthKitPimpl.h>
@@ -96,11 +96,11 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
 
-  qtof_widget_add(1, new QtOfWidget<WidgetHistogramPimpl>());
-  qtof_widget_add(2, new QtOfWidget<WidgetWebcamPimpl>());
-  qtof_widget_add(3, new QtOfWidget<WidgetDepthKitPimpl>());
-  qtof_widget_add(4, new QtOfWidget<Widget3dPimpl>());
-  qtof_widget_add(5, new QtOfWidget<WidgetDebugPimpl>());
+  widgets_add(1, new Widget<WidgetHistogramPimpl>());
+  widgets_add(2, new Widget<WidgetWebcamPimpl>());
+  widgets_add(3, new Widget<WidgetDepthKitPimpl>());
+  widgets_add(4, new Widget<Widget3dPimpl>());
+  widgets_add(5, new Widget<WidgetDebugPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
