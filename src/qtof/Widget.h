@@ -1,3 +1,16 @@
+/*
+
+  WIDGET
+  ======
+
+  GENERAL INFO:
+  
+    Here we define a interface for a widget. We created an widget
+    interface for the use with Qt and openFrameworks.  Though a widget
+    can be anything that wants to render something in a custom
+    way. See `Widgets.h` for more information.
+
+ */
 #ifndef WIDGET_H
 #define WIDGET_H
 
@@ -17,8 +30,8 @@ public:
   virtual int setup() = 0;
   virtual int update() = 0;
   virtual int draw() = 0;
-  virtual int sendUiMessage(const UiMessage& msg) = 0; /* Send a UI message from the GUI to the widget. */
-  virtual int setUiMessageListener(UiMessagesListener* lis) = 0;  /* Set the message listener that receives messages from the widget. (so other direction then `sendUiMessage()`. */
+  virtual int sendUiMessage(const UiMessage& msg) = 0;                /* Send a UI message from the GUI to the widget. */
+  virtual int setUiMessageListener(UiMessagesListener* lis) = 0;      /* Set the message listener that receives messages from the widget. (so other direction then `sendUiMessage()`. */
 };
 
 /* ---------------------------------------------------- */
@@ -34,8 +47,8 @@ public:
   int update();
   int draw();
   int sendUiMessage(const UiMessage& msg);
-  int setUiMessageListener(UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() ? */
-  void onUiMessage(const UiMessage& m);  /* Will be called by our `UiMessages` member. `UiMessages` will make sure that the received message is safe to sure between threads. */
+  int setUiMessageListener(UiMessagesListener* lis);                  
+  void onUiMessage(const UiMessage& m);                               /* Will be called by our `UiMessages` member. `UiMessages` will make sure that the received message is safe to sure between threads. */
 
 private:
   T* obj;

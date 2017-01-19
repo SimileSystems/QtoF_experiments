@@ -23,11 +23,11 @@
     items. For this we have to implement a couple of functions and
     take care of how we create/destroy things. To make it easier and
     to separate the Qt features from the OF features, I created this
-    `QtOfExternalWidget` that works together with `QtOfWidgets`.
+    `QtOfExternalWidget` that works together with `Widgets`.
     The `QtOfExternalWidget` is like a bridge between this custom QML
     item and your OF based widget.
 
-    The `QtOfWidgets` creates, sets up, updates, draws, etc... our
+    The `Widgets` creates, sets up, updates, draws, etc... our
     custom OF based widgets. Using this setup, we don't have to create
     and define a new QML item for each widget we want to
     create. Though because this `QtOfExternalWidget` still needs to
@@ -38,7 +38,7 @@
     number with the `DepthKithHistogramWidget` type, this class
     (`QtOfExternalWidget`) will make sure that the
     `DepthKitHistogramWidget` will be created, updated, drawn,
-    etc.. at the right moments. See `QtOfWidgets.h` for more info.
+    etc.. at the right moments. See `Widgets.h` for more info.
 
 
     +----------------------+
@@ -50,7 +50,7 @@
                |
     +----------v-----------+
     |                      |
-    |     QtOfWidgets      o---| Helper to create/update/draw/destroy OF 
+    |     Widgets          o---| Helper to create/update/draw/destroy OF 
     |                      |     based PIMPL widgets. 
     +----------+-----------+
                |
@@ -70,28 +70,31 @@
 
   EVENTS:
   
-    Ths `QtOfExternalWidget` will call the `onExternalEvent()` function
-    of the widget. Below is a list of events that are dispatched directly
-    to the widget implementation.
+    Ths `QtOfExternalWidget` will call the `widgets_send_message()`
+    function for the widget that it handles. These messages are used
+    to notify a widget about mouse events, key events, size events
+    ets.  Below is a list of events that are dispatched directly to
+    the widget implementation.
 
-    OF_EXT_EVENT_SIZE_CHANGED:
-      Is dispatched when the width and height of the item changes. This 
-      event is also dispatched before we call `setup` on the widget.
+    UI_MSG_SIZE_CHANGED:
+      Is dispatched when the width and height of the item
+      changes. This event is also dispatched before we call `setup` on
+      the widget.
 
-    OF_EXT_EVENT_POSITION_CHANGED:
+    UI_MSG_POSITION_CHANGED:
       Is dispatched when the position (x,y) of the item changes. We
       set the `xy` member of the event object. This event is also
-      dispatched before we call `setup()` on the widget so it can 
+      dispatched before we call `setup()` on the widget so it can
       define it's position.
 
-    OF_EXT_EVENT_MOUSE_LEAVE:
-    OF_EXT_EVENT_MOUSE_ENTER:
+    UI_MSG_MOUSE_LEAVE:
+    UI_MSG_MOUSE_ENTER:
       Is dispatched when the user moves his mouse over or out of, the
       QML item. The `x`, `y`, `width` and `height` properties are used
       by Qt Quick to determine when the user enters an item. We set
       the `mouse[0]` and `mouse[1]` members of the event object.
 
-    OF_EXT_EVENT_PIX_RATIO_CHANGED:
+    UI_MSG_PIX_RATIO_CHANGED:
       Is dispatched when the pixel ratio of the current screen
       changes. E.g. this may happen when the user moves the window
       onto another screen when the screen onto which the window is
@@ -130,7 +133,6 @@
 
  */
 
-
 #ifndef QT_OF_EXTERNAL_WIDGET_H
 #define QT_OF_EXTERNAL_WIDGET_H
 
@@ -147,12 +149,12 @@ class QtOfExternalWidget : public QQuickItem,
                            public UiMessagesListener {
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
-  Q_PROPERTY(int layer WRITE setLayer READ getLayer) /* The layer onto which we draw, 0: background, 1: foreground */
+  Q_PROPERTY(int layer WRITE setLayer READ getLayer)                  /* The layer onto which we draw, 0: background, 1: foreground */
 
 public:
   QtOfExternalWidget();
   ~QtOfExternalWidget();
-  void onUiMessage(const UiMessage& msg);  /* Is called by the `UiMessages` member of the actual widget implementation. */
+  void onUiMessage(const UiMessage& msg);                             /* Is called by the `UiMessages` member of the actual widget implementation. */
 
 public slots:
   void onPaint();
@@ -171,10 +173,10 @@ private slots:
   void onScreenChanged(QScreen* screen);
 
 private:
-  void notifySize();                                /* Notifies the widget about it's size; is (also) called before we call `setup()` on the widget. */
-  void notifyPosition();                            /* Notifies the widget about it's position; is (also) called before we call `setup()` on the widget. */
-  void notifyPixelRatio();                          /* Notifies the widget about the current pixel ratio (e.g. to handle retina). is (also) called before we call `setup()` on the widget. */
-  void resetOpenGlState();                          /* After rendering our own things using openFrameworks, we have to reset the GL state because Qt will run into rendering issues. Qt provides a function for this which sets some of the default state; but not all. We use or own wrapper to reset some other state too. */
+  void notifySize();                                                  /* Notifies the widget about it's size; is (also) called before we call `setup()` on the widget. */
+  void notifyPosition();                                              /* Notifies the widget about it's position; is (also) called before we call `setup()` on the widget. */
+  void notifyPixelRatio();                                            /* Notifies the widget about the current pixel ratio (e.g. to handle retina). is (also) called before we call `setup()` on the widget. */
+  void resetOpenGlState();                                            /* After rendering our own things using openFrameworks, we have to reset the GL state because Qt will run into rendering issues. Qt provides a function for this which sets some of the default state; but not all. We use or own wrapper to reset some other state too. */
 
 protected:
   void hoverEnterEvent(QHoverEvent* ev);                                      

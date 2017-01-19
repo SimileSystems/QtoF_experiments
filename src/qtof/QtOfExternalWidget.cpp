@@ -148,7 +148,7 @@ void QtOfExternalWidget::onCleanup() {
 
 /*
   This is called for every `QtOfExternalWidget` that is defined in the
-  QML. We call `notifyPosition()` because we need to makes sure that
+  QML. We call `notifyPosition()` because we need to make sure that
   each widget uses the latest position, because when we're animating
   we have to make sure that the widget draws at the right position.
 

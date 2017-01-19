@@ -11,7 +11,7 @@ public:
   virtual void onUiMessage(const UiMessage& msg);
 
   /* Mouse */
-  bool isMouseInsideWidget(); /* Returns true when the mouse is inside the x/y and width/height of the widget. */
+  bool isMouseInsideWidget();                                         /* Returns true when the mouse is inside the x/y and width/height of the widget. */
   
   /* Size and position. */
   int getWidgetWidth();
@@ -29,10 +29,10 @@ public:
   /* Message I/O */
   int setUiMessageListener(UiMessagesListener* lis);
   void addUiMessage(const UiMessage& msg);
-  void notifyUiMessages(); /* This will notify the listener of our `widget_messages` about any of the added events; should be called in `update()`. */
+  void notifyUiMessages();                                            /* This will notify the listener of our `widget_messages` about any of the added events; should be called in `update()`. */
 
 private:
-  UiMessages widget_messages; /* Messages that are dispatched from this widget to the `Gui` layer. In this case (during development for DepthKit) these are the messages that a widget sends back to `qml`. */
+  UiMessages widget_messages;                                         /* Messages that are dispatched from this widget to the `Gui` layer. In this case (during development for DepthKit) these are the messages that a widget sends back to `qml`. */
   int widget_width;
   int widget_height;
   int widget_x;
