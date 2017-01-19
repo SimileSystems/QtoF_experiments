@@ -1,7 +1,7 @@
 /*
 
-  QtOfExternal
-  ============
+  OPENFRAMEWORKS INSIDE QT
+  =========================
 
   GENERAL INFO:
 
@@ -11,15 +11,29 @@
     more info.
 
     This QML item is used to instantiate `ofExternal`. ofExternal is a
-    C-style API that will setup openFrameworks in such a way, that you
-    can use the OF features. Basically the `ofExternal` and the
-    `of_external_*()` function will setup a `ofAppExternalWindow()`
-    instance and loads the GL functions (so we assume an active context). 
+    C-style opaque API that will setup openFrameworks in such a way,
+    that you can use the OF features. Basically the `ofExternal` and
+    the `of_external_*()` function will setup a
+    `ofAppExternalWindow()` instance and loads the GL functions (so we
+    assume an active context).
 
     This `QtOfExternal` QML type will handle the `ofExternal` setup,
     but it will also handle generic mouse and keyboard events. Here we
     basically implement what an external window/gl handler would do
     when using the `ofAppExternalWindow`.
+
+    For more info about how OF is used as inside Qt see `ofExternal.h`
+    and `ofAppExternalWindow`.
+
+  USAGE: 
+
+    If you want to use OF with external widgets, your QML file must
+    always contain one `QtOfExternal` item and this must be added
+    before any of the `QtOfExternalWidget` items that you define in
+    your QML (see `QtOfExternalWidget`). By adding this `QtOfExternal`
+    item, we make sure that the openFrameworks library is correctly
+    initialized. See [this][1] gist that shows a minimal QML file that
+    can be used to setup OF and create an external widget.
 
   THREADING:
 
@@ -35,7 +49,7 @@
     signal is emitted; instead of buffered and called from the
     GUI-thread (aka main-thread).
 
-    The following signals are usd with a `Qt::DirectConnections`:
+    The following signals are used with a `Qt::DirectConnections`:
 
     - QQuickWindow::beforeRendering
     - QQuickWindow::beforeSynchronizing
@@ -43,7 +57,7 @@
 
   MOUSE EVENTS:
   
-    Unlike the width, height, screen changed signals that we receive
+    Unlike the width, height, screen change signals that we receive
     we have to use the `mouse*Event()` functions to receive mause
     events. The documentation is not really clear from which thread
     these are called, but I assume these are called from the GUI
@@ -56,6 +70,7 @@
   REFERENCES:
 
     [0]: http://doc.qt.io/qt-5/qtquick-index.html "Qt Quick"
+    [1]: https://gist.github.com/roxlu/1dea9cc36291d7a98a97f3527ba81523 "How to use `QtOfExternal` as a QML item to setup OF."
     
  */
 #ifndef QT_OF_EXTERNAL_H
@@ -122,8 +137,6 @@ inline void QtOfExternal::setGlMajorVersion(int v) {
 inline int QtOfExternal::getGlMajorVersion() {
   return gl_major_version;
 }
-
-
 
 /* ---------------------------------------------------- */
 

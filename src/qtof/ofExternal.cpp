@@ -134,6 +134,7 @@ int ofExternal::finishRender() {
 
 int ofExternal::draw() {
   win->draw();
+  return 0;
 }
 
 int ofExternal::sendUiMessage(const UiMessage& msg) {
@@ -200,12 +201,6 @@ int of_external_update() {
 #endif
 
   return of_external->update();
-}
-
-/* @todo cleanup DO NOT USE - start_render() // finish_render() is what you want. */
-int of_external_draw() {
-  of_external->draw(); 
-  return 0;
 }
 
 int of_external_send_message(const UiMessage& msg) {

@@ -12,19 +12,27 @@
     `ofGLProgrammableRenderer` and therefore assumes that you're using
     a modern GL approach (> 2.x). 
 
+    The most important thing that `ofAppExternalWindow` type will do
+    is initializing the openFrameworks library and some of it's
+    internal things that it needs to work (like a renderer and 
+    core events object). 
+
   USED INTERNALLY BY OF:
   
-    There are a couple of functions which are used internally 
-    by OF. The `getWindowSize()` for example, is use by 
-    `ofMatrixStack` to set the current opengl viewport. 
+    There are a couple of functions which are used internally by
+    OF. The `getWindowSize()` for example, is use by `ofMatrixStack`
+    to set the current opengl viewport. You, as a user of the
+    `ofAppExternalWindow` type, are responsible for passing these
+    properties that are used internally by OF (like the window size).
 
   MAIN LOOP: 
   
     Some functions that determine how `ofMainLoop` works are added
     statically to `ofAppExternalWindow`. Because the
     `ofAppExternalWindow` is managed externally, we do not rely on the
-    returns values of these static functions.
-
+    returns values of these static functions. While creating this
+    class we followed the `ofAppGLFWWindow` class.
+    
   IMPORTANT:
   
     It's most likely that you don't create a `ofAppExternalWindow`
@@ -37,6 +45,46 @@
     current renderer, which is why we have to do this. So if you want to
     create an instance of `ofAppExternalWindow` yourself, have a look
     at `of_eternal_init()`.
+
+    See the `QtOfExternal.cpp` file where we're using these
+    `of_external_*()` functions to setup and use the openFrameworks
+    features using this `ofAppExternalWindow` type.
+
+  USAGE:
+  
+    As described in `IMPORTANT` you most likely want to use the
+    `of_external_*()` functions which provide an opaque way that you
+    can use in your own window managing layer (like Qt). The
+    `ofExternal.h` header contains everything that you need to use to
+    initialize this `ofAppExternalWindow`. The `ofExternal` is
+    basically the pimpl around `ofAppExternalWindow`. To initialize
+    the `ofAppExternalWindow` object, you call `of_external_init()`
+    with an `ofExternalSettings` object which describes what kind of
+    openGL context you've created, your pixel ratio and the window
+    size. Using these settings we will setup the
+    `ofGLProgrammableRenderer`. This is done in
+    `ofAppExternalWindow::setup()` which receives a `ofWindowSettings`
+    object. 
+
+    Once initialized (by calling `of_external_init()`), you want to
+    notify the `ofAppExternalWindow` instance about window size
+    changes, pixel ratio changes, mouse press etc. You do this by
+    sending `UiMessage` objects using `of_external_send_message()`,
+    which is thread safe. When you call `of_external_update()` the
+    messages will be handled and the appropriate openFrameworks /
+    ofAppExternalWindow functions will be called. Make sure to call
+    `of_external_update()` for each frame and make sure that you call
+    this from the same thread where you called `of_external_init()`
+    and that the openGL context has been made current.
+
+    Every time you want to render something, you have to call:
+
+    ````c++
+     of_external_start_render();
+     // THIS IS WHERE YOU DRAW YOUR OWN CONTENT
+     of_external_finish_render()
+
+   ````
 
  */
 #ifndef OF_APP_EXTERNAL_WINDOW_H
@@ -188,6 +236,13 @@ inline ofCoreEvents& ofAppExternalWindow::events() {
 }
 
 inline std::shared_ptr<ofBaseRenderer>& ofAppExternalWindow::renderer() {
+  
+#if !defined(NDEBUG)
+  if (nullptr == programmable_renderer) {
+    ofLogError() << "Trying to retrieve the renderer but it's nullptr.";
+  }
+#endif
+  
   return programmable_renderer;
 }
 

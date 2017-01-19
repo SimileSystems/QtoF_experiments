@@ -34,6 +34,8 @@ void Widget3d::draw() {
   box.set(getWidgetDrawWidth() * 0.35);
   box.draw();
 
+  ofDrawBitmapString("Widget3D", getWidgetDrawX() + 10, getWidgetDrawY() + 16);
+
   spin_x += 0.01;
 }
 

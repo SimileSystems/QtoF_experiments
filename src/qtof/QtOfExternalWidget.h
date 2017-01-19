@@ -1,7 +1,7 @@
 /*
 
-  QtOfExternalWidget
-  ==================
+  EXTERNAL WIDGET THAT USES OPENFRAMEWORKS
+  ========================================
 
   GENERAL INFO:
 

@@ -9,7 +9,7 @@ ApplicationWindow {
   width: 1280
   height: 720
   title: "Depth Kit - List Test"
-  color: "lightgray" /* @todo Have to set the background color; otherwise the widgets are not drawn? */
+//  color: "lightgray" /* @todo Have to set the background color; otherwise the widgets are not drawn? */
   visible: true
 
   QtOfExternal {
