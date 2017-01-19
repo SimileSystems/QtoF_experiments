@@ -83,6 +83,7 @@
 #include <experimental/WidgetWebcamPimpl.h>
 #include <experimental/WidgetDepthKitPimpl.h>
 #include <experimental/Widget3DPimpl.h>
+#include <experimental/WidgetDebugPimpl.h>
 
 /* ---------------------------------------------------- */
 
@@ -99,6 +100,7 @@ int main(int argc, char* argv[]) {
   qtof_widget_add(2, new QtOfWidget<WidgetWebcamPimpl>());
   qtof_widget_add(3, new QtOfWidget<WidgetDepthKitPimpl>());
   qtof_widget_add(4, new QtOfWidget<Widget3dPimpl>());
+  qtof_widget_add(5, new QtOfWidget<WidgetDebugPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);

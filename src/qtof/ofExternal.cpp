@@ -146,16 +146,15 @@ void ofExternal::onUiMessage(const UiMessage& msg) {
   switch (msg.type) {
     
     case UI_MSG_WINDOW_RESIZED: {
-        win->setWindowSize(msg.i[0], msg.i[1]);
-        break;
-      }
+      win->setWindowSize(msg.i[0], msg.i[1]);
+      break;
+    }
         
-      case UI_MSG_PIXEL_RATIO_CHANGED: {
-        win->setPixelRatio(msg.f[0]);
-        break;
-      }
+    case UI_MSG_PIXEL_RATIO_CHANGED: {
+      win->setPixelRatio(msg.f[0]);
+      break;
+    }
         
-    case UI_MSG_MOUSE_MOVE: 
     case UI_MSG_MOUSE_PRESS:
     case UI_MSG_MOUSE_RELEASE: {
       break;

@@ -1,24 +1,17 @@
-#ifndef WIDGET_3D_H
-#define WIDGET_3D_H
+#ifndef WIDGET_DEBUG_H
+#define WIDGET_DEBUG_H
 
-#include <ofMain.h>
 #include <qtof/ofExternalWidget.h>
 
 class UiMessage;
 
-class Widget3d : public ofExternalWidget {
+class WidgetDebug : public ofExternalWidget {
 public:
   void setup();
   void update();
   void draw();
   void destroy();
   void onUiMessage(const UiMessage& msg);
-
-private:
-  ofBoxPrimitive box;
-  ofImage img;
-  float perc_x;
-  float perc_y;
 };
 
 #endif

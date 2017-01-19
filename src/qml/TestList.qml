@@ -32,7 +32,7 @@ ApplicationWindow {
       duration: "02:11"
     }
   }
- 
+
   QtOfExternalWidget {
     id: depthkit
     ref: 3
@@ -47,14 +47,14 @@ ApplicationWindow {
       }
     }
   }
-  
+
   QtOfExternalWidget {
-    id: tool
-    ref: 4
+    id: histogram
+    ref: 1
     layer: 1
     width: 100
     height: 100
-    x: 100
+    x: 600
     y: 100
   }
 
@@ -147,21 +147,32 @@ ApplicationWindow {
         NumberAnimation { property: "x"; duration: 160 }
       }
     ]
-    
-    ListView {
-      id: lv
-      width: 300
-      height: 500
-      model: scenes_model
-      delegate: scenes_delegate
-      topMargin: 20
-      add: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 260 }
-        NumberAnimation { properties: "y"; duration: 260; easing.type: Easing.InCirc }
+
+    Column {
+      x: 0
+      ListView {
+        id: lv
+        width: 300
+        height: 500
+        model: scenes_model
+        delegate: scenes_delegate
+        topMargin: 20
+        add: Transition {
+          NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 260 }
+          NumberAnimation { properties: "y"; duration: 260; easing.type: Easing.InCirc }
+        }
+        displaced: Transition {
+          NumberAnimation { properties: "x,y"; duration: 160; easing.type: Easing.OutCirc }
+          NumberAnimation { property: "opacity"; to: 1.0}
+        }
       }
-      displaced: Transition {
-        NumberAnimation { properties: "x,y"; duration: 160; easing.type: Easing.OutCirc }
-        NumberAnimation { property: "opacity"; to: 1.0}
+
+      QtOfExternalWidget {
+        id: d3
+        ref: 4
+        layer: 1
+        width: parent.width
+        height: 200
       }
     }
   }
@@ -173,7 +184,6 @@ ApplicationWindow {
     anchors.right: parent.right
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-
 
     Column {
       anchors.left: parent.left

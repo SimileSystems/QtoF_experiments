@@ -7,7 +7,9 @@ QtOfWidgets qtof_widgets;
 
 /* ---------------------------------------------------- */
 
-QtOfWidgets::QtOfWidgets() {
+QtOfWidgets::QtOfWidgets()
+  :num_created_widgets(0)
+{
 
 }
 
@@ -37,7 +39,14 @@ int QtOfWidgets::create(int ref) {
     return -1;
   }
 
-  return it->second->create();
+  if (0 != it->second->create()) {
+    qFatal("QtOfWidgets::create() - failed to create through pimpl.\n");
+    return -2;
+  }
+
+  num_created_widgets++;
+
+  return 0;
 }
 
 /* 
@@ -60,6 +69,12 @@ int QtOfWidgets::destroy(int ref) {
   if (0 != it->second->destroy()) {
     qFatal("QtOfWidgets::destroy() - failed.");
   }
+
+  if (num_created_widgets <= 0) {
+    qFatal("QtOfWidgers::destroy() - num_created_widgets is 0 which means we shouldn't destroy any.");
+  }
+  
+  num_created_widgets--;
 
   return 0;
 }
@@ -88,8 +103,12 @@ int QtOfWidgets::sendUiMessage(int ref, const UiMessage& msg) {
   return 0;
 }
 
-int QtOfWidgets::getNumWidgets() {
+int QtOfWidgets::getNumRegisteredWidgets() {
   return (int) widgets.size();
+}
+
+int QtOfWidgets::getNumCreatedWidgets() {
+  return num_created_widgets;
 }
 
 int QtOfWidgets::setUiMessageListener(int ref, UiMessagesListener* lis) {
@@ -138,8 +157,12 @@ int qtof_widget_send_message(int ref, const UiMessage& msg) {
   return qtof_widgets.sendUiMessage(ref, msg);
 }
 
-int qtof_widget_get_num_widgets() {
-  return qtof_widgets.getNumWidgets();
+int qtof_widget_get_num_registered_widgets() {
+  return qtof_widgets.getNumRegisteredWidgets();
+}
+
+int qtof_widget_get_num_created_widgets() {
+  return qtof_widgets.getNumCreatedWidgets();
 }
 
 int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis) {

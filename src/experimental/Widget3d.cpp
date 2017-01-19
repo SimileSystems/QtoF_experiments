@@ -2,6 +2,10 @@
 #include <qtof/UiMessages.h>
 
 void Widget3d::Widget3d::setup() {
+  img.load(ofFilePath::getCurrentExeDir() +"cat.jpg");
+  box.set(100.0);
+  perc_x = 0.0f;
+  perc_y = 0.0f;
 }
 
 void Widget3d::update() {
@@ -9,34 +13,45 @@ void Widget3d::update() {
 }
 
 void Widget3d::draw() {
+  static float spin_x = 0.0f;
   
-  glDisable(GL_DEPTH_TEST);
-  
-  ofSetColor(255, 255, 0, 255);
-  ofDrawRectangle(getWidgetDrawX(),
-                  getWidgetDrawY(),
-                  getWidgetDrawWidth(),
-                  getWidgetDrawHeight()
-                  );
-
-  ofDrawCircle(100, 100, 100);
-
+  //glDisable(GL_DEPTH_TEST);
+  ofSetColor(0, 0, 0, 100);
+  ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
   ofSetColor(255, 255, 255, 255);
-  /*
-  printf("%d x %d / %d x %d\n",
-         getWidgetDrawX(),
-         getWidgetDrawY(),
-         getWidgetDrawWidth(),
-         getWidgetDrawHeight()
-         );
-  */
 
+  //  img.bind();
+  //  img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
+
+  glEnable(GL_DEPTH_TEST);
+  img.getTexture().bind();
+  box.resetTransform();
+  box.rotateDeg(perc_x * 360.0f, 0.0, 1.0, 0.0);
+  box.rotateDeg(perc_y * 360.0f, 1.0, 0.0, 0.0);
+  box.mapTexCoordsFromTexture(img.getTexture());
+  //  box.resizeToTexture(img.getTexture());
+  box.setPosition(getWidgetDrawX() + getWidgetDrawWidth() * 0.5, getWidgetDrawY() + getWidgetDrawHeight() * 0.5, 0.0f);
+  box.set(getWidgetDrawWidth() * 0.35);
+  box.draw();
+
+  spin_x += 0.01;
 }
 
 void Widget3d::destroy() {
 }
 
 void Widget3d::onUiMessage(const UiMessage& msg) {
-  ofExternalWidget::onUiMessage(msg);
+  switch (msg.type) {
+    default: {
+      ofExternalWidget::onUiMessage(msg);
+      break;
+    }
+    case UI_MSG_MOUSE_MOVE: {
+      perc_x = float(msg.i[0]) / getWidgetWidth();
+      perc_y = float(msg.i[1]) / getWidgetHeight();
+      break;
+    }
+  }
+     
 }
 

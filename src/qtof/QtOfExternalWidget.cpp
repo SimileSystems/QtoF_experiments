@@ -106,35 +106,6 @@ void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
 void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
-    
-    if (0 == layer) {
-      connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
-    }
-    else if (1 == layer) {
-      connect(window(), &QQuickWindow::afterRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
-    }
-    else {
-      qFatal("The layer you provided for the QtOfExternalWidget must be either 0 or 1.");
-    }
-    
-    window()->update();
-  }
-}
-
-void QtOfExternalWidget::onCleanup() {
-  qDebug() << "onCleanup";
-}
-
-void QtOfExternalWidget::onPaint() {
-
-  static int paint_count = 0;
-  
-  if (-1 == ref) {
-    qWarning() << "QtOfExternalWidget::onPaint() being called but `ref` is -1. Not supposed to happen.";
-    return;
-  }
-  
-  if (false == is_created) {
 
     if (0 != qtof_widget_create(ref)) {
       qFatal("Failed to create the QtOfExternalWidget.");
@@ -158,28 +129,56 @@ void QtOfExternalWidget::onPaint() {
     resetOpenGlState();
     
     is_created = true;
+
+    if (0 == layer) {
+      connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
+    }
+    else if (1 == layer) {
+      connect(window(), &QQuickWindow::afterRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
+    }
+    else {
+      qFatal("The layer you provided for the QtOfExternalWidget must be either 0 or 1.");
+    }
+  }
+}
+
+void QtOfExternalWidget::onCleanup() {
+  qDebug() << "onCleanup";
+}
+
+/*
+  This is called for every `QtOfExternalWidget` that is defined in the
+  QML. We call `notifyPosition()` because we need to makes sure that
+  each widget uses the latest position, because when we're animating
+  we have to make sure that the widget draws at the right position.
+
+  The call to `of_external_start_render()` and
+  `of_external_finish_render()` will setup the openFrameworks
+  programmable render for each widget. We need to do this because
+  every widget needs to be able to draw on it's own; this is needed
+  when e.g. drawing on different layers (see beforeRendering,
+  afterRendering).
+
+  @todo maybe we also want to update the width / height? 
+
+ */
+void QtOfExternalWidget::onPaint() {
+
+  if (-1 == ref) {
+    qWarning() << "QtOfExternalWidget::onPaint() being called but `ref` is -1. Not supposed to happen.";
+    return;
   }
 
-  if (0 == paint_count) {
-    of_external_start_render();
+  notifyPosition();
+  
+  of_external_start_render();
+  {
+    qtof_widget_update(ref);
+    qtof_widget_draw(ref);
   }
+  of_external_finish_render();
 
-  qtof_widget_update(ref);
-  qtof_widget_draw(ref);
-  //  of_external_draw(); 
-  paint_count++;
-
-  /* 
-     When we've drawn the last widget, we finish the external renderer
-     and rest OpenGL state. We have to reset OpenGL state because
-     otherwise Qt will have trouble drawing it's own contents.
-  */
-  if (paint_count >= qtof_widget_get_num_widgets()) {
-  //if (paint_count == 1) {
-    paint_count = 0;
-    of_external_finish_render();
-    resetOpenGlState();
-  }
+  resetOpenGlState();
 }
 
 /* ---------------------------------------------------- */
@@ -221,11 +220,18 @@ void QtOfExternalWidget::notifySize() {
   qtof_widget_send_message(ref, msg);
 }
 
+/*
+  We convert our local origin into that of the root item as our
+  widgets use global coordinates and don't know about the QML scene
+  graph (and it's hierarchy). See the documentation of `mapToItem()`,
+  we pass `0` to map the position to the root item.
+ */
 void QtOfExternalWidget::notifyPosition() {
+  QPointF pos = mapToItem(0, QPointF(0,0));
   UiMessage msg;
   msg.type = UI_MSG_POSITION_CHANGED;
-  msg.i[0] = x();
-  msg.i[1] = y();
+  msg.i[0] = pos.x();
+  msg.i[1] = pos.y();
   qtof_widget_send_message(ref, msg);
 }
 
@@ -273,6 +279,14 @@ void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
 void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
   UiMessage msg;
   msg.type = UI_MSG_MOUSE_LEAVE;
+  msg.i[0] = ev->pos().x();
+  msg.i[1] = ev->pos().y();
+  qtof_widget_send_message(ref, msg);
+}
+
+void QtOfExternalWidget::hoverMoveEvent(QHoverEvent* ev) {
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_MOVE;
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
   qtof_widget_send_message(ref, msg);

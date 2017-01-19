@@ -53,12 +53,29 @@ void ofAppExternalWindow::setup(const ofGLWindowSettings& settings) {
   gl = new ofGLProgrammableRenderer(this);
   gl->setup(settings.glVersionMajor, settings.glVersionMinor);
   programmable_renderer = std::shared_ptr<ofGLProgrammableRenderer>(gl);
+
+  /*
+
+    We have to disable the auto background, because otherwise
+    openframeworks will call `glClear(GL_COLOR_BUFFER_BIT |
+    GL_DEPTH_BUFFER_BIT)` when we start / stop the renderer. In the
+    case of the Qt window manager, this would mean that the default
+    framebuffer will be cleared by openFrameworks which may remove
+    evertything that Qt has rendered.
+
+   */
+  ofSetBackgroundAuto(false);
 }
 
 /* ---------------------------------------------------- */
 
 void ofAppExternalWindow::update() { }
-void ofAppExternalWindow::draw() { }
+
+void ofAppExternalWindow::draw() {
+  programmable_renderer->startRender();
+  events().notifyDraw();
+  programmable_renderer->finishRender();
+}
 
 /* ---------------------------------------------------- */
 

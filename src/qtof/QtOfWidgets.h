@@ -71,8 +71,8 @@
 template<class T>
 class QtOfWidget;
 
-/* ---------------------------------------------------- */
 
+/* ---------------------------------------------------- */
 class QtOfWidgetBase {
 public:
   virtual int create() = 0;
@@ -118,10 +118,12 @@ public:
   int draw(int ref);
   int sendUiMessage(int ref, const UiMessage& msg);
   int setUiMessageListener(int ref, UiMessagesListener* lis); /* @todo maybe rename to setWidgetUiMessageListener() */
-  int getNumWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
-
+  int getNumRegisteredWidgets(); /* Get the total number of added widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
+  int getNumCreatedWidgets();
+  
 private:
   std::unordered_map<int, QtOfWidgetBase*> widgets;
+  int num_created_widgets;
 };
 
 /* ---------------------------------------------------- */
@@ -135,8 +137,12 @@ int qtof_widget_setup(int ref);
 int qtof_widget_update(int ref);
 int qtof_widget_draw(int ref);
 int qtof_widget_send_message(int ref, const UiMessage& msg);
-int qtof_widget_get_num_widgets(); /* Returns the total number of registered widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
 int qtof_widget_set_message_listener(int ref, UiMessagesListener* lis);
+int qtof_widget_get_num_registered_widgets(); /* Returns the total number of registered widgets.  */
+int qtof_widget_get_num_created_widgets(); /* Returns the total number of created widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
+
+int qtof_widget_is_begin();
+int qtof_widget_is_end();
 
 /* ---------------------------------------------------- */
 

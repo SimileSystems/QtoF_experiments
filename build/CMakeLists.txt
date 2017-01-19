@@ -23,6 +23,9 @@ find_package(Qt5Qml           REQUIRED)
 find_package(Qt5Quick         REQUIRED)
 find_package(Qt5QuickCompiler REQUIRED)   # From http://doc.qt.io/QtQuickCompiler/qquickcompiler-building-with-cmake.html
 
+find_library(fr_opengl OpenGL)
+message("--- ${fr_opengl}")
+
 include_directories(
   ${ed}/include
   ${sd}
@@ -37,7 +40,10 @@ list(APPEND of_sources
   ${sd}/experimental/WidgetDepthKitPimpl.cpp
   ${sd}/experimental/Widget3d.cpp
   ${sd}/experimental/Widget3dPimpl.cpp
+  ${sd}/experimental/WidgetDebug.cpp
+  ${sd}/experimental/WidgetDebugPimpl.cpp
   ${sd}/experimental/GuiBlur.cpp
+#  ${sd}/experimental/OpenGlUtils.cpp
   )
 
 list(APPEND qtof_sources

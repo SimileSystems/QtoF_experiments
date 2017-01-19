@@ -11,6 +11,7 @@ void WidgetHistogram::update() {
 
 void WidgetHistogram::draw() {
 
+
   glDisable(GL_DEPTH_TEST);
   img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
 

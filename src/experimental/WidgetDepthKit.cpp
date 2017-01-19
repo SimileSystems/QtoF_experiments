@@ -4,7 +4,6 @@
 
 void WidgetDepthKit::setup() {
   video_grabber.setup(0, 640, 480);
-
 }
 
 void WidgetDepthKit::update() {
@@ -13,7 +12,8 @@ void WidgetDepthKit::update() {
 }
 
 void WidgetDepthKit::draw() {
-  glDisable(GL_DEPTH_TEST);
+
+  //glDisable(GL_DEPTH_TEST);
   video_grabber.draw(0, 0, ofGetWidth() * getPixelRatio(), ofGetHeight() * getPixelRatio()); 
 }
 
@@ -46,7 +46,7 @@ void WidgetDepthKit::onUiMessage(const UiMessage& msg) {
     }
     case UI_MSG_MOUSE_PRESS: 
     case UI_MSG_MOUSE_MOVE: {
-      printf("Mouse move: %d x %d\n", msg.i[0], msg.i[1]);
+      //printf("Mouse move: %d x %d\n", msg.i[0], msg.i[1]);
       break;
     }
     default: {
