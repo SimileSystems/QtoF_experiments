@@ -1,4 +1,5 @@
-set(of_bd ${OF_DIR})
+set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
+set(of_bd ${bd}/of)
 set(of_ld ${of_bd}/libs)
 set(of_sd ${of_bd}/libs/openFrameworks)
 
@@ -73,8 +74,10 @@ list(APPEND of_sources
   ${of_sd}/video/ofVideoPlayer.cpp
   )
 
-set_source_files_properties(${of_sd}/app/ofAppGLFWWindow.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-set_source_files_properties(${of_sd}/utils/ofSystemUtils.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+if (APPLE)
+  set_source_files_properties(${of_sd}/app/ofAppGLFWWindow.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+  set_source_files_properties(${of_sd}/utils/ofSystemUtils.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+endif()
 
 include_directories(
   ${of_ld}/openFrameworks
@@ -108,52 +111,57 @@ include_directories(
   ${of_ld}/utf8/include
   )
 
-list(APPEND of_libs
-  ${of_ld}/boost/lib/osx/boost_filesystem.a
-  ${of_ld}/boost/lib/osx/boost_system.a
-  ${of_ld}/cairo/lib/osx/cairo.a
-  ${of_ld}/cairo/lib/osx/cairo-script-interpreter.a
-  ${of_ld}/cairo/lib/osx/pixman-1.a
-  ${of_ld}/cairo/lib/osx/png.a
-  ${of_ld}/curl/lib/osx/curl.a
-  ${of_ld}/fmodex/lib/osx/libfmodex.dylib
-  ${of_ld}/FreeImage/lib/osx/freeimage.a
-  ${of_ld}/freetype/lib/osx/freetype.a
-  ${of_ld}/glew/lib/osx/glew.a
-  ${of_ld}/glfw/lib/osx/glfw3.a
-  ${of_ld}/pugixml/lib/osx/pugixml.a
-  ${of_ld}/tess2/lib/osx/tess2.a
-  ${of_ld}/uriparser/lib/osx/uriparser.a
-  )
+if (APPLE)
+  
+  list(APPEND of_libs
+    ${of_ld}/boost/lib/osx/boost_filesystem.a
+    ${of_ld}/boost/lib/osx/boost_system.a
+    ${of_ld}/cairo/lib/osx/cairo.a
+    ${of_ld}/cairo/lib/osx/cairo-script-interpreter.a
+    ${of_ld}/cairo/lib/osx/pixman-1.a
+    ${of_ld}/cairo/lib/osx/png.a
+    ${of_ld}/curl/lib/osx/curl.a
+    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
+    ${of_ld}/FreeImage/lib/osx/freeimage.a
+    ${of_ld}/freetype/lib/osx/freetype.a
+    ${of_ld}/glew/lib/osx/glew.a
+    ${of_ld}/glfw/lib/osx/glfw3.a
+    ${of_ld}/pugixml/lib/osx/pugixml.a
+    ${of_ld}/tess2/lib/osx/tess2.a
+    ${of_ld}/uriparser/lib/osx/uriparser.a
+    )
 
-find_library(fr_corefoundation CoreFoundation)
-find_library(fr_cocoa Cocoa)
-find_library(fr_carbon Carbon)
-find_library(fr_iokit IOKit)
-find_library(fr_coremedia CoreMedia)
-find_library(fr_avfoundation AVFoundation)
-find_library(fr_qtkit QTKit)
-find_library(fr_corevideo CoreVideo)
-find_library(fr_opengl OpenGL)
-find_library(fr_accelerate Accelerate)
-find_library(fr_ldap LDAP)
-find_library(fr_security Security)
+  find_library(fr_corefoundation CoreFoundation)
+  find_library(fr_cocoa Cocoa)
+  find_library(fr_carbon Carbon)
+  find_library(fr_iokit IOKit)
+  find_library(fr_coremedia CoreMedia)
+  find_library(fr_avfoundation AVFoundation)
+  find_library(fr_qtkit QTKit)
+  find_library(fr_corevideo CoreVideo)
+  find_library(fr_opengl OpenGL)
+  find_library(fr_accelerate Accelerate)
+  find_library(fr_ldap LDAP)
+  find_library(fr_security Security)
 
-list(APPEND of_libs
-  ${fr_carbon}
-  ${fr_corefoundation}
-  ${fr_cocoa}
-  ${fr_iokit}
-  ${fr_opengl}
-  ${fr_avfoundation}
-  ${fr_qtkit}
-  ${fr_corevideo}
-  ${fr_coremedia}
-  ${fr_accelerate}
-  ${fr_ldap}
-  ${fr_security}
-  pthread
-  z
-  )
+  list(APPEND of_libs
+    ${fr_carbon}
+    ${fr_corefoundation}
+    ${fr_cocoa}
+    ${fr_iokit}
+    ${fr_opengl}
+    ${fr_avfoundation}
+    ${fr_qtkit}
+    ${fr_corevideo}
+    ${fr_coremedia}
+    ${fr_accelerate}
+    ${fr_ldap}
+    ${fr_security}
+    pthread
+    z
+    )
 
-install(FILES ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION bin)
+  install(FILES ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION bin)
+  file(COPY ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION ${CMAKE_BINARY_DIR})
+  
+endif()

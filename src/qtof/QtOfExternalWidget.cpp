@@ -22,6 +22,7 @@ QtOfExternalWidget::QtOfExternalWidget()
   ,is_created(false)
 {
   connect(this, &QQuickItem::windowChanged, this, &QtOfExternalWidget::onWindowChanged);
+  setAcceptedMouseButtons(Qt::AllButtons);
   setAcceptHoverEvents(true);
 }
 
@@ -268,6 +269,22 @@ void QtOfExternalWidget::releaseResources() {
   */
 }
 
+void QtOfExternalWidget::mousePressEvent(QMouseEvent* ev) {
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_PRESS;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  widgets_send_message(ref, msg);
+}
+
+void QtOfExternalWidget::mouseReleaseEvent(QMouseEvent* ev) {
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_RELEASE;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  widgets_send_message(ref, msg);
+}
+
 void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
   UiMessage msg;
   msg.type = UI_MSG_MOUSE_ENTER;
@@ -322,10 +339,16 @@ void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
   the widget layer.
 
  */
-void QtOfExternalWidget::sendUiMessageString(unsigned int eventType, const QString& str) {
+void QtOfExternalWidget::sendUiMessageString(unsigned int msgType, const QString& str) {
   UiMessage msg;
-  msg.type = eventType;
+  msg.type = msgType;
   msg.s = str.toLatin1().data();
+  widgets_send_message(ref, msg);
+}
+
+void QtOfExternalWidget::sendUiMessage(unsigned int msgType) {
+  UiMessage msg;
+  msg.type = msgType;
   widgets_send_message(ref, msg);
 }
 

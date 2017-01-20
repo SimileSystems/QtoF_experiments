@@ -150,7 +150,7 @@ class QtOfExternalWidget : public QQuickItem,
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
   Q_PROPERTY(int layer WRITE setLayer READ getLayer)                  /* The layer onto which we draw, 0: background, 1: foreground */
-
+  
 public:
   QtOfExternalWidget();
   ~QtOfExternalWidget();
@@ -166,7 +166,8 @@ public:
   int getLayer();
   void setRef(const int& v);
   void setLayer(const int& v);
-  Q_INVOKABLE void sendUiMessageString(unsigned int eventType, const QString& str);                                                
+  Q_INVOKABLE void sendUiMessageString(unsigned int msgType, const QString& str);
+  Q_INVOKABLE void sendUiMessage(unsigned int msgType);
 
 private slots:
   void onWindowChanged(QQuickWindow* win);
@@ -179,6 +180,8 @@ private:
   void resetOpenGlState();                                            /* After rendering our own things using openFrameworks, we have to reset the GL state because Qt will run into rendering issues. Qt provides a function for this which sets some of the default state; but not all. We use or own wrapper to reset some other state too. */
 
 protected:
+  void mousePressEvent(QMouseEvent* ev);
+  void mouseReleaseEvent(QMouseEvent* ev);
   void hoverEnterEvent(QHoverEvent* ev);                                      
   void hoverLeaveEvent(QHoverEvent* ev);
   void hoverMoveEvent(QHoverEvent* ev);

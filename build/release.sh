@@ -61,6 +61,40 @@ if [ ! -d ${of}/libs/boost ] ; then
     ./download_libs.sh
 fi
 
+# Compile libuv; used for an example that was requested by James George
+if [ ! -d ${d}/libuv.build ] ; then
+
+    if [ ! -d ${ed}/extern/lib ] ; then
+        mkdir ${ed}/extern/lib
+    fi
+
+    mkdir ${d}/libuv.build
+    cd ${d}/libuv.build
+    if [ ! -d build/gyp ] ; then
+        git clone https://chromium.googlesource.com/external/gyp.git build/gyp
+    fi
+
+    git clone https://github.com/libuv/libuv .
+    
+    if [ "${os}" = "mac" ] ; then
+       # sh ./autogen.sh
+        ./gyp_uv.py -f xcode -D prefix=${ed}/extern
+        xcodebuild -ARCHS="x86_64" \
+                   -project uv.xcodeproj \
+                   -configuration Release \
+                   -target All
+
+        if [ ! -f ${ed}/extern/lib/libuv.a ] ; then
+            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib
+        fi
+    fi
+    
+    if [ ! -f ${ed}/extern/include/uv.h ] ; then 
+        cp ${d}/libuv.build/include/*.h ${ed}/extern/include/
+    fi
+fi
+
+
 # Create unique name for this build type.
 bd="${d}/${build_dir}.${cmake_build_type}"
 

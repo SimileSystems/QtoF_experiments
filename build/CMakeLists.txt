@@ -23,9 +23,6 @@ find_package(Qt5Qml           REQUIRED)
 find_package(Qt5Quick         REQUIRED)
 find_package(Qt5QuickCompiler REQUIRED)   # From http://doc.qt.io/QtQuickCompiler/qquickcompiler-building-with-cmake.html
 
-find_library(fr_opengl OpenGL)
-message("--- ${fr_opengl}")
-
 include_directories(
   ${ed}/include
   ${sd}
@@ -43,6 +40,7 @@ list(APPEND of_sources
   ${sd}/experimental/WidgetDebug.cpp
   ${sd}/experimental/WidgetDebugPimpl.cpp
   ${sd}/experimental/GuiBlur.cpp
+  ${sd}/experimental/DirectoryWatcher.cpp
   )
 
 list(APPEND qtof_sources
@@ -52,23 +50,30 @@ list(APPEND qtof_sources
   ${sd}/qtof/ofExternalWidget.cpp
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
+  ${sd}/qtof/QtUiMessage.cpp
   ${sd}/qtof/Widgets.cpp
   ${sd}/qtof/UiMessages.cpp
   )
+
+if (APPLE)
+  list(APPEND libs
+    ${ed}/lib/libuv.a
+    )
+endif()
 
 # openFrameworks library
 add_library(of${debug_flag} STATIC ${of_sources})
 
 # QtOf library
 add_library(qtof${debug_flag} STATIC ${qtof_sources})
-target_link_libraries(qtof${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick ${of_libs} of${debug_flag})
+target_link_libraries(qtof${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick ${of_libs} of${debug_flag} ${libs})
 add_dependencies(qtof${debug_flag} of${debug_flag})
 
 # tests
 macro(create_test name)
   set(test_name "test_${name}${debug_flag}")
   add_executable(${test_name} ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
-  target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick qtof${debug_flag})
+  target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick qtof${debug_flag} ${libs})
   install(TARGETS ${test_name} DESTINATION bin/)
 endmacro()
 

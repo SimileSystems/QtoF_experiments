@@ -3,7 +3,12 @@
 #include <experimental/WidgetDepthKit.h>
 
 void WidgetDepthKit::setup() {
+  
   video_grabber.setup(0, 640, 480);
+
+  if (0 != dir_watcher.init(ofFilePath::getCurrentExeDir() + "scenes", this)) {
+    ofLogError() << "Failed to init the dir watcher";
+  }
 }
 
 void WidgetDepthKit::update() {
@@ -12,46 +17,55 @@ void WidgetDepthKit::update() {
 }
 
 void WidgetDepthKit::draw() {
-
-  //glDisable(GL_DEPTH_TEST);
   video_grabber.draw(0, 0, ofGetWidth() * getPixelRatio(), ofGetHeight() * getPixelRatio()); 
 }
 
 void WidgetDepthKit::destroy() {
 }
 
+/* ----------------------------------------------------- */
+/*
+  Here we show how you can handle UiMessages. Of course you want to
+  handle some error checking into this code when removing or creating
+  the directory fails; for readability I've not added those.
+ */
 void WidgetDepthKit::onUiMessage(const UiMessage& msg) {
 
   switch (msg.type) {
-    
-    case 1000: {
 
-      /* 
-         Here we start a thread, detach it and then sleep 
-         for a while after which we send a message back 
-         to the GUI layer. Here we simulate some work
-         that will be done by e.g. DepthKit
-      */
-      std::thread t([&](void) {
-          ofSleepMillis(1000);
-          UiMessage result;
-          result.type = 1000;
-          result.s = msg.s;
-          ofExternalWidget::addUiMessage(result);
-        });
+    case UI_MSG_DIRECTORY_CREATE: {
+      std::string new_dir = "auto-" +ofGetTimestampString();
+      ofDirectory::createDirectory(dir_watcher.path +"/" +new_dir, false);
+      break;
+    }
+
+    case UI_MSG_DIRECTORY_DELETE: {
+      std::string del_dir = dir_watcher.path +"/" +msg.s;
+      ofDirectory::removeDirectory(del_dir, true);
+      break;
+    }
       
-      t.detach();
-
-      break;
-    }
-    case UI_MSG_MOUSE_PRESS: 
-    case UI_MSG_MOUSE_MOVE: {
-      //printf("Mouse move: %d x %d\n", msg.i[0], msg.i[1]);
-      break;
-    }
     default: {
       ofExternalWidget::onUiMessage(msg);
       break;
     }
   }
 }
+
+/* ----------------------------------------------------- */
+
+void WidgetDepthKit::onDirectoryCreated(const std::string& path) {
+  UiMessage msg;
+  msg.type = UI_MSG_DIRECTORY_CREATED;
+  msg.s = path;
+  ofExternalWidget::addUiMessage(msg);
+}
+
+void WidgetDepthKit::onDirectoryRemoved(const std::string& path) {
+  UiMessage msg;
+  msg.type = UI_MSG_DIRECTORY_DELETED;
+  msg.s = path;
+  ofExternalWidget::addUiMessage(msg);
+}
+
+/* ----------------------------------------------------- */

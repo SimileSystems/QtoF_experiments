@@ -79,6 +79,7 @@
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/Widgets.h>
+#include <qtof/QtUiMessage.h>
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
 #include <experimental/WidgetDepthKitPimpl.h>
@@ -95,7 +96,9 @@ int main(int argc, char* argv[]) {
 
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
-
+  qRegisterMetaType<QtUiMessage::UiMsg>("QtUiMessage::UiMsg");
+  qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
+  
   widgets_add(1, new Widget<WidgetHistogramPimpl>());
   widgets_add(2, new Widget<WidgetWebcamPimpl>());
   widgets_add(3, new Widget<WidgetDepthKitPimpl>());

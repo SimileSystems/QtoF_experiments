@@ -176,4 +176,6 @@ inline int Widgets::draw(int ref) {
   return it->second->draw();
 }
 
+/* ---------------------------------------------------- */
+
 #endif

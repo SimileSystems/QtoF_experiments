@@ -15,13 +15,10 @@ void Widget3d::update() {
 void Widget3d::draw() {
   static float spin_x = 0.0f;
   
-  //glDisable(GL_DEPTH_TEST);
+
   ofSetColor(0, 0, 0, 100);
   ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
   ofSetColor(255, 255, 255, 255);
-
-  //  img.bind();
-  //  img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
 
   glEnable(GL_DEPTH_TEST);
   img.getTexture().bind();
@@ -29,7 +26,6 @@ void Widget3d::draw() {
   box.rotateDeg(perc_x * 360.0f, 0.0, 1.0, 0.0);
   box.rotateDeg(perc_y * 360.0f, 1.0, 0.0, 0.0);
   box.mapTexCoordsFromTexture(img.getTexture());
-  //  box.resizeToTexture(img.getTexture());
   box.setPosition(getWidgetDrawX() + getWidgetDrawWidth() * 0.5, getWidgetDrawY() + getWidgetDrawHeight() * 0.5, 0.0f);
   box.set(getWidgetDrawWidth() * 0.35);
   box.draw();

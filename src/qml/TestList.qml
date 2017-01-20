@@ -18,19 +18,8 @@ ApplicationWindow {
     gl_minor_version: 3
   }
 
-
   ListModel {
     id: scenes_model
-    ListElement {
-      number: "1"
-      title: "Take name 001"
-      duration: "06:34"
-    }
-    ListElement {
-      number: "2"
-      title: "Take name 002"
-      duration: "02:11"
-    }
   }
 
   QtOfExternalWidget {
@@ -41,10 +30,59 @@ ApplicationWindow {
     height: app.height
     x: 0
     y: 0
-    function onUiMessage(msg) {
-      if (msg.type == 1000) {
-        scenes_model.insert(0, {title: "TEST", number: "X", duration:"10:35"})
+    
+    function getDirFromPath(path) {
+      var path_parts = path.split("/");
+      if (0 == path_parts.length) {
+        console.error("Invalid path: ", msg.s);
+        return false;
       }
+
+      var dir_name = path_parts[path_parts.length - 1];
+      return dir_name;
+    }
+
+    /* Will add a new entry to the list model. */
+    function handleDirectoryCreatedMessage(msg) {
+      var dir = getDirFromPath(msg.s);
+      if (false == dir) {
+        return;
+      }
+      scenes_model.insert(0, {title: dir, number: "X", duration:"10:35"})
+    }
+
+    /* Will remove the directory name from the list model. */
+    function handleDirectoryDeletedMessage(msg) {
+      var dir = getDirFromPath(msg.s);
+      if (false == dir) {
+        return;
+      }
+      for (var i = 0; i < scenes_model.count; ++i) {
+        var scene = scenes_model.get(i);
+        if (scene.title == dir) {
+          scenes_model.remove(i);
+          return;
+        }
+      }
+    }
+
+    /* Handle incoming ui messages. */
+    function onUiMessage(msg) {
+
+      switch (msg.type) {
+        case QtUiMessage.DIRECTORY_CREATED: {
+          handleDirectoryCreatedMessage(msg);
+          break;
+        }
+        case QtUiMessage.DIRECTORY_DELETED: {
+          handleDirectoryDeletedMessage(msg);
+          break;
+        }
+        default: {
+          console.error("Unhandled ui message.");
+          break;
+        }
+      };
     }
   }
 
@@ -81,7 +119,8 @@ ApplicationWindow {
               hoverEnabled: true
               cursorShape: Qt.PointingHandCursor
               onClicked: {
-                scenes_model.remove(index);
+                var scene = scenes_model.get(index);
+                depthkit.sendUiMessageString(QtUiMessage.DIRECTORY_DELETE, scene.title);
               }
               onEntered: {
                 parent.color = "#FF0000"
@@ -192,12 +231,12 @@ ApplicationWindow {
       topPadding: 20
       spacing: 5
       Button {
-        text: "Add Scene Row"
+        text: "Create Scene Directory"
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 20
         onClicked: {
-          depthkit.sendUiMessageString(1000, "Some scene");
+          depthkit.sendUiMessage(QtUiMessage.DIRECTORY_CREATE);
         }
       }
       Button {
