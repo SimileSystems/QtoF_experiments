@@ -61,45 +61,45 @@ if [ ! -d ${of}/libs/boost ] ; then
         cd ${of}/scripts/osx
         ./download_libs.sh
     elif [ "${os}" == "win" ] ; then
-        cd ${of}/scripts/vs/
-        ./download_libs.sh
+        cd ${of}/scripts/vs
+        /c/Windows/System32/WindowsPowerShell/v1.0/powershell -executionPolicy bypass -file "${of}/scripts/vs/download_libs.ps1"
     fi
 fi
 
 # Compile libuv; used for an example that was requested by James George
-if [ ! -d ${d}/libuv.build ] ; then
-
-    if [ ! -d ${ed}/extern/lib ] ; then
-        mkdir ${ed}/extern/lib
-    fi
-
-    if [ ! -d ${d}/libuv.build ] ; then
-        mkdir ${d}/libuv.build
-    fi
-    
-    cd ${d}/libuv.build
-    git clone https://github.com/libuv/libuv .
-    
-    if [ ! -d build/gyp ] ; then
-        git clone https://chromium.googlesource.com/external/gyp.git build/gyp
-    fi
-
-    if [ "${os}" == "mac" ] ; then
-
-        ./gyp_uv.py -f xcode -D prefix=${ed}/extern
-        xcodebuild -ARCHS="x86_64" \
-                   -project uv.xcodeproj \
-                   -configuration Release \
-                   -target All
-
-        if [ ! -d ${ed}/extern/lib/clang ] ; then
-            mkdir -p ${ed}/extern/lib/clang
-        fi
-        if [ ! -f ${ed}/extern/lib/clang/libuv.a ] ; then
-            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib/clang/
-        fi
-    fi
-fi
+#if [ ! -d ${d}/libuv.build ] ; then
+#
+#    if [ ! -d ${ed}/extern/lib ] ; then
+#        mkdir ${ed}/extern/lib
+#    fi
+#
+#    if [ ! -d ${d}/libuv.build ] ; then
+#        mkdir ${d}/libuv.build
+#    fi
+#    
+#    cd ${d}/libuv.build
+#    git clone https://github.com/libuv/libuv .
+#    
+#    if [ ! -d build/gyp ] ; then
+#        git clone https://chromium.googlesource.com/external/gyp.git build/gyp
+#    fi
+#
+#    if [ "${os}" == "mac" ] ; then
+#
+#        ./gyp_uv.py -f xcode -D prefix=${ed}/extern
+#        xcodebuild -ARCHS="x86_64" \
+#                   -project uv.xcodeproj \
+#                   -configuration Release \
+#                   -target All
+#
+#        if [ ! -d ${ed}/extern/lib/clang ] ; then
+#            mkdir -p ${ed}/extern/lib/clang
+#        fi
+#        if [ ! -f ${ed}/extern/lib/clang/libuv.a ] ; then
+#            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib/clang/
+#        fi
+#    fi
+#fi
 
 # Create unique name for this build type.
 cd ${d}
