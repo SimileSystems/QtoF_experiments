@@ -2,6 +2,7 @@ set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(of_bd ${bd}/of)
 set(of_ld ${of_bd}/libs)
 set(of_sd ${of_bd}/libs/openFrameworks)
+set(of_ed ${bd}/extern)
 
 list(APPEND of_sources
   ${of_sd}/3d/of3dPrimitives.cpp
@@ -64,19 +65,46 @@ list(APPEND of_sources
   ${of_sd}/utils/ofURLFileLoader.cpp
   ${of_sd}/utils/ofUtils.cpp
   ${of_sd}/utils/ofXml.cpp
-  ${of_sd}/video/ofAVFoundationGrabber.mm
-  ${of_sd}/video/ofQTKitGrabber.mm
-  ${of_sd}/video/ofQTKitMovieRenderer.m
-  ${of_sd}/video/ofQtUtils.cpp
-  ${of_sd}/video/ofQuickTimeGrabber.cpp
-  ${of_sd}/video/ofQuickTimePlayer.cpp
   ${of_sd}/video/ofVideoGrabber.cpp
   ${of_sd}/video/ofVideoPlayer.cpp
   )
 
-if (APPLE)
+if (WIN32)
+  
+  list(APPEND of_sources
+    ${of_sd}/video/ofDirectShowGrabber.cpp
+    ${of_sd}/video/ofDirectShowPlayer.cpp
+    )
+
+  include_directories(
+    ${of_ld}/videoInput/include
+    )
+
+  add_definitions(
+    -DPOCO_STATIC
+    -DCAIRO_WIN32_STATIC_BUILD
+    -DDISABLE_SOME_FLOATING_POINT
+    -DUNICODE
+    -D_UNICODE
+    -DCURL_STATICLIB
+    )
+  
+  #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} /GL")
+  
+elseif (APPLE)
+
+  list(APPEND of_sources
+    ${of_sd}/video/ofAVFoundationGrabber.mm
+    ${of_sd}/video/ofQTKitGrabber.mm
+    ${of_sd}/video/ofQTKitMovieRenderer.m
+    ${of_sd}/video/ofQtUtils.cpp
+    ${of_sd}/video/ofQuickTimeGrabber.cpp
+    ${of_sd}/video/ofQuickTimePlayer.cpp
+    )
+  
   set_source_files_properties(${of_sd}/app/ofAppGLFWWindow.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
   set_source_files_properties(${of_sd}/utils/ofSystemUtils.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
 endif()
 
 include_directories(
@@ -107,11 +135,75 @@ include_directories(
   ${of_ld}/pugixml/include
   ${of_ld}/rtAudio/include
   ${of_ld}/tess2/include
-  ${of_ld}/uriparser/include
   ${of_ld}/utf8/include
   )
 
-if (APPLE)
+if (WIN32)
+
+  list(APPEND of_libs
+    ${of_ld}/assimp/lib/vs/x64/assimp64.lib
+    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-1_62.lib
+    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-1_62.lib
+    ${of_ld}/cairo/lib/vs/x64/cairo-static.lib
+    ${of_ld}/cairo/lib/vs/x64/libpng.lib
+    ${of_ld}/cairo/lib/vs/x64/pixman-1.lib
+    ${of_ld}/cairo/lib/vs/x64/zlib.lib
+    ${of_ld}/curl/lib/vs/x64/libcurl.lib
+    ${of_ld}/fmodex/lib/vs/x64/fmodex64_vc.lib
+    ${of_ld}/FreeImage/lib/vs/x64/FreeImage.lib
+    ${of_ld}/freetype/lib/vs/x64/libfreetype.lib 
+    ${of_ld}/glew/lib/vs/x64/glew32s.lib
+    ${of_ld}/glfw/lib/vs/x64/glfw3.lib
+    ${of_ld}/ippicv/lib/vs/x64/ippicvmt.lib
+    ${of_ld}/libxml2/lib/vs/x64/libxml2.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/libwebp.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_calib3d310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_core310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_features2d310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_flann310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_highgui310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_imgcodecs310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_imgproc310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_ml310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_objdetect310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_photo310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_shape310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_stitching310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_superres310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_video310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_videoio310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/opencv_videostab310.lib
+    ${of_ld}/opencv/lib/vs/x64/Release/zlib.lib # also in png?
+    ${of_ld}/openssl/lib/vs/x64/libeay32md.lib
+    ${of_ld}/openssl/lib/vs/x64/ssleay32md.lib
+    ${of_ld}/poco/lib/vs/x64/Release/PocoFoundationmd.lib
+    ${of_ld}/poco/lib/vs/x64/Release/PocoNetmd.lib
+    ${of_ld}/poco/lib/vs/x64/Release/PocoUtilmd.lib
+    ${of_ld}/poco/lib/vs/x64/Release/PocoXMLmd.lib
+    ${of_ld}/pugixml/lib/vs/x64/pugixml.lib
+    ${of_ld}/rtAudio/lib/vs/x64/rtAudio.lib
+    ${of_ld}/svgtiny/lib/vs/x64/svgtiny.lib
+    ${of_ld}/tess2/lib/vs/x64/tess2.lib
+    ${of_ld}/videoInput/lib/vs/x64/VideoInput.lib
+    ${of_ed}/lib/vs2015/uriparser.lib
+    
+    Ws2_32.lib
+    Wldap32.lib
+    Psapi.lib
+    Userenv.lib
+    Winmm.lib
+    Opengl32.lib
+    )
+
+  install(FILES ${of_ld}/assimp/lib/vs/x64/assimp64.dll DESTINATION bin)
+  install(FILES ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll DESTINATION bin)
+  install(FILES ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll DESTINATION bin)
+
+elseif (APPLE)
+
+  include_directories(
+    ${of_ld}/uriparser/include
+    )
   
   list(APPEND of_libs
     ${of_ld}/boost/lib/osx/boost_filesystem.a
@@ -165,3 +257,4 @@ if (APPLE)
   file(COPY ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION ${CMAKE_BINARY_DIR})
   
 endif()
+

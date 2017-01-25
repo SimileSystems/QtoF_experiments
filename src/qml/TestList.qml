@@ -9,7 +9,7 @@ ApplicationWindow {
   width: 1280
   height: 720
   title: "Depth Kit - List Test"
-  color: "lightgray"
+  color: "#FFFF00"
   visible: true
 
   QtOfExternal {
@@ -32,6 +32,7 @@ ApplicationWindow {
     y: 0
     
     function getDirFromPath(path) {
+      path = path.replace(/\\/g, "/");
       var path_parts = path.split("/");
       if (0 == path_parts.length) {
         console.error("Invalid path: ", msg.s);
@@ -39,6 +40,7 @@ ApplicationWindow {
       }
 
       var dir_name = path_parts[path_parts.length - 1];
+      console.log("dirname:", dir_name);
       return dir_name;
     }
 
@@ -48,6 +50,7 @@ ApplicationWindow {
       if (false == dir) {
         return;
       }
+      console.log(dir);
       scenes_model.insert(0, {title: dir, number: "X", duration:"10:35"})
     }
 
@@ -163,7 +166,8 @@ ApplicationWindow {
     x: 0
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-
+    clip: true
+    
     states: [
       State {
         name: "show"

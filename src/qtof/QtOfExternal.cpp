@@ -103,7 +103,7 @@ void QtOfExternal::onWindowChanged(QQuickWindow* win) {
   connect(win, &QQuickWindow::heightChanged, this, &QtOfExternal::onHeightChanged);
   connect(win, &QQuickWindow::screenChanged, this, &QtOfExternal::onScreenChanged);
 
-  win->setClearBeforeRendering(false);
+  //win->setClearBeforeRendering(true);
 }
 
 void QtOfExternal::onWidthChanged(int w) {

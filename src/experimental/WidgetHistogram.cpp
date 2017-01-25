@@ -3,7 +3,11 @@
 #include <experimental/WidgetHistogram.h>
 
 void WidgetHistogram::setup() {
-  img.load(ofFilePath::getCurrentExeDir() +"scene.jpg");
+
+  if (false == img.load("scene.jpg")) {
+    ofLogError() << "Failed to load scene.jpg from exe dir.";
+    exit(EXIT_FAILURE);
+  }
 }
 
 void WidgetHistogram::update() {
@@ -11,8 +15,7 @@ void WidgetHistogram::update() {
 
 void WidgetHistogram::draw() {
 
-
-  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_DEPTH_TEST);  /* Necessary on Win */
   img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
 
   if (true == isMouseInsideWidget()) {

@@ -203,7 +203,6 @@ void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
   connect(win, &QQuickWindow::sceneGraphInvalidated, this, &QtOfExternalWidget::onCleanup, Qt::DirectConnection);
   connect(win, &QQuickWindow::screenChanged, this, &QtOfExternalWidget::onScreenChanged);
 
-  /* @todo do we want to call this here? */
   win->setClearBeforeRendering(false);
 }
 

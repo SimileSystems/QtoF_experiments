@@ -65,6 +65,13 @@ void ofAppExternalWindow::setup(const ofGLWindowSettings& settings) {
 
    */
   ofSetBackgroundAuto(false);
+
+  /*
+    After some debugging issues with loading an image on Windows I
+    found out that I had to call `ofInit()` because that's setting up
+    the path loading features. See `ofAppRunner.cpp`
+   */
+  ofInit();
 }
 
 /* ---------------------------------------------------- */

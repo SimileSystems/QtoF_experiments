@@ -54,11 +54,18 @@ if [ ! -d ${of} ] ; then
     mkdir ${of}
     cd ${of}
     git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
+    git submodule init
+    git submodule update
 fi
 
-if [ ! -d ${of}/libs/boost ] ; then 
-    cd ${of}/scripts/osx
-    ./download_libs.sh
+if [ ! -d ${of}/libs/boost ] ; then
+    if [ "${os}" == "mac" ] ; then
+        cd ${of}/scripts/osx
+        ./download_libs.sh
+    elif [ "${os}" == "win" ] ; then
+        cd ${of}/scripts/vs/
+        ./download_libs.sh
+    fi
 fi
 
 # Compile libuv; used for an example that was requested by James George
@@ -68,15 +75,18 @@ if [ ! -d ${d}/libuv.build ] ; then
         mkdir ${ed}/extern/lib
     fi
 
-    mkdir ${d}/libuv.build
+    if [ ! -d ${d}/libuv.build ] ; then
+        mkdir ${d}/libuv.build
+    fi
+    
     cd ${d}/libuv.build
+    git clone https://github.com/libuv/libuv .
+    
     if [ ! -d build/gyp ] ; then
         git clone https://chromium.googlesource.com/external/gyp.git build/gyp
     fi
 
-    git clone https://github.com/libuv/libuv .
-    
-    if [ "${os}" = "mac" ] ; then
+    if [ "${os}" == "mac" ] ; then
        # sh ./autogen.sh
         ./gyp_uv.py -f xcode -D prefix=${ed}/extern
         xcodebuild -ARCHS="x86_64" \
@@ -87,13 +97,27 @@ if [ ! -d ${d}/libuv.build ] ; then
         if [ ! -f ${ed}/extern/lib/libuv.a ] ; then
             cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib
         fi
+    elif [ "${os}" == "win" ] ; then
+        if [ ! -f ${d}/libuv.build/Release/libuv.lib ] ; then
+            echo ""
+            echo "------------------------------------------------------"
+            echo ""
+            echo "1. Open the Developer Command Prompt for VS2015"
+            echo "2. cd ${d}/libuv.build "
+            echo "3. set PYTHON=c:\Python2.7\python.exe"
+            echo "4. vcbuild.bat"
+            echo "5. msbuild uv.sln /t:libuv"
+            echo ""
+            echo "------------------------------------------------------"
+            echo ""
+            exit
+        fi
     fi
     
     if [ ! -f ${ed}/extern/include/uv.h ] ; then 
         cp ${d}/libuv.build/include/*.h ${ed}/extern/include/
     fi
 fi
-
 
 # Create unique name for this build type.
 bd="${d}/${build_dir}.${cmake_build_type}"

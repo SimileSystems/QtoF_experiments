@@ -2,10 +2,16 @@
 #include <qtof/UiMessages.h>
 
 void Widget3d::Widget3d::setup() {
-  img.load(ofFilePath::getCurrentExeDir() +"cat.jpg");
+  
+  if (false == img.load("cat.jpg")) {
+    ofLogError() << "Failed to load cat.jpg from exe dir.";
+    exit(EXIT_FAILURE);
+  }
+  
   box.set(100.0);
   perc_x = 0.0f;
   perc_y = 0.0f;
+
 }
 
 void Widget3d::update() {
@@ -14,7 +20,6 @@ void Widget3d::update() {
 
 void Widget3d::draw() {
   static float spin_x = 0.0f;
-  
 
   ofSetColor(0, 0, 0, 100);
   ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
@@ -50,6 +55,5 @@ void Widget3d::onUiMessage(const UiMessage& msg) {
       break;
     }
   }
-     
 }
 
