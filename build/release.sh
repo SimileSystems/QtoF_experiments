@@ -54,8 +54,6 @@ if [ ! -d ${of} ] ; then
     mkdir ${of}
     cd ${of}
     git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
-    git submodule init
-    git submodule update
 fi
 
 if [ ! -d ${of}/libs/boost ] ; then
@@ -87,39 +85,24 @@ if [ ! -d ${d}/libuv.build ] ; then
     fi
 
     if [ "${os}" == "mac" ] ; then
-       # sh ./autogen.sh
+
         ./gyp_uv.py -f xcode -D prefix=${ed}/extern
         xcodebuild -ARCHS="x86_64" \
                    -project uv.xcodeproj \
                    -configuration Release \
                    -target All
 
-        if [ ! -f ${ed}/extern/lib/libuv.a ] ; then
-            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib
+        if [ ! -d ${ed}/extern/lib/clang ] ; then
+            mkdir -p ${ed}/extern/lib/clang
         fi
-    elif [ "${os}" == "win" ] ; then
-        if [ ! -f ${d}/libuv.build/Release/libuv.lib ] ; then
-            echo ""
-            echo "------------------------------------------------------"
-            echo ""
-            echo "1. Open the Developer Command Prompt for VS2015"
-            echo "2. cd ${d}/libuv.build "
-            echo "3. set PYTHON=c:\Python2.7\python.exe"
-            echo "4. vcbuild.bat"
-            echo "5. msbuild uv.sln /t:libuv"
-            echo ""
-            echo "------------------------------------------------------"
-            echo ""
-            exit
+        if [ ! -f ${ed}/extern/lib/clang/libuv.a ] ; then
+            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib/clang/
         fi
-    fi
-    
-    if [ ! -f ${ed}/extern/include/uv.h ] ; then 
-        cp ${d}/libuv.build/include/*.h ${ed}/extern/include/
     fi
 fi
 
 # Create unique name for this build type.
+cd ${d}
 bd="${d}/${build_dir}.${cmake_build_type}"
 
 if [ ! -d ${bd} ] ; then 

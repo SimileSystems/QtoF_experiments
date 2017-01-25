@@ -72,7 +72,7 @@ if (WIN32)
 
 elseif (APPLE)
   list(APPEND libs
-    ${ed}/lib/libuv.a
+    ${ed}/lib/clang/libuv.a
     )
 endif()
 
