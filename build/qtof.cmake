@@ -7,6 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+# @todo - how to specify this?
 if (APPLE)
   set(CMAKE_PREFIX_PATH /Applications/Qt/5.7/clang_64/)
 endif()
@@ -19,12 +20,22 @@ find_package(Qt5Qml           REQUIRED)
 find_package(Qt5Quick         REQUIRED)
 
 if (WIN32)
-  install(FILES $<TARGET_FILE:Qt5::Widgets> DESTINATION bin)
-  install(FILES $<TARGET_FILE:Qt5::Gui>     DESTINATION bin)
-  install(FILES $<TARGET_FILE:Qt5::Qml>     DESTINATION bin)
-  install(FILES $<TARGET_FILE:Qt5::Quick>   DESTINATION bin)
-  install(FILES $<TARGET_FILE:Qt5::Core>    DESTINATION bin)
-  install(FILES $<TARGET_FILE:Qt5::Network> DESTINATION bin)
+  
+  #install(FILES $<TARGET_FILE:Qt5::Widgets> DESTINATION bin)
+  #install(FILES $<TARGET_FILE:Qt5::Gui>     DESTINATION bin)
+  #install(FILES $<TARGET_FILE:Qt5::Qml>     DESTINATION bin)
+  #install(FILES $<TARGET_FILE:Qt5::Quick>   DESTINATION bin)
+  #install(FILES $<TARGET_FILE:Qt5::Core>    DESTINATION bin)
+  #install(FILES $<TARGET_FILE:Qt5::Network> DESTINATION bin)
+
+  list(APPEND qtof_assets
+    $<TARGET_FILE:Qt5::Widgets>
+    $<TARGET_FILE:Qt5::Gui>
+    $<TARGET_FILE:Qt5::Qml>
+    $<TARGET_FILE:Qt5::Quick>
+    $<TARGET_FILE:Qt5::Core>
+    $<TARGET_FILE:Qt5::Network>
+    )
 endif()
 
 include_directories(

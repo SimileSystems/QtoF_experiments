@@ -100,8 +100,6 @@ include_directories(
   ${of_ld}/utf8/include
   )
 
-
-
 if (WIN32)
   
   list(APPEND of_sources
@@ -123,8 +121,10 @@ if (WIN32)
     )
 
   list(APPEND of_libs
-    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-1_62.lib
-    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-1_62.lib
+#    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-1_62.lib
+#    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-gd-1_62.lib
+#    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-gd-1_62.lib
+#    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-1_62.lib
     ${of_ld}/cairo/lib/vs/x64/cairo-static.lib
     ${of_ld}/cairo/lib/vs/x64/libpng.lib
     ${of_ld}/cairo/lib/vs/x64/pixman-1.lib
@@ -140,7 +140,6 @@ if (WIN32)
     ${of_ld}/pugixml/lib/vs/x64/pugixml.lib
     ${of_ld}/rtAudio/lib/vs/x64/rtAudio.lib
     ${of_ld}/tess2/lib/vs/x64/tess2.lib
-    ${of_ld}/videoInput/lib/vs/x64/VideoInput.lib
     ${of_ed}/lib/vs2015/uriparser.lib
     
     Ws2_32.lib
@@ -152,9 +151,24 @@ if (WIN32)
     Iphlpapi.lib
     )
 
-  install(FILES ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll DESTINATION bin)
-  install(FILES ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll DESTINATION bin)
-
+  if (CMAKE_BUILD_TYPE MATCHES Release)
+    list(APPEND of_libs
+      ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-1_62.lib
+      ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-1_62.lib
+      ${of_ld}/videoInput/lib/vs/x64/videoInput.lib
+      )
+  else()
+    list(APPEND of_libs
+      ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-gd-1_62.lib
+      ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-gd-1_62.lib
+      ${of_ld}/videoInput/lib/vs/x64/videoInputD.lib
+      )
+  endif()
+  
+  list(APPEND of_assets
+    ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll
+    ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll
+    )
   
 elseif (APPLE)
 

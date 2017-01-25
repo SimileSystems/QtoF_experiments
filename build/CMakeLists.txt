@@ -41,17 +41,13 @@ list(APPEND of_sources
   )
 
 if (WIN32)
-  
   list(APPEND libs
     ${ed}/lib/vs2015/libuv.lib
     )
-  
 elseif (APPLE)
-  
   list(APPEND libs
     ${ed}/lib/clang/libuv.a
-    )
-  
+<    )
 endif()
 
 # openFrameworks library
@@ -71,11 +67,21 @@ macro(create_test name)
   install(DIRECTORY DESTINATION bin/scenes)
 
   # Create the "scenes" directory (Custom for this project).
-  add_custom_target(create_scenes_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
+  #add_custom_target(create_scenes_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
 
   # Install the OF assets. 
+  #foreach(of_asset ${of_assets}) 
+  #  add_custom_target(install_of_assets ALL COMMAND ${CMAKE_COMMAND} -E copy ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
+  #endforeach()
+
+  # Install the openFrameworks assets.
   foreach(of_asset ${of_assets}) 
-    add_custom_target(install_of_assets ALL COMMAND ${CMAKE_COMMAND} -E copy ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
+    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
+  endforeach()
+
+  # Install the Qt assets
+  foreach(qtof_asset ${qtof_assets})
+    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_asset} $<TARGET_FILE_DIR:${test_name}>)
   endforeach()
 
 endmacro()
