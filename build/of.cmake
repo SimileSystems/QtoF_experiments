@@ -222,7 +222,8 @@ elseif (APPLE)
     z
     )
 
-  install(FILES ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION bin)
-  file(COPY ${of_ld}/fmodex/lib/osx/libfmodex.dylib DESTINATION ${CMAKE_BINARY_DIR})
-  
+  list(APPEND of_assets
+    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
+    )
+
 endif()

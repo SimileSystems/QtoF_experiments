@@ -17,14 +17,15 @@ find_package(Qt5Widgets       REQUIRED)
 find_package(Qt5Gui           REQUIRED)
 find_package(Qt5Qml           REQUIRED)
 find_package(Qt5Quick         REQUIRED)
-#find_package(Qt5QuickCompiler REQUIRED)
 
-install(FILES $<TARGET_FILE:Qt5::Widgets> DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Gui>     DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Qml>     DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Quick>   DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Core>    DESTINATION bin)
-install(FILES $<TARGET_FILE:Qt5::Network> DESTINATION bin)
+if (WIN32)
+  install(FILES $<TARGET_FILE:Qt5::Widgets> DESTINATION bin)
+  install(FILES $<TARGET_FILE:Qt5::Gui>     DESTINATION bin)
+  install(FILES $<TARGET_FILE:Qt5::Qml>     DESTINATION bin)
+  install(FILES $<TARGET_FILE:Qt5::Quick>   DESTINATION bin)
+  install(FILES $<TARGET_FILE:Qt5::Core>    DESTINATION bin)
+  install(FILES $<TARGET_FILE:Qt5::Network> DESTINATION bin)
+endif()
 
 include_directories(
   ${sd}

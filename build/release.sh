@@ -128,4 +128,10 @@ if [ $? -ne 0 ] ; then
 fi
 
 cd ${id}/bin
-${debugger} ./test_qt${debug_flag}
+if [ "${os}" == "mac" ] ; then
+    open ./test_qt.app
+else
+    ${debugger} ./test_qt${debug_flag}
+fi
+
+
