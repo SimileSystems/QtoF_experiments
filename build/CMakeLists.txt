@@ -11,8 +11,7 @@ endif()
 set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(sd ${bd}/src)
 set(ed ${bd}/extern)
-#set(CMAKE_PREFIX_PATH /Applications/Qt/5.7/clang_64/)
-#set(CMAKE_PREFIX_PATH "/g/applications/Qt/5.8/msvc2015_64/lib/cmake/")
+#@todo remove this next line
 set(CMAKE_PREFIX_PATH "/g/applications/Qt/5.8/msvc2015_64/")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
@@ -47,7 +46,7 @@ if (WIN32)
 elseif (APPLE)
   list(APPEND libs
     ${ed}/lib/clang/libuv.a
-<    )
+    )
 endif()
 
 # openFrameworks library
@@ -66,16 +65,9 @@ macro(create_test name)
   install(TARGETS ${test_name} DESTINATION bin/)
   install(DIRECTORY DESTINATION bin/scenes)
 
-  # Create the "scenes" directory (Custom for this project).
-  #add_custom_target(create_scenes_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
-
-  # Install the OF assets. 
-  #foreach(of_asset ${of_assets}) 
-  #  add_custom_target(install_of_assets ALL COMMAND ${CMAKE_COMMAND} -E copy ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
-  #endforeach()
-
   # Install the openFrameworks assets.
-  foreach(of_asset ${of_assets}) 
+  foreach(of_asset ${of_assets})
+    message("___${of_asset}__")
     add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
   endforeach()
 
