@@ -67,13 +67,14 @@ macro(create_test name)
 
   # Install the openFrameworks assets.
   foreach(of_asset ${of_assets})
-    message("___${of_asset}__")
     add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
+    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${of_asset} ${CMAKE_INSTALL_PREFIX}/bin)
   endforeach()
 
   # Install the Qt assets
   foreach(qtof_asset ${qtof_assets})
     add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_asset} $<TARGET_FILE_DIR:${test_name}>)
+    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_asset} ${CMAKE_INSTALL_PREFIX}/bin)
   endforeach()
 
 endmacro()
