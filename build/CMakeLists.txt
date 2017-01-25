@@ -68,6 +68,7 @@ macro(create_test name)
   add_executable(${test_name} MACOSX_BUNDLE ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
   target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick ${of_libs} qtof${debug_flag} ${libs})
   install(TARGETS ${test_name} DESTINATION bin/)
+  install(DIRECTORY DESTINATION bin/scenes)
 
   # Create the "scenes" directory (Custom for this project).
   add_custom_target(create_scenes_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
