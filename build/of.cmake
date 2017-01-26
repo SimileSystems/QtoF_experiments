@@ -121,10 +121,6 @@ if (WIN32)
     )
 
   list(APPEND of_libs
-#    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-1_62.lib
-#    ${of_ld}/boost/lib/vs/x64/libboost_filesystem-vc140-mt-gd-1_62.lib
-#    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-gd-1_62.lib
-#    ${of_ld}/boost/lib/vs/x64/libboost_system-vc140-mt-1_62.lib
     ${of_ld}/cairo/lib/vs/x64/cairo-static.lib
     ${of_ld}/cairo/lib/vs/x64/libpng.lib
     ${of_ld}/cairo/lib/vs/x64/pixman-1.lib
