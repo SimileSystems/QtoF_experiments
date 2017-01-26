@@ -1,3 +1,19 @@
+# Prerequistics
+
+This repository has been tested with the following setups.
+
+**Win**
+
+- Windows 8.1
+- Visual Studio 2015
+- Qt 5.8
+
+**Mac**
+
+- Mac 10.12.1
+- Clang 800.0.42.1
+- Qt 5.7
+
 # Installing
 
 While developing this library I've used a shell script that I run in a
@@ -39,13 +55,13 @@ this work cross platform, you have to create an environment variable
 - Open _Options / Preferences_
 - Select _Build & Run_ > _CMake_
 - When there is no _Auto-detected_ CMake entry, press _Add_ and select the path where CMake is installed.
-  I only had to do this on Mac.
+I only had to do this on Mac.
 
 **3. Configure the CMake Kit**
 
 - Open _Options / Preferences_
 - Select _Build & Run_ > _Kits_
-- Select _CMake_
+- Click _Add_, name it _CMake_
 - Click _Change..._ for the _CMake Generator_ (at the bottom).
     - **Mac:**
       - Generator: _Unix Makefiles_
