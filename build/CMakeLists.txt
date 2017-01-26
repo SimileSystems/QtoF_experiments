@@ -8,11 +8,14 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(debug_flag "_debug")
 endif()
 
+if(NOT DEFINED ENV{QT_PATH})
+  message(FATAL_ERROR "Please add an environment variable called QT_PATH that is set to the Qt install directory, like: G:\\applications\\Qt\\5.8\\msvc2015_64")
+endif()
+
 set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(sd ${bd}/src)
 set(ed ${bd}/extern)
-#@todo remove this next line
-set(CMAKE_PREFIX_PATH "/g/applications/Qt/5.8/msvc2015_64/")
+set(CMAKE_PREFIX_PATH "$ENV{QT_PATH}")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
