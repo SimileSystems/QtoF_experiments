@@ -74,6 +74,39 @@ if [ ! -d ${bd} ] ; then
     mkdir ${bd}
 fi
 
+# Compile libuv; used for an example that was requested by James George
+if [ ! -d ${d}/libuv.build ] ; then
+
+    if [ ! -d ${ed}/extern/lib ] ; then
+        mkdir ${ed}/extern/lib
+    fi
+
+    mkdir ${d}/libuv.build
+    cd ${d}/libuv.build
+
+    git clone --depth 1 https://github.com/libuv/libuv .
+
+    if [ ! -d build/gyp ] ; then
+        git clone --depth 1 https://chromium.googlesource.com/external/gyp.git build/gyp
+    fi
+
+    if [ "${os}" = "mac" ] ; then
+        ./gyp_uv.py -f xcode -D prefix=${ed}/extern
+        xcodebuild -ARCHS="x86_64" \
+                   -project uv.xcodeproj \
+                   -configuration Release \
+                   -target All
+
+        if [ ! -f ${ed}/extern/lib/clang/libuv.a ] ; then
+            cp ${d}/libuv.build/build/Release/libuv.a ${ed}/extern/lib/clang
+        fi
+    fi
+    
+    if [ ! -f ${ed}/extern/include/uv.h ] ; then 
+        cp ${d}/libuv.build/include/*.h ${ed}/extern/include/
+    fi
+fi
+
 # Compile the library.
 cd ${bd}
 cmake -DCMAKE_INSTALL_PREFIX=${id} \

@@ -19,7 +19,6 @@ public:
   void onDirectoryCreated(const std::string& path);
   
 private:
-  ofVideoGrabber video_grabber;
   DirectoryWatcher dir_watcher;
 };
 

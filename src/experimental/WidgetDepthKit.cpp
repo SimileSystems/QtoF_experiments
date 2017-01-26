@@ -4,10 +4,6 @@
 
 void WidgetDepthKit::setup() {
   
-  video_grabber.listDevices();
-  video_grabber.setDeviceID(1);
-  video_grabber.setup(1, 640, 480);
-
   if (0 != dir_watcher.init(ofFilePath::getCurrentExeDir() + "scenes", this)) {
     ofLogError() << "Failed to init the dir watcher";
   }
@@ -15,11 +11,9 @@ void WidgetDepthKit::setup() {
 
 void WidgetDepthKit::update() {
   ofExternalWidget::notifyUiMessages();
-  video_grabber.update();
 }
 
 void WidgetDepthKit::draw() {
-  video_grabber.draw(0, 0, ofGetWidth() * getPixelRatio(), ofGetHeight() * getPixelRatio());
 }
 
 void WidgetDepthKit::destroy() {

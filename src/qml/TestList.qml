@@ -12,6 +12,11 @@ ApplicationWindow {
   color: "#FFFF00"
   visible: true
 
+  Rectangle {
+     anchors.fill: parent
+     color: "#666666"
+  }           
+
   QtOfExternal {
     visible: true
     gl_major_version: 3
