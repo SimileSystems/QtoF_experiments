@@ -7,8 +7,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-if(NOT DEFINED ENV{QT_PATH})
+if(NOT CMAKE_PREFIX_PATH AND NOT DEFINED ENV{QT_PATH})
   message(FATAL_ERROR "Please add an environment variable called QT_PATH that is set to the Qt install directory, like: G:\\applications\\Qt\\5.8\\msvc2015_64")
+endif()
+
+if (ENV{QT_PATH})
+  set(CMAKE_PREFIX_PATH "$ENV{QT_PATH}")
 endif()
 
 find_package(Qt5Core          REQUIRED)
