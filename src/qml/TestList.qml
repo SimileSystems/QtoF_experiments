@@ -3,6 +3,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import cc.openframeworks 1.0
+import roxlu 1.0
 
 ApplicationWindow {
   id: app
@@ -21,6 +22,15 @@ ApplicationWindow {
     visible: true
     gl_major_version: 3
     gl_minor_version: 3
+  }
+
+  TestQmlWidget {
+    id: myTestInstance
+    x: 686
+    y: 69
+    width: 200
+    height: 200
+    visible: true
   }
 
   ListModel {
@@ -131,10 +141,14 @@ ApplicationWindow {
                 depthkit.sendUiMessageString(QtUiMessage.DIRECTORY_DELETE, scene.title);
               }
               onEntered: {
+                /*
                 parent.color = "#FF0000"
+                */
               }
               onExited: {
+                /*
                 parent.color = "#33FFFFFF"
+                */
               }
             }
           }
@@ -278,4 +292,6 @@ ApplicationWindow {
       }
     }
   }
+
+
 }

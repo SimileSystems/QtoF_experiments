@@ -1,6 +1,7 @@
 set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(sd ${bd}/src)
 set(ed ${bd}/extern)
+set(pd ${bd}/src/experimental/) # Plugin base dir.
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -48,5 +49,129 @@ list(APPEND qtof_sources
   ${sd}/qtof/QtUiMessage.cpp
   ${sd}/qtof/Widgets.cpp
   ${sd}/qtof/UiMessages.cpp
+
+  #${sd}/experimental/TestQmlWidgetQtDesigner.cpp
   )
+
+add_library(TestQmlWidget SHARED
+  ${sd}/experimental/TestQmlWidget/TestQmlWidget.cpp
+  ${sd}/experimental/TestQmlWidget/TestQmlWidgetExtensionPlugin.cpp
+  )
+
+target_link_libraries(TestQmlWidget Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick)
+
+
+#list(APPEND qtof_shared_libs_to_install
+#  TestQmlWidgetExtensionPlugin
+#  )
+
+#list(APPEND qtof_libs
+#  TestQmlWidgetExtensionPlugin
+#  )
+
+#set(plugin_base_dir "${CMAKE_CURRENT_BINARY_DIR}/plugins")
+
+#set_target_properties(TestQmlWidget PROPERTIES
+#  MACOSX_RPATH TRUE
+#  LIBRARY_OUTPUT_DIRECTORY "${plugin_base_dir}/roxlu"
+#  )
+
+#get_target_property(plugin_library_output_dir TestQmlWidgetExtensionPlugin LIBRARY_OUTPUT_DIRECTORY)
+#get_target_property(qtcore_location Qt5::Core LOCATION)
+#set(plugin_lib_name "TestQmlWidgetExtensionPlugin")
+#set(plugin_module_name "roxlu")
+
+macro(qtof_install_for_target targetName pluginName)
+
+  set_target_properties(${targetName} PROPERTIES INSTALL_RPATH "@executable_path/plugins/roxlu")
+
+  # Create plugin dir
+  #add_custom_command(
+  #  TARGET ${targetName}
+  #  POST_BUILD
+  #  COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:${targetName}>/plugins/roxlu"
+  #  )
+
+  # Copy plugin
+ # add_custom_command(
+ #   TARGET ${targetName}
+ #   POST_BUILD
+ #   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${pluginName}> "$<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/"
+ #   )
+
+  # QmlPluginDump
+  #add_custom_command(
+  #  TARGET ${targetName}
+  #  POST_BUILD
+  #  COMMAND qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/plugins.qmltypes
+  #  )
+
+  # Create plugins dir
+  add_custom_target(create_plugins_dir
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:${targetName}>/plugins/roxlu"
+    COMMENT "Create plugins dir"
+    )
+  
+
+  # Copy dylib
+  add_custom_target(copy_lib
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${pluginName}> "$<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/"
+    COMMENT "Copying plugin library"
+    )
+
+  # Copy qmldir file
+  add_custom_target(copy_qmldir
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy ${pd}/${pluginName}/qmldir $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/
+    COMMENT "Copying qmldir file"
+    )
+
+  # Copy Qt Quick Designer files
+  add_custom_target(copy_designer
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${pd}/${pluginName}/designer $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/designer
+    COMMENT "Copying designer files"
+    )
+
+  # Test: copy temp qml
+  add_custom_target(copy_qml
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy ${pd}/${pluginName}/TestQmlWidget.qml $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/
+    COMMENT "Copying test qml file"
+    )
+  
+  # Create qmltypes file (Make sure .dylib + qmldir files are there)
+  add_custom_target(create_qmltypes
+    ALL
+    COMMAND qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/plugins.qmltypes
+    COMMENT "Executing qmlplugindump"
+    DEPENDS copy_qmldir copy_lib copy_qml
+    )
+  
+  #add_dependencies(${targetName} ${pluginName})
+
+#  add_custom_command(
+#    TARGET ${targetName}
+#    POST_BUILD
+#    COMMAND qmlplugindump 
+#    )
+
+  
+#  add_custom_command(
+#    TARGET ${targetName}
+#    POST_BUILD
+#    COMMAND "/Applications/Qt/5.7/clang_64/bin/qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > test.txt"
+#    )
+  #message("/Applications/Qt/5.7/clang_64/bin/qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/plugins.qmltypes")
+
+ 
+  message("___ ${pd}/${pluginName}/qmldir ___")
+  install(FILES ${pd}/${pluginName}/qmldir DESTINATION $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/)
+  install(TARGETS ${pluginName} DESTINATION $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/)
+  
+endmacro()
+
+#macro(qtof_create_plugin pluginName pluginSources
 

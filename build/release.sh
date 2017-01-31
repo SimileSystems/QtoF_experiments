@@ -119,7 +119,8 @@ if [ $? -ne 0 ] ; then
     exit
 fi
 
-cmake --build . --config ${cmake_build_type} --target install
+cmake --build . --config ${cmake_build_type}
+#--target install
 
 if [ $? -ne 0 ] ; then
     exit
@@ -127,7 +128,9 @@ fi
 
 cd ${id}/bin
 if [ "${os}" == "mac" ] ; then
-    open ./test_qt.app
+    cd ./test_qt.app/Contents/MacOs
+    ./test_qt
+    #open ./test_qt.app
 else
     ${debugger} ./test_qt${debug_flag}
 fi

@@ -55,26 +55,25 @@ add_library(qtof${debug_flag} STATIC ${qtof_sources})
 target_link_libraries(qtof${debug_flag} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick of${debug_flag} ${of_libs} ${libs})
 add_dependencies(qtof${debug_flag} of${debug_flag})
 
+#set(QML_IMPORT_PATH "/Users/roxlu/Documents/programming/tests/102_qt_depthkit/build/build-build-CMake-Default/test_qt.app/Contents/MacOS/plugins" ${CMAKE_BINARY_DIR}/imports CACHE string "" FORCE)
+#set(QML2_IMPORT_PATH "/Users/roxlu/Documents/programming/tests/102_qt_depthkit/build/build-build-CMake-Default/test_qt.app/Contents/MacOS/plugins" ${CMAKE_BINARY_DIR}/imports CACHE string "" FORCE)
+#set(QML2_IMPORT_PATH "/Users/roxlu/Documents/programming/tests/102_qt_depthkit/src/experimental/TestQmlWidget/" ${CMAKE_BINARY_DIR}/imports CACHE string "" FORCE)
+set(QML_IMPORT_PATH ${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/ CACHE string "" FORCE)
+set(QML2_IMPORT_PATH ${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/ CACHE string "" FORCE)
+  
 # Helper to create tests
 macro(create_test name)
+
   set(test_name "test_${name}${debug_flag}")
   add_executable(${test_name} MACOSX_BUNDLE ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
-  target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick ${of_libs} qtof${debug_flag} ${libs})
-  install(TARGETS ${test_name} DESTINATION bin/)
+  target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick ${of_libs} qtof${debug_flag} ${libs} ${qtof_libs})
+  install(TARGETS ${test_name} DESTINATION bin)
   add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
-
-  # Install the openFrameworks assets.
-  foreach(of_asset ${of_assets})
-    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_asset} $<TARGET_FILE_DIR:${test_name}>)
-    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${of_asset} ${CMAKE_INSTALL_PREFIX}/bin)
-  endforeach()
-
-  # Install the Qt assets
-  foreach(qtof_asset ${qtof_assets})
-    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_asset} $<TARGET_FILE_DIR:${test_name}>)
-    add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_asset} ${CMAKE_INSTALL_PREFIX}/bin)
-  endforeach()
-
+  
+  # Prepare this test for OF and Qt.
+  qtof_install_for_target(${test_name} TestQmlWidget)
+  of_install_for_target(${test_name})
+  
 endmacro()
 
 create_test(qt)

@@ -1,0 +1,14 @@
+MetaInfo {
+    Type {
+        name: "roxlu.TestQmlWidget"
+        icon: "images/item-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Notifications"
+            category: "Testing with QML Widget"
+            libraryIcon: "images/item-icon.png"
+            version: "1.0"
+            requiredImport: "roxlu"
+        }
+    }
+}

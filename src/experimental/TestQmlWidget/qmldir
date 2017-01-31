@@ -1,0 +1,6 @@
+module roxlu
+plugin TestQmlWidget
+classname TestQmlWidgetExtensionPlugin
+designersupported
+
+TestQmlWidget 1.0 TestQmlWidget.qml

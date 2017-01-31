@@ -161,7 +161,7 @@ if (WIN32)
       )
   endif()
   
-  list(APPEND of_assets
+  list(APPEND of_shared_libs
     ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll
     ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll
     )
@@ -232,8 +232,29 @@ elseif (APPLE)
     z
     )
 
-  list(APPEND of_assets
+  list(APPEND of_shared_libs
     ${of_ld}/fmodex/lib/osx/libfmodex.dylib
     )
 
 endif()
+
+macro(of_install_for_target targetName)
+
+  if (APPLE)
+
+    # Copy the shared library dependencies upon build and install
+    foreach(of_shared_lib ${of_shared_libs})
+      add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_shared_lib} $<TARGET_FILE_DIR:${targetName}>)
+      install(FILES ${of_shared_lib} DESTINATION $<TARGET_FILE_DIR:${targetName}>)
+    endforeach()
+
+    # When we need to copy the data somewhere after installing ...
+    #install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin/data DESTINATION $<TARGET_FILE_DIR:${targetName}>/../Resources)
+
+    # Install the data to the current build directory
+    #add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+    add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../install/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+
+  endif()
+  
+endmacro()

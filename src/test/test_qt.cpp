@@ -1,73 +1,6 @@
 /*
-
- ----
-
-  QtOfExternal {
-  }
-
-  QtOfExternalWidget {
-   id: myclass
-   width: 100
-   height: 100
-  }
-
-  QtQtExternalWidget {
-   id: depthkit_3d
-   width: 200 
-   height: 200
-  }
-
- ---
-
- - We also need a factory becuase a QQuickItem may be destroyed / recreated. 
-
-  of_external_register("myclass", myclass_setup, myclass_update, myclass_draw);
-  of_external_register("depthkit_3d", dk_setup, dk_update, dk_draw);
-
-  qtof_register<MyClass>(ref); 
-
- ----
- 
- Generic handler for OF<>QT interop: 
-
-   - initializes the ofExternal
-   - sets up the ofAppExternal instance (with programmable renderer) 
-   - handles inter interop between GL/Window and OF.
-   - uses the ofAppExternal
-
- class ofQt {
- public:
-   void onMouseMove() { 
-      of_external_event(EVENT_TYPE_MOUSE_MOVE, (void*)mouse_data);
-   }
-
-   void onMousePress() { 
-      of_external_event(EVENT_TYPE_MOUSE_PRESS, (void*)mouse_data);
-   }
-
-   void onMouseRelease() { 
-      of_external_event(EVENT_TYPE_MOUSE_RELEASE, (void*)mouse_data);
-   }
-
- };
-
- ----
-
- Widget that uses the `ofQt` and `ofExternal` instance
- - 
-
- class ofQtWidget {
- public:
-
-   void onPaint() {
-     of_external_update(myname);
-     of_external_draw(myname);
-   } 
-
- };
-
- ----
-
+  This file was used during the development and experiments with Qt
+  and openFrameworks
  */
 
 #include <stdio.h>
@@ -85,6 +18,7 @@
 #include <experimental/WidgetDepthKitPimpl.h>
 #include <experimental/Widget3DPimpl.h>
 #include <experimental/WidgetDebugPimpl.h>
+//#include <experimental/TestQmlWidget.h>
 
 /* ---------------------------------------------------- */
 
@@ -94,11 +28,12 @@ int main(int argc, char* argv[]) {
 
   QGuiApplication app(argc, argv);
 
+  //qmlRegisterType<TestQmlWidget>("roxlu", 1, 0, "TestQmlWidget");
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
   qRegisterMetaType<QtUiMessage::UiMsg>("QtUiMessage::UiMsg");
   qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
-  
+
   widgets_add(1, new Widget<WidgetHistogramPimpl>());
   widgets_add(2, new Widget<WidgetWebcamPimpl>());
   widgets_add(3, new Widget<WidgetDepthKitPimpl>());
@@ -113,6 +48,7 @@ int main(int argc, char* argv[]) {
   QSurfaceFormat::setDefaultFormat(format);
   
   QQmlApplicationEngine engine;
+  engine.addImportPath(app.applicationDirPath() +"/plugins/");
   engine.load(QUrl("qrc:/TestList.qml"));
   //engine.load(QUrl("qrc:/main.qml"));
   return app.exec();
