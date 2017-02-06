@@ -119,8 +119,7 @@ if [ $? -ne 0 ] ; then
     exit
 fi
 
-cmake --build . --config ${cmake_build_type}
-#--target install
+cmake --build . --config ${cmake_build_type} --target install
 
 if [ $? -ne 0 ] ; then
     exit

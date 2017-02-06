@@ -7,6 +7,6 @@ TestQmlWidget::TestQmlWidget(QQuickItem* parent)
 }
 
 void TestQmlWidget::paint(QPainter* p) {
-  p->fillRect(contentsBoundingRect(), Qt::red);
+  p->fillRect(contentsBoundingRect(), Qt::green);
 }
 

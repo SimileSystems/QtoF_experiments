@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.7.1)
 include(ExternalProject)
 project(101_qt)
+
+# Temporary while using the Qt OS version.
+set(QT_PATH "/Users/roxlu/Applications/QtOS/5.8/clang_64/")
+set(CMAKE_PREFIX_PATH ${QT_PATH} CACHE string "" FORCE)
+
 include(of.cmake)
 include(qtof.cmake)
 

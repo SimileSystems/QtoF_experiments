@@ -1,6 +1,8 @@
 module roxlu
 plugin TestQmlWidget
-classname TestQmlWidgetExtensionPlugin
+classname TestQmlWidgetExtensionPlugin  
+typeinfo plugins.qmltypes
 designersupported
 
-TestQmlWidget 1.0 TestQmlWidget.qml
+TestQmlWidgetWrapper 1.0 TestQmlWidgetWrapper.qml
+

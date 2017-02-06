@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+
 if(NOT CMAKE_PREFIX_PATH AND NOT DEFINED ENV{QT_PATH})
   message(FATAL_ERROR "Please add an environment variable called QT_PATH that is set to the Qt install directory, like: G:\\applications\\Qt\\5.8\\msvc2015_64")
 endif()
@@ -22,6 +23,8 @@ find_package(Qt5Widgets       REQUIRED)
 find_package(Qt5Gui           REQUIRED)
 find_package(Qt5Qml           REQUIRED)
 find_package(Qt5Quick         REQUIRED)
+
+message(STATUS "VERSION: ${Qt5Core_VERSION}")
 
 if (WIN32)
   list(APPEND qtof_assets
@@ -107,7 +110,7 @@ macro(qtof_install_for_target targetName pluginName)
   #  )
 
   # Create plugins dir
-  add_custom_target(create_plugins_dir
+  add_custom_target(create_plugin_dir
     ALL
     COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:${targetName}>/plugins/roxlu"
     COMMENT "Create plugins dir"
@@ -138,18 +141,22 @@ macro(qtof_install_for_target targetName pluginName)
   # Test: copy temp qml
   add_custom_target(copy_qml
     ALL
-    COMMAND ${CMAKE_COMMAND} -E copy ${pd}/${pluginName}/TestQmlWidget.qml $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/
+    COMMAND ${CMAKE_COMMAND} -E copy ${pd}/${pluginName}/TestQmlWidgetWrapper.qml $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/
     COMMENT "Copying test qml file"
+    DEPENDS create_plugin_dir
     )
-  
+
   # Create qmltypes file (Make sure .dylib + qmldir files are there)
+  # - Cannot use $ENV{QT_PATH} as it's not available in Qt Creator
+  # Use -nonrelocatable because otherwise the "exports" value is wrong, see https://gist.github.com/roxlu/6114e1371143e73ae686775db3a1b338
+  if (TRUE)
   add_custom_target(create_qmltypes
     ALL
-    COMMAND qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/plugins.qmltypes
+    COMMAND ${QT_PATH}/bin/qmlplugindump -nonrelocatable roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/plugins.qmltypes
     COMMENT "Executing qmlplugindump"
     DEPENDS copy_qmldir copy_lib copy_qml
     )
-  
+  endif()
   #add_dependencies(${targetName} ${pluginName})
 
 #  add_custom_command(
@@ -167,7 +174,7 @@ macro(qtof_install_for_target targetName pluginName)
   #message("/Applications/Qt/5.7/clang_64/bin/qmlplugindump roxlu 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/plugins.qmltypes")
 
  
-  message("___ ${pd}/${pluginName}/qmldir ___")
+  #message("___ ${pd}/${pluginName}/qmldir ___")
   install(FILES ${pd}/${pluginName}/qmldir DESTINATION $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/)
   install(TARGETS ${pluginName} DESTINATION $<TARGET_FILE_DIR:${targetName}>/plugins/roxlu/)
   

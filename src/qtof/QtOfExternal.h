@@ -85,7 +85,7 @@
 /* ---------------------------------------------------- */
 
 class QtOfExternal : public QQuickItem {
-  Q_OBJECT
+  Q_OBJECT;
   Q_PROPERTY(int gl_minor_version WRITE setGlMinorVersion READ getGlMinorVersion)
   Q_PROPERTY(int gl_major_version WRITE setGlMajorVersion READ getGlMajorVersion)
 

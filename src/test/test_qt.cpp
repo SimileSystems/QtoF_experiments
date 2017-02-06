@@ -12,6 +12,7 @@
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/Widgets.h>
+#include <qtof/WidgetTypes.h>
 #include <qtof/QtUiMessage.h>
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
@@ -34,11 +35,11 @@ int main(int argc, char* argv[]) {
   qRegisterMetaType<QtUiMessage::UiMsg>("QtUiMessage::UiMsg");
   qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
 
-  widgets_add(1, new Widget<WidgetHistogramPimpl>());
-  widgets_add(2, new Widget<WidgetWebcamPimpl>());
-  widgets_add(3, new Widget<WidgetDepthKitPimpl>());
-  widgets_add(4, new Widget<Widget3dPimpl>());
-  widgets_add(5, new Widget<WidgetDebugPimpl>());
+  widgets_add(WIDGET_TYPE_HISTOGRAM, new Widget<WidgetHistogramPimpl>());
+  widgets_add(WIDGET_TYPE_WEBCAM, new Widget<WidgetWebcamPimpl>());
+  widgets_add(WIDGET_TYPE_DEPTHKIT, new Widget<WidgetDepthKitPimpl>());
+  widgets_add(WIDGET_TYPE_3D, new Widget<Widget3dPimpl>());
+  widgets_add(WIDGET_TYPE_DEBUG, new Widget<WidgetDebugPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
@@ -49,7 +50,8 @@ int main(int argc, char* argv[]) {
   
   QQmlApplicationEngine engine;
   engine.addImportPath(app.applicationDirPath() +"/plugins/");
-  engine.load(QUrl("qrc:/TestList.qml"));
+  //nengine.load(QUrl("qrc:/TestList.qml"));
+  engine.load(QUrl("qrc:/TestForWidget.qml"));
   //engine.load(QUrl("qrc:/main.qml"));
   return app.exec();
 }
