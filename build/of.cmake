@@ -238,7 +238,7 @@ elseif (APPLE)
 
 endif()
 
-macro(of_install_for_target targetName)
+macro(install_of_for_target targetName)
 
   if (APPLE)
 
@@ -247,6 +247,7 @@ macro(of_install_for_target targetName)
       add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_shared_lib} $<TARGET_FILE_DIR:${targetName}>)
       install(FILES ${of_shared_lib} DESTINATION $<TARGET_FILE_DIR:${targetName}>)
     endforeach()
+
 
     # When we need to copy the data somewhere after installing ...
     #install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin/data DESTINATION $<TARGET_FILE_DIR:${targetName}>/../Resources)

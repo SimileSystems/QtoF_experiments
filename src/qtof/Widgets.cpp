@@ -8,7 +8,6 @@ Widgets widgets_manager;
 /* ---------------------------------------------------- */
 
 Widgets::Widgets() {
-
 }
 
 int Widgets::addFactoryForType(int type, WidgetFactoryBase* factory) {

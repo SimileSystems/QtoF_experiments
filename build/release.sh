@@ -124,7 +124,7 @@ cmake --build . --config ${cmake_build_type} --target install
 if [ $? -ne 0 ] ; then
     exit
 fi
-
+set -x
 cd ${id}/bin
 if [ "${os}" == "mac" ] ; then
     cd ./test_qt.app/Contents/MacOs

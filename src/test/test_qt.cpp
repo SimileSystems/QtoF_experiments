@@ -20,7 +20,6 @@
 #include <experimental/WidgetDepthKitPimpl.h>
 #include <experimental/Widget3DPimpl.h>
 #include <experimental/WidgetDebugPimpl.h>
-//#include <experimental/TestQmlWidget.h>
 
 /* ---------------------------------------------------- */
 
@@ -30,24 +29,18 @@ int main(int argc, char* argv[]) {
 
   QGuiApplication app(argc, argv);
 
-  //qmlRegisterType<TestQmlWidget>("roxlu", 1, 0, "TestQmlWidget");
+  /*
   qmlRegisterType<QtOfExternal>("cc.openframeworks", 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>("cc.openframeworks", 1, 0, "QtOfExternalWidget");
-  //  qRegisterMetaType<QtUiMessage::UiMsg>("QtUiMessage::UiMsg");
-  //  qRegisterMetaType<QtWidgetType::WidgetType>("QtWidgetType::WidgetType");
   qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
   qmlRegisterType<QtWidgetType>("cc.openframeworks", 1, 0, "QtWidgetType");
-
-  /*
-  widgets_add(WIDGET_TYPE_HISTOGRAM, new Widget<WidgetHistogramPimpl>());
-  widgets_add(WIDGET_TYPE_WEBCAM, new Widget<WidgetWebcamPimpl>());
-  widgets_add(WIDGET_TYPE_DEPTHKIT, new Widget<WidgetDepthKitPimpl>());
-  widgets_add(WIDGET_TYPE_3D, new Widget<Widget3dPimpl>());
-  widgets_add(WIDGET_TYPE_DEBUG, new Widget<WidgetDebugPimpl>());
   */
 
-  widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
@@ -58,11 +51,14 @@ int main(int argc, char* argv[]) {
   
   QQmlApplicationEngine engine;
   engine.addImportPath(app.applicationDirPath() +"/plugins/");
-  //engine.load(QUrl("qrc:/TestList.qml"));
   engine.load(QUrl("qrc:/TestForWidget.qml"));
-  //engine.load(QUrl("qrc:/main.qml"));
+
   return app.exec();
 }
 
-
 /* ---------------------------------------------------- */
+
+#if 0
+  engine.load(QUrl("qrc:/TestList.qml"));
+  engine.load(QUrl("qrc:/main.qml"));
+#endif

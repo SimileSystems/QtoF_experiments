@@ -1,0 +1,3 @@
+module qtof
+plugin qtof
+classname QtExternalPlugin

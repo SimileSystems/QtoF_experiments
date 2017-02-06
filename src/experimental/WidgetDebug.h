@@ -1,6 +1,7 @@
 #ifndef WIDGET_DEBUG_H
 #define WIDGET_DEBUG_H
 
+#include <ofMain.h>
 #include <qtof/ofExternalWidget.h>
 
 class UiMessage;

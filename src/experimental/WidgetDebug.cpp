@@ -8,6 +8,7 @@ void WidgetDebug::update() {
 }
 
 void WidgetDebug::draw() {
+  ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
 }
 
 void WidgetDebug::destroy() {
