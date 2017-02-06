@@ -19,6 +19,7 @@ private:
 QtOfExternalWidget::QtOfExternalWidget()
   :ref(-1)
   ,layer(0)
+  ,type(WIDGET_TYPE_NONE)
   ,is_created(false)
 {
   connect(this, &QQuickItem::windowChanged, this, &QtOfExternalWidget::onWindowChanged);
@@ -47,6 +48,8 @@ QtOfExternalWidget::~QtOfExternalWidget() {
     window()->scheduleRenderJob(new QtOfExternalWidgetCleanupRunnable(ref), QQuickWindow::BeforeSynchronizingStage);
   }
 
+  type = WIDGET_TYPE_NONE;
+  layer = 0;
   ref = -1;
   is_created = false;
 }
@@ -68,6 +71,7 @@ QtOfExternalWidget::~QtOfExternalWidget() {
 
      QtOfExternalWidget {
        id: depthkit
+       type: QtWidgetType.WEBCAM
        ref: 3
        width: app.width
        height: app.height
@@ -108,10 +112,22 @@ void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
 
+    if (WIDGET_TYPE_NONE == type) {
+      qFatal("Cannot create widget because type is not set.");
+      return;
+    }
+
+    if (0 != widgets_create_instance_for_type_and_ref(type, ref)) {
+      qFatal("Failed to create the QtOfExternalWidget for type: %d and ref: %d.", type, ref);
+      return;
+    }
+
+    /*
     if (0 != widgets_create(ref)) {
       qFatal("Failed to create the QtOfExternalWidget.");
       return;
     }
+    */
 
     widgets_set_message_listener(ref, this);
 

@@ -142,6 +142,7 @@
 #include <QString>
 #include <QScreen>
 #include <qtof/UiMessages.h>
+#include <qtof/WidgetTypes.h>
 
 /* ---------------------------------------------------- */
 
@@ -150,6 +151,7 @@ class QtOfExternalWidget : public QQuickItem,
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
   Q_PROPERTY(int layer WRITE setLayer READ getLayer)                  /* The layer onto which we draw, 0: background, 1: foreground */
+  Q_PROPERTY(int type WRITE setType READ getType)
   
 public:
   QtOfExternalWidget();
@@ -164,8 +166,11 @@ public slots:
 public:
   int getRef();
   int getLayer();
+  int getType();
   void setRef(const int& v);
   void setLayer(const int& v);
+  void setType(const int& t);
+  
   Q_INVOKABLE void sendUiMessageString(unsigned int msgType, const QString& str);
   Q_INVOKABLE void sendUiMessage(unsigned int msgType);
 
@@ -192,6 +197,7 @@ protected:
 private:
   int ref;
   int layer;
+  int type;  /* The widget type, see WidgetTypes.h */
   bool is_created; 
 };
 
@@ -205,12 +211,20 @@ inline int QtOfExternalWidget::getLayer() {
   return layer;
 }
 
+inline int QtOfExternalWidget::getType() {
+  return type;
+}
+
 inline void QtOfExternalWidget::setRef(const int& v) {
   ref = v;
 }
 
 inline void QtOfExternalWidget::setLayer(const int& v) {
   layer = v;
+}
+
+inline void QtOfExternalWidget::setType(const int& t) {
+  type = t;
 }
 
 /* ---------------------------------------------------- */

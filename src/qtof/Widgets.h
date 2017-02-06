@@ -121,6 +121,10 @@
 class Widgets {
 public:
   Widgets();
+
+  int addFactoryForType(int type, WidgetBase* factory);
+  int createInstanceForTypeAndRef(int type, int ref);
+  
   int add(int ref, WidgetBase* fac);                                  /* Widgets takes ownership. */
   int create(int ref);                                                /* This will call `create()` on your widget and allows you to instantiate your oject. Can be called multiple times with Qt (see documentation in this header). */
   int destroy(int ref);                                               /* This will call `destroy()` on your widget and allows you to cleanup anything you created in `create()`. Can be called multiple times with Qt (see documentation in this header). */
@@ -135,11 +139,17 @@ public:
 private:
   std::unordered_map<int, WidgetBase*> widgets;                       /* The widgets which have bee added. We take ownership! */
   int num_created_widgets;                                            /* Number of `create()`d widgets; not the same as added widgets. Everytime you call `create()` this number is incremented; when you call `destory()` it's decremented. Was added to start/finish the OF renderer. */
+
+  std::unordered_map<int, WidgetBase*> factories;
+  std::unordered_map<int, WidgetInstanceBase*> instances;
 };
 
 /* ---------------------------------------------------- */
 
 extern Widgets widgets_mananager;
+
+int widgets_add_factory_for_type(int type, WidgetBase* factory);
+int widgets_create_instance_for_type_and_ref(int type, int ref);
 
 int widgets_add(int ref, WidgetBase* fac);                            /* Add a widget for the given reference. */
 int widgets_create(int ref);                                          /* Calls `create()` on the widget for the given reference. */
@@ -156,6 +166,15 @@ int widgets_get_num_created_widgets();                                /* Returns
 
 inline int Widgets::update(int ref) {
 
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::update() - no instance found for the reference: %d", ref);
+    return -1;
+  }
+
+  it->second->update();
+
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::update() - reference not found.");
@@ -163,10 +182,14 @@ inline int Widgets::update(int ref) {
   }
   
   return it->second->update();
+  */
+
+  return 0;
 }
 
 inline int Widgets::draw(int ref) {
 
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::draw() - reference not found.");
@@ -174,6 +197,17 @@ inline int Widgets::draw(int ref) {
   }
 
   return it->second->draw();
+  */
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::draw() - no instance found for the reference: %d", ref);
+    return -1;
+  }
+
+  it->second->draw();
+  
+  return 0;
 }
 
 /* ---------------------------------------------------- */

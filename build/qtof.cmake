@@ -50,6 +50,7 @@ list(APPEND qtof_sources
   ${sd}/qtof/QtOfExternal.cpp
   ${sd}/qtof/QtOfExternalWidget.cpp
   ${sd}/qtof/QtUiMessage.cpp
+  ${sd}/qtof/QtWidgetType.cpp
   ${sd}/qtof/Widgets.cpp
   ${sd}/qtof/UiMessages.cpp
 

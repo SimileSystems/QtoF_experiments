@@ -3,7 +3,7 @@
 
 /* ---------------------------------------------------- */
 
-Widgets widgets_mananager;
+Widgets widgets_manager;
 
 /* ---------------------------------------------------- */
 
@@ -11,6 +11,24 @@ Widgets::Widgets()
   :num_created_widgets(0)
 {
 
+}
+
+int Widgets::addFactoryForType(int type, WidgetBase* factory) {
+
+  if (nullptr == factory) {
+    qFatal("Given factory is NULL.");
+    return -1;
+  }
+
+  std::unordered_map<int, WidgetBase*>::iterator it = factories.find(type);
+  if (it != factories.end()) {
+    qFatal("There already exists a factory for the given type");
+    return -2;
+  }
+
+  factories[type] = factory;
+
+  return 0;
 }
 
 int Widgets::add(int ref, WidgetBase* fac) {
@@ -49,6 +67,33 @@ int Widgets::create(int ref) {
   return 0;
 }
 
+int Widgets::createInstanceForTypeAndRef(int type, int ref) {
+
+  std::unordered_map<int, WidgetBase*>::iterator fit = factories.find(type);
+  if (fit == factories.end()) {
+    qFatal("No factory found for given type: %d", type);
+    return -1;
+  }
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator iit = instances.find(ref);
+  if (iit != instances.end()) {
+    qFatal("We already created an widget instance with the same reference ID. Use unique reference values.");
+    return -2;
+  }
+
+  WidgetInstanceBase* instance = fit->second->createWidgetInstance();
+  if (nullptr == instance) {
+    qFatal("Failed to create an instance for the given widget type: %d, and ref: %d", type, ref);
+    return -3;
+  }
+
+  instances[ref] = instance;
+  num_created_widgets++;
+  //WidgetBase* wb = new WidgetBase(it->second);
+
+  return 0;
+}
+
 /* 
    This function will destroy and cleanup `WidgetBase`. We will
    not remove the `WidgetBase*` from our `widgets` map, because we
@@ -59,7 +104,22 @@ int Widgets::create(int ref) {
 
  */
 int Widgets::destroy(int ref) {
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::destroy() failed, no instance found for reference: %d", ref);
+    return -1;
+  }
+
+  it->second->destroy();
+
+  delete it->second;
+  it->second = nullptr;
+
+  instances.erase(it);
+
   
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::destroy() - reference not found.");
@@ -73,6 +133,7 @@ int Widgets::destroy(int ref) {
   if (num_created_widgets <= 0) {
     qFatal("QtOfWidgers::destroy() - num_created_widgets is 0 which means we shouldn't destroy any.");
   }
+  */
   
   num_created_widgets--;
 
@@ -80,7 +141,8 @@ int Widgets::destroy(int ref) {
 }
 
 int Widgets::setup(int ref) {
-  
+
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::setup() - reference not found.");
@@ -88,10 +150,22 @@ int Widgets::setup(int ref) {
   }
   
   return it->second->setup();
+  */
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::setup() failed, no instance found for reference: %d", ref);
+    return -1;
+  }
+
+  it->second->setup();
+
+  return 0;
 }
 
 int Widgets::sendUiMessage(int ref, const UiMessage& msg) {
 
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::sendUiMessage() - reference not found.");
@@ -99,6 +173,18 @@ int Widgets::sendUiMessage(int ref, const UiMessage& msg) {
   }
 
   it->second->sendUiMessage(msg);
+  */
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::sendUiMessage() failed, no instance found for reference: %d", ref);
+    return -1;
+  }
+
+  if (0 != it->second->sendUiMessage(msg)) {
+    qFatal("Widgets::sendUiMessage() failed, widget returned an error. references: %d", ref);
+    return -2;
+  }
   
   return 0;
 }
@@ -112,10 +198,23 @@ int Widgets::getNumCreatedWidgets() {
 }
 
 int Widgets::setUiMessageListener(int ref, UiMessagesListener* lis) {
-  
+
+  /*
   std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
   if (it == widgets.end()) {
     qFatal("Widgets::setUiMessageListener() - reference not found.");
+    return -1;
+  }
+
+  if (0 != it->second->setUiMessageListener(lis)) {
+    qFatal("Widgets::setUiMessageListener() - failed.");
+    return -2;
+  }
+  */
+
+  std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
+  if (it == instances.end()) {
+    qFatal("Widgets::setUiMessageListener() failed, no instance found for reference: %d", ref);
     return -1;
   }
 
@@ -129,44 +228,52 @@ int Widgets::setUiMessageListener(int ref, UiMessagesListener* lis) {
 
 /* ---------------------------------------------------- */
 
+int widgets_add_factory_for_type(int type, WidgetBase* fac) {
+  return widgets_manager.addFactoryForType(type, fac);
+}
+
+int widgets_create_instance_for_type_and_ref(int type, int ref) {
+  return widgets_manager.createInstanceForTypeAndRef(type, ref);
+}
+
 int widgets_add(int ref, WidgetBase* fac) {
-  return widgets_mananager.add(ref, fac);
+  return widgets_manager.add(ref, fac);
 }
 
 int widgets_create(int ref) {
-  return widgets_mananager.create(ref);
+  return widgets_manager.create(ref);
 }
 
 int widgets_destroy(int ref) {
-  return widgets_mananager.destroy(ref);
+  return widgets_manager.destroy(ref);
 }
 
 int widgets_setup(int ref) {
-  return widgets_mananager.setup(ref);
+  return widgets_manager.setup(ref);
 }
 
 int widgets_update(int ref) {
-  return widgets_mananager.update(ref);
+  return widgets_manager.update(ref);
 }
 
 int widgets_draw(int ref) {
-  return widgets_mananager.draw(ref);
+  return widgets_manager.draw(ref);
 }
 
 int widgets_send_message(int ref, const UiMessage& msg) {
-  return widgets_mananager.sendUiMessage(ref, msg);
+  return widgets_manager.sendUiMessage(ref, msg);
 }
 
 int widgets_get_num_registered_widgets() {
-  return widgets_mananager.getNumRegisteredWidgets();
+  return widgets_manager.getNumRegisteredWidgets();
 }
 
 int widgets_get_num_created_widgets() {
-  return widgets_mananager.getNumCreatedWidgets();
+  return widgets_manager.getNumCreatedWidgets();
 }
 
 int widgets_set_message_listener(int ref, UiMessagesListener* lis) {
-  return widgets_mananager.setUiMessageListener(ref, lis);
+  return widgets_manager.setUiMessageListener(ref, lis);
 }
 
 /* ---------------------------------------------------- */
