@@ -102,7 +102,7 @@
     created. Again, because its totally up to the widget
     implementation how to deal with messages, we only provide a
     function `widgets_set_message_listener()` which calls the
-    corresponding `setUiMessageListener()` of the `WidgetBase`
+    corresponding `setUiMessageListener()` of the `WidgetFactoryBase`
     interface. In our case we're again using a `UiMessages` object for
     sending messages from a widget back to the gui.
     
@@ -121,26 +121,19 @@
 class Widgets {
 public:
   Widgets();
-
-  int addFactoryForType(int type, WidgetBase* factory);
-  int createInstanceForTypeAndRef(int type, int ref);
-  
-  int add(int ref, WidgetBase* fac);                                  /* Widgets takes ownership. */
-  int create(int ref);                                                /* This will call `create()` on your widget and allows you to instantiate your oject. Can be called multiple times with Qt (see documentation in this header). */
-  int destroy(int ref);                                               /* This will call `destroy()` on your widget and allows you to cleanup anything you created in `create()`. Can be called multiple times with Qt (see documentation in this header). */
-  int setup(int ref);                                                 /* This will call `setup()` on your widget. */
-  int update(int ref);                                                /* This will call `update()` on your widget. */
-  int draw(int ref);                                                  /* This will call `draw()` on your widget. */
-  int sendUiMessage(int ref, const UiMessage& msg);                   /* Thread safe way to send messages to your widget from e.g. the Qt Gui thread. The messages are flushed when you call `update()`. */
-  int setUiMessageListener(int ref, UiMessagesListener* lis);         /* Set the listener that will/can receive messages back from your own widget. See `UI MESSAGES` above.  */
-  int getNumRegisteredWidgets();                                      /* Get the number of registered widgets (which have be added using `add()`. */                 
-  int getNumCreatedWidgets();                                         /* Get the total number of created widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
+  int addFactoryForType(int type, WidgetFactoryBase* factory);                                 /* Add a factory object for the given widget type. */
+  int createInstanceForTypeAndRef(int type, int ref);                                          /* This will create a new instance of the widget using the factory for the given type. */
+  int destroyInstanceWithRef(int ref);                                                         /* This will call `destroy()` on your widget and allows you to cleanup anything you created in `create()`. Can be called multiple times with Qt (see documentation in this header). */
+  int setupInstanceWithRef(int ref);                                                           /* This will call `setup()` on your widget. */
+  int updateInstanceWithRef(int ref);                                                          /* This will call `update()` on your widget. */
+  int drawInstanceWithRef(int ref);                                                            /* This will call `draw()` on your widget. */
+  int sendUiMessageToInstanceWithRef(int ref, const UiMessage& msg);                           /* Thread safe way to send messages to your widget from e.g. the Qt Gui thread. The messages are flushed when you call `update()`. */
+  int setUiMessageListenerForInstanceWithRef(int ref, UiMessagesListener* lis);                /* Set the listener that will/can receive messages back from your own widget. See `UI MESSAGES` above.  */
+  int getNumRegisteredWidgets();                                                               /* Get the number of registered widgets (which have be added using `add()`. */                 
+  int getNumCreatedWidgets();                                                                  /* Get the total number of created widgets. Is used to start and stop the underlaying (ofExternal) renderer. */
   
 private:
-  std::unordered_map<int, WidgetBase*> widgets;                       /* The widgets which have bee added. We take ownership! */
-  int num_created_widgets;                                            /* Number of `create()`d widgets; not the same as added widgets. Everytime you call `create()` this number is incremented; when you call `destory()` it's decremented. Was added to start/finish the OF renderer. */
-
-  std::unordered_map<int, WidgetBase*> factories;
+  std::unordered_map<int, WidgetFactoryBase*> factories;
   std::unordered_map<int, WidgetInstanceBase*> instances;
 };
 
@@ -148,23 +141,20 @@ private:
 
 extern Widgets widgets_mananager;
 
-int widgets_add_factory_for_type(int type, WidgetBase* factory);
-int widgets_create_instance_for_type_and_ref(int type, int ref);
-
-int widgets_add(int ref, WidgetBase* fac);                            /* Add a widget for the given reference. */
-int widgets_create(int ref);                                          /* Calls `create()` on the widget for the given reference. */
-int widgets_destroy(int ref);                                         /* Calls `destroy()` on the widget for the given reference. */
-int widgets_setup(int ref);                                           /* Calls `setup()` on the widget for the given reference. */
-int widgets_update(int ref);                                          /* Calls `update()` on the widget for the given reference, and also makes sure the added `UiMessages` are flushed. */
-int widgets_draw(int ref);                                            /* Calls `draw()` on the widget for the given reference. */
-int widgets_send_message(int ref, const UiMessage& msg);              /* Send a message to the widget for the given reference. Make sure to call `widgets_update()` to flush the message queue. */
-int widgets_set_message_listener(int ref, UiMessagesListener* lis);   /* Set the listener for message -FROM- the widget. */
-int widgets_get_num_registered_widgets();                             /* Returns the total number of registered widgets.  */
-int widgets_get_num_created_widgets();                                /* Returns the total number of created widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
+int widgets_add_factory_for_type(int type, WidgetFactoryBase* factory);                        /* Add a factory object for the given widget type. See `WidgetTypes.h` where you can define the widget types. */
+int widgets_create_instance_for_type_and_ref(int type, int ref);                               /* Calls `createWidgetInstance()` on the factory for the given reference. */
+int widgets_destroy_instance_with_ref(int ref);                                                /* Calls `destroy()` on the widget instance for the given reference. */
+int widgets_setup_instance_with_ref(int ref);                                                  /* Calls `setup()` on the widget for the given reference. */
+int widgets_update_instance_with_ref(int ref);                                                 /* Calls `update()` on the widget for the given reference, and also makes sure the added `UiMessages` are flushed. */
+int widgets_draw_instance_with_ref(int ref);                                                   /* Calls `draw()` on the widget for the given reference. */
+int widgets_send_message_to_instance_with_ref(int ref, const UiMessage& msg);                  /* Send a message to the widget for the given reference. Make sure to call `widgets_update()` to flush the message queue. */
+int widgets_set_message_listener_for_instance_with_ref(int ref, UiMessagesListener* lis);      /* Set the listener for message -FROM- the widget. */
+int widgets_get_num_registered_widgets();                                                      /* Returns the total number of registered widgets.  */
+int widgets_get_num_created_widgets();                                                         /* Returns the total number of created widgets. This is used to start/stop the renderer at the right time, see `QtOfExternalWidget.cpp`  */
 
 /* ---------------------------------------------------- */
 
-inline int Widgets::update(int ref) {
+inline int Widgets::updateInstanceWithRef(int ref) {
 
   std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
   if (it == instances.end()) {
@@ -174,30 +164,10 @@ inline int Widgets::update(int ref) {
 
   it->second->update();
 
-  /*
-  std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
-  if (it == widgets.end()) {
-    qFatal("Widgets::update() - reference not found.");
-    return -1;
-  }
-  
-  return it->second->update();
-  */
-
   return 0;
 }
 
-inline int Widgets::draw(int ref) {
-
-  /*
-  std::unordered_map<int, WidgetBase*>::iterator it = widgets.find(ref);
-  if (it == widgets.end()) {
-    qFatal("Widgets::draw() - reference not found.");
-    return -1;
-  }
-
-  return it->second->draw();
-  */
+inline int Widgets::drawInstanceWithRef(int ref) {
 
   std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
   if (it == instances.end()) {

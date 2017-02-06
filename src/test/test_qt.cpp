@@ -38,14 +38,16 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
   qmlRegisterType<QtWidgetType>("cc.openframeworks", 1, 0, "QtWidgetType");
 
+  /*
   widgets_add(WIDGET_TYPE_HISTOGRAM, new Widget<WidgetHistogramPimpl>());
   widgets_add(WIDGET_TYPE_WEBCAM, new Widget<WidgetWebcamPimpl>());
   widgets_add(WIDGET_TYPE_DEPTHKIT, new Widget<WidgetDepthKitPimpl>());
   widgets_add(WIDGET_TYPE_3D, new Widget<Widget3dPimpl>());
   widgets_add(WIDGET_TYPE_DEBUG, new Widget<WidgetDebugPimpl>());
+  */
 
-  widgets_add_factory_for_type(WIDGET_TYPE_3D, new Widget<Widget3dPimpl>());
-  widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new Widget<WidgetHistogramPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
