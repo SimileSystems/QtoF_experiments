@@ -31,7 +31,7 @@ ApplicationWindow {
   QtOfExternalWidget {
     id: histogram
     ref: 1
-    type: QtWidgetType.HISTOGRAM
+/*    type: QtWidgetType.HISTOGRAM */
     width: 391
     height: 197
     x: 229
@@ -39,6 +39,7 @@ ApplicationWindow {
     focus: true // Set focus so we can accept key events.
   }
 
+  /*
   QtOfExternalWidget {
     id: debug_c
     ref: 2
@@ -78,5 +79,6 @@ ApplicationWindow {
     x: 102
     y: 20
   }
-
+  */
+  
 }

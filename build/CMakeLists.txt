@@ -163,7 +163,6 @@ macro(install_qtof_for_target targetName)
       )
     
   endif()
-
   
   # Fix for fmodex
   #add_custom_target(fix_fmod
@@ -173,15 +172,21 @@ macro(install_qtof_for_target targetName)
   #  DEPENDS ${targetName}
   #  )
 
-
-  #set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
-  set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
-  message("__ ${CMAKE_INSTALL_PREFIX}/bin/plugins/ __")
-
+  # @todo this is a quick-fix
+  message("_____ $ENV{QML_DESIGNER_IMPORT_PATH} ________ $ENV{QML_PUPPET_MODE} __")
+  if (FALSE)
+    if (APPLE)
+      set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
+    else()
+      set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
+    endif()
+  endif()
+  
 endmacro()
 
+# QML_DESIGNER_IMPORT_PATH is not loaded from CMake
 #set(QML_DESIGNER_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
-#set(QML_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
+set(QML_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
 
 macro(create_test name)
 

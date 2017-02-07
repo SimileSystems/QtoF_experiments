@@ -31,7 +31,7 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
-  widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_D3, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
 #endif
   

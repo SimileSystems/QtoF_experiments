@@ -14,6 +14,11 @@ This repository has been tested with the following setups.
 - Clang 800.0.42.1
 - Qt 5.7
 
+**General**
+
+- Make sure you can access the *QtoF_experiments* repository
+- Make sure you can access the *openFrameworks* repository
+
 # Installing
 
 While developing this library I've used a shell script that I run in a
