@@ -9,6 +9,7 @@
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlApplicationEngine>
+
 /*
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>

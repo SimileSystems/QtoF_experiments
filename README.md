@@ -69,6 +69,9 @@ I only had to do this on Mac.
     - **Win: (defaults)**
       - Generator: _NMake MakeFiles_
       - Extra generator: _CodeBlocks_
+      - Compiler C: _Microsoft Visual C++ Compiler 14.0 (xxx64)_
+      - Compiler C++_Microsoft Visual C++ Compiler 14.0 (xxx64)_
+      - Debugger: _Auto-detected CDB at ... \x64\cdb.exe_
 
 ## Opening a CMake project in QtCreator
 
