@@ -82,6 +82,19 @@ list(APPEND qtof_libs
   )
 
 if (WIN32)
+ 
+  list(APPEND qtof_assets
+    $<TARGET_FILE:Qt5::Widgets>
+    $<TARGET_FILE:Qt5::Gui>
+    $<TARGET_FILE:Qt5::Qml>
+    $<TARGET_FILE:Qt5::Quick>
+    $<TARGET_FILE:Qt5::Core>
+    $<TARGET_FILE:Qt5::Network>
+    )
+
+endif()
+
+if (WIN32)
   list(APPEND app_libs
     ${ed}/lib/vs2015/libuv.lib
     )
@@ -163,6 +176,9 @@ macro(install_qtof_for_target targetName)
       )
     
   endif()
+
+
+ install(FILES ${qtof_assets} DESTINATION bin) 
 
   
   # Fix for fmodex
