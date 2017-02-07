@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   QQmlApplicationEngine engine;
   engine.addImportPath(app.applicationDirPath() +"/plugins/");
   engine.load(QUrl("qrc:/TestList.qml"));
-    //  engine.load(QUrl("qrc:/TestForWidget.qml"));
+    // engine.load(QUrl("qrc:/TestForWidget.qml"));
 
   return app.exec();
 }

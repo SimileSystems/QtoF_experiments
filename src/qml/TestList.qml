@@ -101,6 +101,8 @@ ApplicationWindow {
     }
   }
 
+  
+
   /*
   QtOfExternalWidget {
     id: histogram
@@ -284,4 +286,18 @@ ApplicationWindow {
       }
     }
   }
+
+
+  QtOfExternalWidget {
+    id: timelement
+    type: QtWidgetType.TIM
+    ref: 3456
+    layer: 0
+    width: 500 
+    height: 100
+    x: 300
+    y: 200
+	visible: true
+}
+
 }

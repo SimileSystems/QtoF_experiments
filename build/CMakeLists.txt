@@ -34,6 +34,8 @@ include_directories(
 
 list(APPEND widget_sources
 #list(APPEND qtof_sources
+  ${sd}/experimental/TimWidgetPimpl.cpp
+  ${sd}/experimental/TimWidget.cpp
   ${sd}/experimental/WidgetHistogramPimpl.cpp
   ${sd}/experimental/WidgetHistogram.cpp
   ${sd}/experimental/WidgetWebcamPimpl.cpp

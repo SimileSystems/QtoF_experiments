@@ -10,8 +10,9 @@
 #include <experimental/WidgetHistogramPimpl.h>
 #include <experimental/WidgetWebcamPimpl.h>
 #include <experimental/WidgetDepthKitPimpl.h>
-#include <experimental/Widget3DPimpl.h>
+#include <experimental/Widget3dPimpl.h>
 #include <experimental/WidgetDebugPimpl.h>
+#include <experimental/TimWidgetPimpl.h>
 
 void QtOfExternalPlugin::registerTypes(const char* uri) {
 
@@ -31,8 +32,9 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
-  widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_D3, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
+  widgets_add_factory_for_type(WIDGET_TYPE_TIM, new WidgetFactory<TimWidgetPimpl>());
 #endif
   
   /* Register our custom types. */

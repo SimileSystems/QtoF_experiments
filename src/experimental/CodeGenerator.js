@@ -1,4 +1,4 @@
-var widget_name = "WidgetDebug";
+var widget_name = "TimWidget";
 var widget_pimpl_name = widget_name +"Pimpl";
 
 /* -------------------------------------------------------------- */
