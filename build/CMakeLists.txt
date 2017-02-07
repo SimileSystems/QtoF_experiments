@@ -177,7 +177,6 @@ macro(install_qtof_for_target targetName)
     
   endif()
 
-
  install(FILES ${qtof_assets} DESTINATION bin) 
 
   
