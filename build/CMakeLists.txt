@@ -34,6 +34,8 @@ include_directories(
 
 list(APPEND widget_sources
 #list(APPEND qtof_sources
+  ${sd}/experimental/TimWidgetPimpl.cpp
+  ${sd}/experimental/TimWidget.cpp
   ${sd}/experimental/WidgetHistogramPimpl.cpp
   ${sd}/experimental/WidgetHistogram.cpp
   ${sd}/experimental/WidgetWebcamPimpl.cpp
@@ -80,6 +82,19 @@ list(APPEND qtof_libs
   Qt5::Qml
   Qt5::Quick
   )
+
+if (WIN32)
+ 
+  list(APPEND qtof_assets
+    $<TARGET_FILE:Qt5::Widgets>
+    $<TARGET_FILE:Qt5::Gui>
+    $<TARGET_FILE:Qt5::Qml>
+    $<TARGET_FILE:Qt5::Quick>
+    $<TARGET_FILE:Qt5::Core>
+    $<TARGET_FILE:Qt5::Network>
+    )
+
+endif()
 
 if (WIN32)
   list(APPEND app_libs
@@ -163,7 +178,9 @@ macro(install_qtof_for_target targetName)
       )
     
   endif()
-  
+
+ install(FILES ${qtof_assets} DESTINATION bin) 
+
   # Fix for fmodex
   #add_custom_target(fix_fmod
   #  ALL
@@ -182,6 +199,10 @@ macro(install_qtof_for_target targetName)
     endif()
   endif()
   
+  #set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
+  #set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
+  message("__ ${CMAKE_INSTALL_PREFIX}/bin/plugins/ __")
+
 endmacro()
 
 # QML_DESIGNER_IMPORT_PATH is not loaded from CMake
@@ -198,6 +219,7 @@ macro(create_test name)
   install_of_for_target(${test_name})
   add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
 
+  install(DIRECTORY DESTINATION bin/scenes)
 #  qtof_install_for_target(${test_name} TestQmlWidget)
   #of_install_for_target(${test_name})
 

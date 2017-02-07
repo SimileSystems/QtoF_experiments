@@ -7,5 +7,6 @@
 #define WIDGET_TYPE_DEPTHKIT     3
 #define WIDGET_TYPE_D3           4
 #define WIDGET_TYPE_DEBUG        5
+#define WIDGET_TYPE_TIM	         6
 
 #endif

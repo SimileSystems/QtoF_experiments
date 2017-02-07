@@ -262,6 +262,18 @@ macro(install_of_for_target targetName)
     #add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
     add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../install/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
 
+  elseif(WIN32)
+
+    foreach(of_shared_lib ${of_shared_libs})
+      add_custom_target(copy_shared_lib
+        ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_shared_lib} $<TARGET_FILE_DIR:${targetName}>
+        COMMENT "Copying ${of_shared_lib}"
+        )
+    endforeach()
+    
+    install(FILES ${of_shared_libs} DESTINATION bin)
   endif()
+
   
 endmacro()

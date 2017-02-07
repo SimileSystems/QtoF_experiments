@@ -26,8 +26,9 @@ ApplicationWindow {
     anchors.leftMargin: 578
     anchors.topMargin: 14
     visible: false
-  }           
-
+  }     
+        
+/*
   QtOfExternalWidget {
     id: histogram
     ref: 1
@@ -81,4 +82,16 @@ ApplicationWindow {
   }
   */
   
+  QtOfExternalWidget {
+    id: timelement
+    type: QtWidgetType.TIM
+    ref: 3456
+    layer: 0
+    width: 500 
+    height: 100
+    x: 300
+    y: 200
+	visible: true
+}
+
 }
