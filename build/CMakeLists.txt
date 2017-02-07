@@ -143,10 +143,10 @@ macro(install_qtof_for_target targetName)
   set_target_properties(${targetName} PROPERTIES INSTALL_RPATH "@executable_path/plugins/qtof")
 
   if (TRUE)
-    # COMMAND ${QT_PATH}/bin/qmlplugindump -dependency ${sd}/qtof/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
+    #COMMAND ${QT_PATH}/bin/qmlplugindump -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
     add_custom_target(create_qmltypes
       ALL
-      COMMAND ${QT_PATH}/bin/qmlplugindump -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
+      COMMAND ${QT_PATH}/bin/qmlplugindump -dependencies ${sd}/qtof/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
       COMMENT "Executing qmlplugindump"
       DEPENDS copy_imports copy_plugin_lib
       )
