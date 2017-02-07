@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
     <file>TestForWidget.qml</file>
+    <file>TestList.qml</file>  
   </qresource> 
 </RCC>

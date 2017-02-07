@@ -53,7 +53,8 @@ int main(int argc, char* argv[]) {
   
   QQmlApplicationEngine engine;
   engine.addImportPath(app.applicationDirPath() +"/plugins/");
-  engine.load(QUrl("qrc:/TestForWidget.qml"));
+  engine.load(QUrl("qrc:/TestList.qml"));
+    //  engine.load(QUrl("qrc:/TestForWidget.qml"));
 
   return app.exec();
 }
@@ -61,6 +62,6 @@ int main(int argc, char* argv[]) {
 /* ---------------------------------------------------- */
 
 #if 0
-  engine.load(QUrl("qrc:/TestList.qml"));
+
   engine.load(QUrl("qrc:/main.qml"));
 #endif

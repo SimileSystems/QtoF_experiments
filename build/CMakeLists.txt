@@ -175,13 +175,13 @@ macro(install_qtof_for_target targetName)
 
 
   #set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
-  #set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
+  set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
   message("__ ${CMAKE_INSTALL_PREFIX}/bin/plugins/ __")
 
 endmacro()
 
-set(QML_DESIGNER_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
-set(QML_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
+#set(QML_DESIGNER_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
+#set(QML_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
 
 macro(create_test name)
 

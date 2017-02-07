@@ -14,12 +14,8 @@ ApplicationWindow {
   visible: true
 
   QtOfExternal {
-      x: 38
-      y: 7
-    visible: true
-    someVariable: 1
     gl_major_version: 3
-    //gl_minor_version: 3
+    gl_minor_version: 3
   }
 
   Rectangle {
@@ -42,8 +38,6 @@ ApplicationWindow {
     y: 20
     focus: true // Set focus so we can accept key events.
   }
-
-  /*
 
   QtOfExternalWidget {
     id: debug_c
@@ -84,6 +78,5 @@ ApplicationWindow {
     x: 102
     y: 20
   }
-*/
 
 }

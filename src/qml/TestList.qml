@@ -2,8 +2,9 @@ import QtQuick 2.7
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
-import cc.openframeworks 1.0
-import roxlu 1.0
+//import cc.openframeworks 1.0
+//import roxlu 1.0
+import qtof 1.0
 
 ApplicationWindow {
   id: app
@@ -28,22 +29,13 @@ ApplicationWindow {
     gl_minor_version: 3
   }
 
-  TestQmlWidgetWrapper {
-    id: myTestInstance
-    x: 364
-    y: 108
-    width: 402
-    height: 339
-    ref: 9999992
-    visible: true
-  }
-
   ListModel {
     id: scenes_model
   }
 
   QtOfExternalWidget {
     id: depthkit
+    type: QtWidgetType.DEPTHKIT
     ref: 3
     layer: 0
     width: app.width
@@ -109,6 +101,7 @@ ApplicationWindow {
     }
   }
 
+  /*
   QtOfExternalWidget {
     id: histogram
     ref: 1
@@ -118,6 +111,7 @@ ApplicationWindow {
     x: 600
     y: 100
   }
+*/
 
   Component {
     id: scenes_delegate
@@ -234,13 +228,6 @@ ApplicationWindow {
         }
       }
 
-      ExternalWidget {
-        id: d3a
-        ref: 4
-        layer: 1
-        width: parent.width
-        height: 200
-      }
     }
   }
 
@@ -297,6 +284,4 @@ ApplicationWindow {
       }
     }
   }
-
-
 }
