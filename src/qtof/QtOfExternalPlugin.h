@@ -5,7 +5,10 @@
 
 class QtOfExternalPlugin : public QQmlExtensionPlugin {
   Q_OBJECT;
-  Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid);
+
+#if !defined(_WIN32)  
+  Q_PLUGIN_METADATA(IID "QQmlExtensionInterface_iid");
+#endif  
   
 public:
   void registerTypes(const char* uri);

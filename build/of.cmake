@@ -67,6 +67,7 @@ list(APPEND of_sources
   ${of_sd}/utils/ofXml.cpp
   ${of_sd}/video/ofVideoGrabber.cpp
   ${of_sd}/video/ofVideoPlayer.cpp
+  ${of_ed}/src/glad.c
   )
 
 include_directories(

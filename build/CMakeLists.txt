@@ -33,6 +33,7 @@ include_directories(
   )
 
 list(APPEND widget_sources
+#list(APPEND qtof_sources
   ${sd}/experimental/WidgetHistogramPimpl.cpp
   ${sd}/experimental/WidgetHistogram.cpp
   ${sd}/experimental/WidgetWebcamPimpl.cpp
@@ -90,10 +91,23 @@ elseif (APPLE)
     )
 endif()
 
+#list(APPEND of_sources
+#  ${ed}/src/glad.c
+#  )
+
 add_library(of${debug_flag} STATIC ${of_sources})
 add_library(widgets${debug_flag} STATIC ${widget_sources})
 add_library(qtof${debug_flag} SHARED ${qtof_sources})
+
+add_library(tmp STATIC ${qtof_sources}) # win fix
+target_link_libraries(widgets${debug_flag} ${app_libs}) # win fix
+target_link_libraries(tmp of${debug_flag} widgets${debug_flag} ${of_libs} ${qtof_libs})
+
 target_link_libraries(qtof${debug_flag} of${debug_flag} widgets${debug_flag} ${of_libs} ${qtof_libs})
+#target_link_libraries(qtof${debug_flag} of${debug_flag} ${of_libs} ${qtof_libs} ${app_libs})
+
+install(TARGETS qtof${debug_flag} DESTINATION bin/plugins/qtof/)
+install(DIRECTORY ${sd}/qtof/imports/ DESTINATION bin/plugins/qtof/)
 
 macro(install_qtof_for_target targetName)
 
@@ -137,8 +151,6 @@ macro(install_qtof_for_target targetName)
       DEPENDS copy_imports copy_plugin_lib
       )
   endif()
-
-
   
   # Fix for fmodex
   #add_custom_target(fix_fmod
@@ -148,7 +160,9 @@ macro(install_qtof_for_target targetName)
   #  DEPENDS ${targetName}
   #  )
 
-  set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
+  #set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
+  set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
+  message("__ ${CMAKE_INSTALL_PREFIX}/bin/plugins/ __")
 
 endmacro()
 
@@ -157,17 +171,17 @@ macro(create_test name)
   set(test_name "test_${name}${debug_flag}")
   add_executable(${test_name} MACOSX_BUNDLE ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
   #target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick ${of_libs} qtof${debug_flag} ${libs} ${qtof_libs})
-  target_link_libraries(${test_name} qtof${debug_flag} ${app_libs})
+  target_link_libraries(${test_name} qtof${debug_flag} ${app_libs} widgets${debug_flag} tmp)
   install(TARGETS ${test_name} DESTINATION bin)
   install_qtof_for_target(${test_name})
   install_of_for_target(${test_name})
   add_custom_command(TARGET ${test_name} POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${test_name}>/scenes)
 
 #  qtof_install_for_target(${test_name} TestQmlWidget)
-#  of_install_for_target(${test_name})
+  #of_install_for_target(${test_name})
 
 #  qtof_install_plugin_for_target(${test_name})
-
+               
 endmacro()
 
 create_test(qt)
