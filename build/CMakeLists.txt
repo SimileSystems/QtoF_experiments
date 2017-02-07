@@ -142,7 +142,7 @@ macro(install_qtof_for_target targetName)
   # Make sure the rpath is set correctly
   set_target_properties(${targetName} PROPERTIES INSTALL_RPATH "@executable_path/plugins/qtof")
 
-  if (TRUE)
+  if (FALSE)
     #COMMAND ${QT_PATH}/bin/qmlplugindump -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
     add_custom_target(create_qmltypes
       ALL
@@ -170,8 +170,7 @@ macro(create_test name)
 
   set(test_name "test_${name}${debug_flag}")
   add_executable(${test_name} MACOSX_BUNDLE ${sd}/test/test_${name}.cpp ${sd}/qml/resources.qrc)
-  #target_link_libraries(${test_name} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick ${of_libs} qtof${debug_flag} ${libs} ${qtof_libs})
-  target_link_libraries(${test_name} qtof${debug_flag} ${app_libs} widgets${debug_flag} tmp)
+  target_link_libraries(${test_name} qtof${debug_flag} ${app_libs} widgets${debug_flag}) # tmp)
   install(TARGETS ${test_name} DESTINATION bin)
   install_qtof_for_target(${test_name})
   install_of_for_target(${test_name})

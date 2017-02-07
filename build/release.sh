@@ -46,6 +46,10 @@ do
         build_dir="build_xcode"
         cmake_generator="Xcode"
         build_dir="build_xcode"
+    elif [ "${var}" = "vs2013" ] ; then
+        build_dir="build_vs2013"
+        compiler="vs2013"
+        cmake_generator="Visual Studio 12 2013 Win64"
     fi
 done
 

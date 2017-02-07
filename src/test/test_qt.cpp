@@ -9,6 +9,7 @@
 #include <QGuiApplication>
 #include <QQuickView>
 #include <QQmlApplicationEngine>
+/*
 #include <qtof/QtOfExternal.h>
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/Widgets.h>
@@ -20,7 +21,7 @@
 #include <experimental/WidgetDepthKitPimpl.h>
 #include <experimental/Widget3DPimpl.h>
 #include <experimental/WidgetDebugPimpl.h>
-
+*/
 /* ---------------------------------------------------- */
 
 int main(int argc, char* argv[]) {
@@ -35,12 +36,13 @@ int main(int argc, char* argv[]) {
   qmlRegisterType<QtUiMessage>("cc.openframeworks", 1, 0, "QtUiMessage");
   qmlRegisterType<QtWidgetType>("cc.openframeworks", 1, 0, "QtWidgetType");
   */
-
+  /*
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_3D, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
+  */
 
   QSurfaceFormat format;
   format.setVersion(3, 3);
