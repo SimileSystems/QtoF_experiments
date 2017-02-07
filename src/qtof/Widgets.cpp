@@ -17,6 +17,8 @@ int Widgets::addFactoryForType(int type, WidgetFactoryBase* factory) {
     return -1;
   }
 
+  qDebug() << "Adding a factory for type: " << type << ", ptr: " << factory << ", this: " << this;;
+
   std::unordered_map<int, WidgetFactoryBase*>::iterator it = factories.find(type);
   if (it != factories.end()) {
     qFatal("There already exists a factory for the given type");
@@ -32,7 +34,7 @@ int Widgets::createInstanceForTypeAndRef(int type, int ref) {
 
   std::unordered_map<int, WidgetFactoryBase*>::iterator fit = factories.find(type);
   if (fit == factories.end()) {
-    qFatal("No factory found for given type: %d", type);
+    qFatal("No factory found for given type: %d. We have %zu factories, this: %p.", type, factories.size(), this);
     return -1;
   }
 

@@ -14,18 +14,21 @@ ApplicationWindow {
   visible: true
 
   QtOfExternal {
+      x: 38
+      y: 7
     visible: true
+    someVariable: 1
     gl_major_version: 3
-    gl_minor_version: 3
+    //gl_minor_version: 3
   }
 
   Rectangle {
     anchors.fill: parent
     color: "#666666"
-    anchors.rightMargin: 22
-    anchors.bottomMargin: 112
-    anchors.leftMargin: 648
-    anchors.topMargin: 20
+    anchors.rightMargin: 92
+    anchors.bottomMargin: 118
+    anchors.leftMargin: 578
+    anchors.topMargin: 14
     visible: false
   }           
 
@@ -40,12 +43,14 @@ ApplicationWindow {
     focus: true // Set focus so we can accept key events.
   }
 
+  /*
+
   QtOfExternalWidget {
     id: debug_c
     ref: 2
     type: QtWidgetType.DEBUG
-    width: 20
-    height: 20
+    width: 46
+    height: 110
     x: 20
     y: 20
   }
@@ -56,8 +61,8 @@ ApplicationWindow {
     type: QtWidgetType.DEBUG
     width: 152
     height: 186
-    x: 60
-    y: 20
+    x: 50
+    y: 226
   }
 
   QtOfExternalWidget {
@@ -69,5 +74,16 @@ ApplicationWindow {
       height: 114
       ref: 6
   }
+
+  QtOfExternalWidget {
+    id: dk
+    ref: 4
+    type: QtWidgetType.DEPTHKIT
+    width: 100
+    height: 200
+    x: 102
+    y: 20
+  }
+*/
 
 }

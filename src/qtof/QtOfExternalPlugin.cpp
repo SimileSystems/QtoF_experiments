@@ -3,21 +3,15 @@
 #include <qtof/QtOfExternalWidget.h>
 #include <qtof/QtUiMessage.h>
 #include <qtof/QtWidgetType.h>
+#include <qtof/Widgets.h>
+#include <qtof/WidgetTypes.h>
 
-/* 
-   @todo this is a quickfix to make our plugin work on Windows. I've
-   to figure out how/where the symbols should be stored; apparently
-   there are some differences between Windows and Mac.
- */
-#if defined(_WIN32)
-#  include <qtof/Widgets.h>
-#  include <qtof/WidgetTypes.h>
-#  include <experimental/WidgetHistogramPimpl.h>
-#  include <experimental/WidgetWebcamPimpl.h>
-#  include <experimental/WidgetDepthKitPimpl.h>
-#  include <experimental/Widget3DPimpl.h>
-#  include <experimental/WidgetDebugPimpl.h>
-#endif
+/* Include your widget PIMPL wrappers here. */
+#include <experimental/WidgetHistogramPimpl.h>
+#include <experimental/WidgetWebcamPimpl.h>
+#include <experimental/WidgetDepthKitPimpl.h>
+#include <experimental/Widget3DPimpl.h>
+#include <experimental/WidgetDebugPimpl.h>
 
 void QtOfExternalPlugin::registerTypes(const char* uri) {
 
@@ -26,7 +20,14 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
     exit(EXIT_FAILURE);
   }
 
-#if defined(_WIN32)
+  printf("--++//----------------------------------------\n");
+  
+  /* 
+     Register the PIMPL wrappers for our widgets.  When you want to
+     add new widgets you need to make sure you add a call to
+     `widget_add_factory_for_type()`
+  */
+#if 1
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
@@ -34,6 +35,7 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
 #endif
   
+  /* Register our custom types. */
   qmlRegisterType<QtOfExternal>(uri, 1, 0, "QtOfExternal");
   qmlRegisterType<QtOfExternalWidget>(uri, 1, 0, "QtOfExternalWidget");
   qmlRegisterType<QtUiMessage>(uri, 1, 0, "QtUiMessage");

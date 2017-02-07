@@ -151,6 +151,19 @@ macro(install_qtof_for_target targetName)
       DEPENDS copy_imports copy_plugin_lib
       )
   endif()
+
+  if (FALSE)
+    # COMMAND ${QT_PATH}/bin/qmlplugindump -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes
+    # COMMAND ${QT_PATH}/bin/qmlplugindump -dependencies ${sd}/qtof/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 ${sd}/qtof/imports/ > ${sd}/qtof/imports/qtof/plugin.qmltypes
+    add_custom_target(create_qmltypes
+      ALL
+      COMMAND ${QT_PATH}/bin/qmlplugindump qtof 1.0 ${sd}/qtof/imports/ > ${sd}/qtof/imports/qtof/plugin.qmltypes
+      COMMENT "Executing qmlplugindump"
+      DEPENDS copy_imports copy_plugin_lib
+      )
+    
+  endif()
+
   
   # Fix for fmodex
   #add_custom_target(fix_fmod
@@ -160,11 +173,15 @@ macro(install_qtof_for_target targetName)
   #  DEPENDS ${targetName}
   #  )
 
+
   #set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
-  set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
+  #set(QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/bin/plugins/" CACHE string "" FORCE)
   message("__ ${CMAKE_INSTALL_PREFIX}/bin/plugins/ __")
 
 endmacro()
+
+set(QML_DESIGNER_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
+set(QML_IMPORT_PATH "${sd}/qtof/imports/" CACHE string "" FORCE)
 
 macro(create_test name)
 
