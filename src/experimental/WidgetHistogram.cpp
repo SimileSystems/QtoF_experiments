@@ -15,12 +15,16 @@ void WidgetHistogram::update() {
 
 void WidgetHistogram::draw() {
 
-  glDisable(GL_DEPTH_TEST);  /* Necessary on Win */
-  img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
-
   if (true == isMouseInsideWidget()) {
+    ofSetColor(244, 244, 0, 127);
     ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight()); // x * pix_ratio, y * pix_ratio, width * pix_ratio, height * pix_ratio);
+    ofSetColor(255, 255, 255,255);
   }
+  else {
+    ofSetColor(255, 255, 255,255);
+    img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
+  }
+
 }
 
 void WidgetHistogram::destroy() {

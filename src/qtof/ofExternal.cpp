@@ -115,6 +115,7 @@ int ofExternal::startRender() {
 #endif
 
   win->startRender();
+  
   return 0;
 }
 

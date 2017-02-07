@@ -21,26 +21,31 @@ ApplicationWindow {
   Rectangle {
     anchors.fill: parent
     color: "#666666"
-    anchors.rightMargin: 92
-    anchors.bottomMargin: 118
-    anchors.leftMargin: 578
-    anchors.topMargin: 14
     visible: false
   }     
-        
-/*
+  
   QtOfExternalWidget {
     id: histogram
     ref: 1
-/*    type: QtWidgetType.HISTOGRAM */
-    width: 391
-    height: 197
-    x: 229
-    y: 20
+    layer: 1
+    type: QtWidgetType.HISTOGRAM 
+    width: 400
+    height: 20
+    x: 300
+    y: 30
     focus: true // Set focus so we can accept key events.
   }
 
-  /*
+  QtOfExternalWidget {
+    id: qtOfExternalWidget
+    type: QtWidgetType.HISTOGRAM
+    ref: 6
+    x: 30
+    y: 30
+    width: 200
+    height: 200
+  }
+
   QtOfExternalWidget {
     id: debug_c
     ref: 2
@@ -61,15 +66,6 @@ ApplicationWindow {
     y: 226
   }
 
-  QtOfExternalWidget {
-      id: qtOfExternalWidget
-      type: QtWidgetType.HISTOGRAM
-      x: 264
-      y: 346
-      width: 154
-      height: 114
-      ref: 6
-  }
 
   QtOfExternalWidget {
     id: dk
@@ -80,8 +76,7 @@ ApplicationWindow {
     x: 102
     y: 20
   }
-  */
-  
+
   QtOfExternalWidget {
     id: timelement
     type: QtWidgetType.TIM
@@ -91,7 +86,7 @@ ApplicationWindow {
     height: 100
     x: 300
     y: 200
-	visible: true
-}
+    visible: true
+  }
 
 }

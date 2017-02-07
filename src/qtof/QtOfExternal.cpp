@@ -36,6 +36,8 @@ void QtOfExternal::onSync() {
 
 void QtOfExternal::onPaint() {
 
+  glClear(GL_COLOR_BUFFER_BIT);
+  
   of_external_update();
 
   window()->update();

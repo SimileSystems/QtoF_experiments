@@ -2,8 +2,6 @@ import QtQuick 2.7
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
-//import cc.openframeworks 1.0
-//import roxlu 1.0
 import qtof 1.0
 
 ApplicationWindow {
@@ -14,21 +12,23 @@ ApplicationWindow {
   color: "#FFFF00"
   visible: true
 
-  Rectangle {
-      anchors.fill: parent
-      color: "#666666"
-      anchors.rightMargin: 0
-      anchors.bottomMargin: 0
-      anchors.leftMargin: 0
-      anchors.topMargin: 0
-  }           
-
   QtOfExternal {
     visible: true
     gl_major_version: 3
     gl_minor_version: 3
   }
 
+  /* This causes Qt to call glClear() */
+
+  Rectangle {
+    anchors.fill: parent
+    color: "#666666"
+    anchors.rightMargin: 10
+    anchors.bottomMargin: 10
+    anchors.leftMargin: 0
+    anchors.topMargin: 0
+  }
+  
   ListModel {
     id: scenes_model
   }
@@ -85,35 +85,35 @@ ApplicationWindow {
     function onUiMessage(msg) {
 
       switch (msg.type) {
-        case QtUiMessage.DIRECTORY_CREATED: {
-          handleDirectoryCreatedMessage(msg);
-          break;
-        }
-        case QtUiMessage.DIRECTORY_DELETED: {
-          handleDirectoryDeletedMessage(msg);
-          break;
-        }
-        default: {
-          console.error("Unhandled ui message.");
-          break;
-        }
+      case QtUiMessage.DIRECTORY_CREATED: {
+        handleDirectoryCreatedMessage(msg);
+        break;
+      }
+      case QtUiMessage.DIRECTORY_DELETED: {
+        handleDirectoryDeletedMessage(msg);
+        break;
+      }
+      default: {
+        console.error("Unhandled ui message.");
+        break;
+      }
       };
     }
   }
 
   
 
-  /*
   QtOfExternalWidget {
     id: histogram
+    type: QtWidgetType.HISTOGRAM
     ref: 1
-    layer: 1
+    layer: 0
     width: 100
     height: 100
     x: 600
     y: 100
-  }
-*/
+    }
+
 
   Component {
     id: scenes_delegate
@@ -143,12 +143,12 @@ ApplicationWindow {
               }
               onEntered: {
                 /*
-                parent.color = "#FF0000"
+                  parent.color = "#FF0000"
                 */
               }
               onExited: {
                 /*
-                parent.color = "#33FFFFFF"
+                  parent.color = "#33FFFFFF"
                 */
               }
             }
@@ -186,7 +186,8 @@ ApplicationWindow {
     x: 0
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    clip: true
+    /* Disable clipping becuase of clearing issue. */
+/*    clip: false */
     
     states: [
       State {
@@ -287,17 +288,16 @@ ApplicationWindow {
     }
   }
 
-
   QtOfExternalWidget {
     id: timelement
     type: QtWidgetType.TIM
-    ref: 3456
-    layer: 0
-    width: 500 
+    ref: 12
+    layer: 1
+    width: 800 
     height: 100
-    x: 300
-    y: 200
-	visible: true
-}
+    x: 0
+    y: 20
+	  visible: true
+  }
 
 }
