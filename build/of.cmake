@@ -44,12 +44,12 @@ list(APPEND of_sources
   ${of_sd}/math/ofVec2f.cpp
   ${of_sd}/math/ofVec4f.cpp
   ${of_sd}/sound/ofBaseSoundStream.cpp
-  ${of_sd}/sound/ofFmodSoundPlayer.cpp
+#  ${of_sd}/sound/ofFmodSoundPlayer.cpp
   ${of_sd}/sound/ofOpenALSoundPlayer.cpp
   ${of_sd}/sound/ofRtAudioSoundStream.cpp
   ${of_sd}/sound/ofSoundBuffer.cpp
-  ${of_sd}/sound/ofSoundPlayer.cpp
-  ${of_sd}/sound/ofSoundStream.cpp
+#  ${of_sd}/sound/ofSoundPlayer.cpp
+#  ${of_sd}/sound/ofSoundStream.cpp
   ${of_sd}/types/ofBaseTypes.cpp
   ${of_sd}/types/ofColor.cpp
   ${of_sd}/types/ofParameter.cpp
@@ -87,7 +87,7 @@ include_directories(
   ${of_ld}/boost/include
   ${of_ld}/cairo/include/cairo/
   ${of_ld}/curl/include
-  ${of_ld}/fmodex/include
+#  ${of_ld}/fmodex/include
   ${of_ld}/freetype/include/freetype2/
   ${of_ld}/glew/include
   ${of_ld}/glfw/include
@@ -98,6 +98,11 @@ include_directories(
   ${of_ld}/rtAudio/include
   ${of_ld}/tess2/include
   ${of_ld}/utf8/include
+  )
+
+
+add_definitions(
+  -DTARGET_NO_SOUND
   )
 
 if (WIN32)
@@ -126,7 +131,7 @@ if (WIN32)
     ${of_ld}/cairo/lib/vs/x64/pixman-1.lib
     ${of_ld}/cairo/lib/vs/x64/zlib.lib
     ${of_ld}/curl/lib/vs/x64/libcurl.lib
-    ${of_ld}/fmodex/lib/vs/x64/fmodex64_vc.lib
+#    ${of_ld}/fmodex/lib/vs/x64/fmodex64_vc.lib
     ${of_ld}/FreeImage/lib/vs/x64/FreeImage.lib
     ${of_ld}/freetype/lib/vs/x64/libfreetype.lib 
     ${of_ld}/glew/lib/vs/x64/glew32s.lib
@@ -162,7 +167,7 @@ if (WIN32)
   endif()
   
   list(APPEND of_shared_libs
-    ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll
+#    ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll
     ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll
     )
   
@@ -192,7 +197,7 @@ elseif (APPLE)
     ${of_ld}/cairo/lib/osx/pixman-1.a
     ${of_ld}/cairo/lib/osx/png.a
     ${of_ld}/curl/lib/osx/curl.a
-    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
+#    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
     ${of_ld}/FreeImage/lib/osx/freeimage.a
     ${of_ld}/freetype/lib/osx/freetype.a
     ${of_ld}/glew/lib/osx/glew.a
@@ -232,9 +237,9 @@ elseif (APPLE)
     z
     )
 
-  list(APPEND of_shared_libs
-    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
-    )
+#  list(APPEND of_shared_libs
+#    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
+#    )
 
 endif()
 

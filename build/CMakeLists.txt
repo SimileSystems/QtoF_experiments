@@ -1,15 +1,24 @@
 cmake_minimum_required(VERSION 3.7.1)
+project(Depthkit)
 include(ExternalProject)
 include(of.cmake)
-project(Depthkit)
 
-set(QT_PATH "/Users/roxlu/Applications/QtOS/5.8/clang_64/") # Temporary while using the Qt OS version.
+# The user has to specificy the QT_PATH variable which is set to the
+# base directory of yor Qt install. E.g.  /Qt/5.8/clang_64. We need
+# this path to be able to include the Qt cmake modules. We also use
+# this to find the qmlplugindump util that we use to create the
+# qmltypes file.
+if (NOT QT_PATH)
+  message(FATAL_ERROR "QT_PATH not set. Set QT_PATH to your Qt base install dir, e.g. /Qt/5.8/clang_64")
+endif()
+
 set(CMAKE_PREFIX_PATH ${QT_PATH} CACHE string "" FORCE)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) # This will make sure that the installed qt dylibs are found. 
+
 set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(sd ${bd}/src)
 set(ed ${bd}/extern)
@@ -58,6 +67,10 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Qml REQUIRED)
 find_package(Qt5Quick REQUIRED)
+
+if (Qt5Core_NOTFOUND)
+  message(FATAL_ERROR "Qt5Core not found. Mae sure that you've set the QT_PATH variable to your Qt install directory; e.g. /Applications/Qt/5.8/clang_64")
+endif()
 
 list(APPEND qtof_libs
   Qt5::Widgets
@@ -115,23 +128,25 @@ macro(install_qtof_for_target targetName)
   # Make sure the rpath is set correctly
   set_target_properties(${targetName} PROPERTIES INSTALL_RPATH "@executable_path/plugins/qtof")
 
-  if (FALSE)
+  if (TRUE)
+    # COMMAND ${QT_PATH}/bin/qmlplugindump -dependency ${sd}/qtof/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
     add_custom_target(create_qmltypes
       ALL
-      COMMAND ${QT_PATH}/bin/qmlplugindump -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes
+      COMMAND ${QT_PATH}/bin/qmlplugindump -noforceqtquick -nonrelocatable qtof 1.0 $<TARGET_FILE_DIR:${targetName}>/plugins > $<TARGET_FILE_DIR:${targetName}>/plugins/qtof/plugins.qmltypes 
       COMMENT "Executing qmlplugindump"
       DEPENDS copy_imports copy_plugin_lib
       )
   endif()
+
+
   
   # Fix for fmodex
-  add_custom_target(fix_fmod
-    ALL
-    COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change "@executable_path/libfmodex.dylib" "$<TARGET_FILE_DIR:${targetName}>/libfmodex.dylib" $<TARGET_FILE:qtof${debug_flag}>
-    COMMENT "Fixing fmod dylib install name"
-    DEPENDS ${targetName}
-    )
-
+  #add_custom_target(fix_fmod
+  #  ALL
+  #  COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change "@executable_path/libfmodex.dylib" "$<TARGET_FILE_DIR:${targetName}>/libfmodex.dylib" $<TARGET_FILE:qtof${debug_flag}>
+  #  COMMENT "Fixing fmod dylib install name"
+  #  DEPENDS ${targetName}
+  #  )
 
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/test_qt.app/Contents/MacOS/plugins/" CACHE string "" FORCE)
 

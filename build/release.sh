@@ -111,7 +111,7 @@ fi
 cd ${bd}
 cmake -DCMAKE_INSTALL_PREFIX=${id} \
       -DCMAKE_BUILD_TYPE=${cmake_build_type} \
-      -DOF_DIR=${of}/ \
+      -DQT_PATH=${QT_PATH} \
       -G "${cmake_generator}" \
       ..
 
