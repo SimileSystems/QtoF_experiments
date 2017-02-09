@@ -18,8 +18,8 @@ private:
 
 QtOfExternalWidget::QtOfExternalWidget()
   :ref(-1)
-  ,layer(0)
-  ,type(WIDGET_TYPE_NONE)
+  ,level(0)
+  ,widget(WIDGET_TYPE_NONE)
   ,is_created(false)
 {
   connect(this, &QQuickItem::windowChanged, this, &QtOfExternalWidget::onWindowChanged);
@@ -48,8 +48,8 @@ QtOfExternalWidget::~QtOfExternalWidget() {
     window()->scheduleRenderJob(new QtOfExternalWidgetCleanupRunnable(ref), QQuickWindow::BeforeSynchronizingStage);
   }
 
-  type = WIDGET_TYPE_NONE;
-  layer = 0;
+  widget = WIDGET_TYPE_NONE;
+  level = 0;
   ref = -1;
   is_created = false;
 }
@@ -71,7 +71,7 @@ QtOfExternalWidget::~QtOfExternalWidget() {
 
      QtOfExternalWidget {
        id: depthkit
-       type: QtWidgetType.WEBCAM
+       widget: QtWidgetType.WEBCAM
        ref: 3
        width: app.width
        height: app.height
@@ -112,13 +112,13 @@ void QtOfExternalWidget::onSync() {
   
   if (false == is_created) {
 
-    if (WIDGET_TYPE_NONE == type) {
-      qFatal("Cannot create widget because type is not set.");
+    if (WIDGET_TYPE_NONE == widget) {
+      qFatal("Cannot create widget because widget is not set, ref: %d", ref);
       return;
     }
 
-    if (0 != widgets_create_instance_for_type_and_ref(type, ref)) {
-      qFatal("Failed to create the QtOfExternalWidget for type: %d and ref: %d.", type, ref);
+    if (0 != widgets_create_instance_for_type_and_ref(widget, ref)) {
+      qFatal("Failed to create the QtOfExternalWidget for widget: %d and ref: %d.", widget, ref);
       return;
     }
 
@@ -147,14 +147,14 @@ void QtOfExternalWidget::onSync() {
     
     is_created = true;
 
-    if (0 == layer) {
+    if (0 == level) {
       connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
     }
-    else if (1 == layer) {
+    else if (1 == level) {
       connect(window(), &QQuickWindow::afterRendering, this, &QtOfExternalWidget::onPaint, Qt::DirectConnection);
     }
     else {
-      qFatal("The layer you provided for the QtOfExternalWidget must be either 0 or 1.");
+      qFatal("The level you provided for the QtOfExternalWidget must be either 0 or 1.");
     }
   }
 }
@@ -173,7 +173,7 @@ void QtOfExternalWidget::onCleanup() {
   `of_external_finish_render()` will setup the openFrameworks
   programmable render for each widget. We need to do this because
   every widget needs to be able to draw on it's own; this is needed
-  when e.g. drawing on different layers (see beforeRendering,
+  when e.g. drawing on different levels (see beforeRendering,
   afterRendering).
 
   @todo maybe we also want to update the width / height? 
@@ -350,8 +350,8 @@ void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
   itself (e.g. the openFramworks code) will receive the `UiMessage` in
   it's `onUiMessage()` listener function.
 
-  This function was created to communicate between the GUI layer and
-  the widget layer.
+  This function was created to communicate between the GUI level and
+  the widget level.
 
  */
 void QtOfExternalWidget::sendUiMessageString(unsigned int msgType, const QString& str) {

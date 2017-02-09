@@ -4,8 +4,8 @@
 
 void WidgetHistogram::setup() {
 
-  if (false == img.load("scene.jpg")) {
-    ofLogError() << "Failed to load scene.jpg from exe dir.";
+  if (false == img.load("dog.jpg")) {
+    ofLogError() << "Failed to load cat.jpg from exe dir.";
     exit(EXIT_FAILURE);
   }
 }

@@ -44,12 +44,9 @@ list(APPEND of_sources
   ${of_sd}/math/ofVec2f.cpp
   ${of_sd}/math/ofVec4f.cpp
   ${of_sd}/sound/ofBaseSoundStream.cpp
-#  ${of_sd}/sound/ofFmodSoundPlayer.cpp
   ${of_sd}/sound/ofOpenALSoundPlayer.cpp
   ${of_sd}/sound/ofRtAudioSoundStream.cpp
   ${of_sd}/sound/ofSoundBuffer.cpp
-#  ${of_sd}/sound/ofSoundPlayer.cpp
-#  ${of_sd}/sound/ofSoundStream.cpp
   ${of_sd}/types/ofBaseTypes.cpp
   ${of_sd}/types/ofColor.cpp
   ${of_sd}/types/ofParameter.cpp
@@ -88,7 +85,6 @@ include_directories(
   ${of_ld}/boost/include
   ${of_ld}/cairo/include/cairo/
   ${of_ld}/curl/include
-#  ${of_ld}/fmodex/include
   ${of_ld}/freetype/include/freetype2/
   ${of_ld}/glew/include
   ${of_ld}/glfw/include
@@ -132,7 +128,6 @@ if (WIN32)
     ${of_ld}/cairo/lib/vs/x64/pixman-1.lib
     ${of_ld}/cairo/lib/vs/x64/zlib.lib
     ${of_ld}/curl/lib/vs/x64/libcurl.lib
-#    ${of_ld}/fmodex/lib/vs/x64/fmodex64_vc.lib
     ${of_ld}/FreeImage/lib/vs/x64/FreeImage.lib
     ${of_ld}/freetype/lib/vs/x64/libfreetype.lib 
     ${of_ld}/glew/lib/vs/x64/glew32s.lib
@@ -168,7 +163,6 @@ if (WIN32)
   endif()
   
   list(APPEND of_shared_libs
-#    ${of_ld}/fmodex/lib/vs/x64/fmodex64.dll
     ${of_ld}/FreeImage/lib/vs/x64/FreeImage.dll
     )
   
@@ -198,7 +192,6 @@ elseif (APPLE)
     ${of_ld}/cairo/lib/osx/pixman-1.a
     ${of_ld}/cairo/lib/osx/png.a
     ${of_ld}/curl/lib/osx/curl.a
-#    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
     ${of_ld}/FreeImage/lib/osx/freeimage.a
     ${of_ld}/freetype/lib/osx/freetype.a
     ${of_ld}/glew/lib/osx/glew.a
@@ -238,10 +231,6 @@ elseif (APPLE)
     z
     )
 
-#  list(APPEND of_shared_libs
-#    ${of_ld}/fmodex/lib/osx/libfmodex.dylib
-#    )
-
 endif()
 
 macro(install_of_for_target targetName)
@@ -254,12 +243,7 @@ macro(install_of_for_target targetName)
       install(FILES ${of_shared_lib} DESTINATION $<TARGET_FILE_DIR:${targetName}>)
     endforeach()
 
-
-    # When we need to copy the data somewhere after installing ...
-    #install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin/data DESTINATION $<TARGET_FILE_DIR:${targetName}>/../Resources)
-
     # Install the data to the current build directory
-    #add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
     add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../install/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
 
   elseif(WIN32)
@@ -275,5 +259,4 @@ macro(install_of_for_target targetName)
     install(FILES ${of_shared_libs} DESTINATION bin)
   endif()
 
-  
 endmacro()

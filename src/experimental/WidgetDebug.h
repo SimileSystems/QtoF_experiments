@@ -13,6 +13,9 @@ public:
   void draw();
   void destroy();
   void onUiMessage(const UiMessage& msg);
+  
+private:
+  ofImage img;
 };
 
 #endif

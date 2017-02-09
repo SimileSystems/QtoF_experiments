@@ -150,8 +150,8 @@ class QtOfExternalWidget : public QQuickItem,
                            public UiMessagesListener {
   Q_OBJECT
   Q_PROPERTY(int ref WRITE setRef READ getRef)
-  Q_PROPERTY(int layer WRITE setLayer READ getLayer)                  /* The layer onto which we draw, 0: background, 1: foreground */
-  Q_PROPERTY(int type WRITE setType READ getType)
+  Q_PROPERTY(int level WRITE setLevel READ getLevel)                  /* The level onto which we draw, 0: background, 1: foreground */
+  Q_PROPERTY(int widget WRITE setWidget READ getWidget)
   
 public:
   QtOfExternalWidget();
@@ -165,11 +165,11 @@ public slots:
 
 public:
   int getRef();
-  int getLayer();
-  int getType();
+  int getLevel();
+  int getWidget();
   void setRef(const int& v);
-  void setLayer(const int& v);
-  void setType(const int& t);
+  void setLevel(const int& v);
+  void setWidget(const int& t);
   
   Q_INVOKABLE void sendUiMessageString(unsigned int msgType, const QString& str);
   Q_INVOKABLE void sendUiMessage(unsigned int msgType);
@@ -196,8 +196,8 @@ protected:
   
 private:
   int ref;
-  int layer;
-  int type;  /* The widget type, see WidgetTypes.h */
+  int level;
+  int widget;  /* The widget type, see WidgetTypes.h */
   bool is_created; 
 };
 
@@ -207,24 +207,24 @@ inline int QtOfExternalWidget::getRef() {
   return ref;
 }
 
-inline int QtOfExternalWidget::getLayer() {
-  return layer;
+inline int QtOfExternalWidget::getLevel() {
+  return level;
 }
 
-inline int QtOfExternalWidget::getType() {
-  return type;
+inline int QtOfExternalWidget::getWidget() {
+  return widget;
 }
 
 inline void QtOfExternalWidget::setRef(const int& v) {
   ref = v;
 }
 
-inline void QtOfExternalWidget::setLayer(const int& v) {
-  layer = v;
+inline void QtOfExternalWidget::setLevel(const int& v) {
+  level = v;
 }
 
-inline void QtOfExternalWidget::setType(const int& t) {
-  type = t;
+inline void QtOfExternalWidget::setWidget(const int& t) {
+  widget = t;
 }
 
 /* ---------------------------------------------------- */

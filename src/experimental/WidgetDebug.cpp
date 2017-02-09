@@ -1,6 +1,10 @@
 #include <experimental/WidgetDebug.h>
 
 void WidgetDebug::setup() {
+  if (false == img.load("cat.jpg")) {
+    ofLogError() << "Failed to load cat.jpg from exe dir.";
+    exit(EXIT_FAILURE);
+  }
 }
 
 void WidgetDebug::update() {
@@ -8,7 +12,8 @@ void WidgetDebug::update() {
 }
 
 void WidgetDebug::draw() {
-  ofDrawRectangle(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
+  ofSetColor(255, 255, 255,255);
+  img.draw(getWidgetDrawX(), getWidgetDrawY(), getWidgetDrawWidth(), getWidgetDrawHeight());
 }
 
 void WidgetDebug::destroy() {

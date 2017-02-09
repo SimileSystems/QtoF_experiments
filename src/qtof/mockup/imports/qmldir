@@ -1,0 +1,3 @@
+module qtof
+plugin qtof_mockup
+classname QtOfPlugin

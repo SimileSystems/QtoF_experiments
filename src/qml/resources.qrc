@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="/">
-    <file>TestForWidget.qml</file>
-    <file>TestList.qml</file>  
+    <file>TestMockup.qml</file>
+    <file>img/depthkit.png</file>
+    <file>img/of-logo.png</file>  
   </qresource> 
 </RCC>
