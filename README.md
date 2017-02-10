@@ -1,4 +1,4 @@
-# Prerequistics
+# Prerequisites
 
 This repository has been tested with the following setups.
 

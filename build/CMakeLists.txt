@@ -127,3 +127,21 @@ macro(create_test name)
 endmacro()
 
 create_test(qt)
+
+# ------------------------------------------------------------
+
+macro(download url dest)
+  if (NOT EXISTS ${dest})
+    file(DOWNLOAD ${url} ${dest})
+  endif()
+endmacro()
+
+download(https://farm4.staticflickr.com/3831/32775279856_b1a6356bb8_o_d.jpg ${CMAKE_CURRENT_BINARY_DIR}/dog.jpg)
+download(https://farm3.staticflickr.com/2535/32662597732_db6ebb155e_o_d.jpg ${CMAKE_CURRENT_BINARY_DIR}/cat.jpg)
+download(https://farm3.staticflickr.com/2542/31973224534_f03a62a1c6_o_d.png ${sd}/qml/img/depthkit.png)
+download(https://farm3.staticflickr.com/2585/31973224244_394acc9b08_o_d.png ${sd}/qml/img/of-logo.png)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dog.jpg DESTINATION bin/data/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cat.jpg DESTINATION bin/data/)
+
+# ------------------------------------------------------------
