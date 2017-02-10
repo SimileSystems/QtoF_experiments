@@ -1,0 +1,3 @@
+module qtof
+QtOfExternalWidget 1.0 QtOfExternalWidget.qml
+QtOfExternal 1.0 QtOfExternal.qml
