@@ -122,13 +122,6 @@ void QtOfExternalWidget::onSync() {
       return;
     }
 
-    /*
-    if (0 != widgets_create(ref)) {
-      qFatal("Failed to create the QtOfExternalWidget.");
-      return;
-    }
-    */
-
     widgets_set_message_listener_for_instance_with_ref(ref, this);
 
     /* Notify some info that's needed when setting up. */
@@ -266,12 +259,12 @@ void QtOfExternalWidget::resetOpenGlState() {
 /* ---------------------------------------------------- */
 
 /*
-  @todo atm I'm not sure how to handle this situation. When 
-  I would remove the widget (widgets_destroy_instance_with_ref) this results
-  in a crash because `onPaint` is still being called. 
+  @todo atm I'm not sure how to handle this situation. When I would
+  remove the widget (widgets_destroy_instance_with_ref) this results
+  in a crash because `onPaint` is still being called.
 
-  You can test this by setting the parent of the QML node 
-  to null (in your QML create a button for example).
+  You can test this by setting the parent of the QML node to null (in
+  your QML create a button for example).
 
  */
 

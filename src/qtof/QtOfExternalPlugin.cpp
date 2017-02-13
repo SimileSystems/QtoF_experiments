@@ -21,21 +21,18 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
     exit(EXIT_FAILURE);
   }
 
-  printf("--++//----------------------------------------\n");
-  
   /* 
      Register the PIMPL wrappers for our widgets.  When you want to
      add new widgets you need to make sure you add a call to
      `widget_add_factory_for_type()`
   */
-#if 1
   widgets_add_factory_for_type(WIDGET_TYPE_HISTOGRAM, new WidgetFactory<WidgetHistogramPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_WEBCAM, new WidgetFactory<WidgetWebcamPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEPTHKIT, new WidgetFactory<WidgetDepthKitPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_D3, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_TIM, new WidgetFactory<TimWidgetPimpl>());
-#endif
+
   
   /* Register our custom types. */
   qmlRegisterType<QtOfExternal>(uri, 1, 0, "QtOfExternal");
