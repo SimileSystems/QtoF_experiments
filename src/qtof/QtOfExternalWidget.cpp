@@ -348,6 +348,7 @@ void QtOfExternalWidget::keyReleaseEvent(QKeyEvent* ev) {
 
  */
 void QtOfExternalWidget::sendUiMessageString(unsigned int msgType, const QString& str) {
+
   UiMessage msg;
   msg.type = msgType;
   msg.s = str.toLatin1().data();

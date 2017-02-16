@@ -20,6 +20,7 @@ void WidgetDebug::destroy() {
 }
 
 void WidgetDebug::onUiMessage(const UiMessage& msg) {
+    printf("TESTING\n");
   switch (msg.type) {
     default: {
       ofExternalWidget::onUiMessage(msg);
