@@ -32,7 +32,6 @@ void QtOfExternalPlugin::registerTypes(const char* uri) {
   widgets_add_factory_for_type(WIDGET_TYPE_D3, new WidgetFactory<Widget3dPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_DEBUG, new WidgetFactory<WidgetDebugPimpl>());
   widgets_add_factory_for_type(WIDGET_TYPE_TIM, new WidgetFactory<TimWidgetPimpl>());
-
   
   /* Register our custom types. */
   qmlRegisterType<QtOfExternal>(uri, 1, 0, "QtOfExternal");

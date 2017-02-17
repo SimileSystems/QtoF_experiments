@@ -41,7 +41,6 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 
 # -------------------------------------------------------------
 
-if (TRUE)
 add_custom_target(copy_qtof_mockup
   ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
@@ -54,5 +53,5 @@ add_custom_target(copy_qtof_mockup
   )
 
 set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
-endif()
+
 # -------------------------------------------------------------

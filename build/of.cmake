@@ -95,6 +95,7 @@ include_directories(
   ${of_ld}/rtAudio/include
   ${of_ld}/tess2/include
   ${of_ld}/utf8/include
+  ${of_ed}/include
   )
 
 
@@ -233,6 +234,11 @@ elseif (APPLE)
 
 endif()
 
+add_library(of STATIC ${of_sources})
+install(TARGETS of DESTINATION lib)
+
+# -------------------------------------------------------------
+
 macro(install_of_for_target targetName)
 
   if (APPLE)
@@ -260,3 +266,5 @@ macro(install_of_for_target targetName)
   endif()
 
 endmacro()
+
+# -------------------------------------------------------------

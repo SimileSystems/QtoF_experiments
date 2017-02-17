@@ -53,12 +53,19 @@ do
     fi
 done
 
-# Download our OF version
-if [ ! -d ${of} ] ; then
-    mkdir ${of}
-    cd ${of}
-    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
+# Clone OF as submodule
+if [ ! -d ${bd}/of ] ; then
+    cd ${bd}
+    git submodule add -b qt-integration git@github.com:SimileSystems/openFrameworks.git of
+    git submodule update
+    git submodule init
 fi
+
+#if [ ! -d ${of} ] ; then
+#    mkdir ${of}
+#    cd ${of}
+#    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
+#fi
 
 if [ ! -d ${of}/libs/boost ] ; then
     if [ "${os}" == "mac" ] ; then
@@ -69,6 +76,9 @@ if [ ! -d ${of}/libs/boost ] ; then
         /c/Windows/System32/WindowsPowerShell/v1.0/powershell -executionPolicy bypass -file "${of}/scripts/vs/download_libs.ps1"
     fi
 fi
+
+# Stopping here for now as the QtOf repository has been setup.
+exit
 
 # Create unique name for this build type.
 cd ${d}

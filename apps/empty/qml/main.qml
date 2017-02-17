@@ -11,12 +11,6 @@ ApplicationWindow {
   title: qsTr("Hello World")
   color: "lightgray"
 
-  QtOfExternal {
-    visible: true
-    gl_major_version: 3
-    gl_minor_version: 3
-  }
-
   Rectangle {
     anchors.fill: parent
     color: "#666666"
@@ -27,16 +21,4 @@ ApplicationWindow {
     height: 100
     color: "red"
   }
-
-  
-  QtOfExternalWidget {
-    id: depthkit
-    ref: 3
-    layer: 0
-    width: app.width
-    height: app.height
-    x: 0
-    y: 0
-  }    
-
 }
