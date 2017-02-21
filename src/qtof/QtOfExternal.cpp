@@ -44,7 +44,6 @@ void QtOfExternal::onPaint() {
 }
 
 void QtOfExternal::onCleanup() {
-  qDebug() << "@todo shutdown of external.";
 }
 
 /* --------------------------------------- */
@@ -83,11 +82,11 @@ void QtOfExternal::hoverMoveEvent(QHoverEvent* ev) {
 }
 
 void QtOfExternal::hoverEnterEvent(QHoverEvent* ev) {
-  printf("ENTER: %d, %d\n", ev->pos().x(), ev->pos().y());
+  /* printf("ENTER: %d, %d\n", ev->pos().x(), ev->pos().y()); */
 }
 
 void QtOfExternal::hoverLeaveEvent(QHoverEvent* ev) {
-  printf("LEAVE: %d, %d\n", ev->pos().x(), ev->pos().y());
+  /* printf("LEAVE: %d, %d\n", ev->pos().x(), ev->pos().y()); */
 }
 
 /* ---------------------------------------------------- */
@@ -95,7 +94,6 @@ void QtOfExternal::hoverLeaveEvent(QHoverEvent* ev) {
 void QtOfExternal::onWindowChanged(QQuickWindow* win) {
   
   if (nullptr == win) {
-    qDebug() << "Not initializing the QtOfExternal; win is null.";
     return;
   }
 

@@ -153,7 +153,6 @@ void QtOfExternalWidget::onSync() {
 }
 
 void QtOfExternalWidget::onCleanup() {
-  qDebug() << "onCleanup";
 }
 
 /*
@@ -204,7 +203,6 @@ void QtOfExternalWidget::onPaint() {
 void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
 
   if (nullptr == win) {
-    qDebug() << "Not initializing the QtOfExternalWidget; win is null.";
     return;
   }
 
@@ -269,7 +267,6 @@ void QtOfExternalWidget::resetOpenGlState() {
  */
 
 void QtOfExternalWidget::releaseResources() {
-  qDebug() << "releaseResources!";
   /*
   window()->scheduleRenderJob(new QtOfExternalWidgetCleanupRunnable(ref), QQuickWindow::AfterRenderingStage); // BeforeSynchronizingStage);
   ref = -1;
