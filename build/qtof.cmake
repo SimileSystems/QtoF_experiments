@@ -9,8 +9,6 @@ set(CMAKE_AUTOUIC ON)
 set(qtof_bd ${CMAKE_CURRENT_LIST_DIR}/..)
 set(qtof_sd ${qtof_bd}/src/)
 
-include(${CMAKE_CURRENT_LIST_DIR}/of.cmake)
-
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(debug_flag "_debug")
 endif()
@@ -34,6 +32,11 @@ list(APPEND qtof_libs
   Qt5::Quick
   )
 
+find_program(node_js node)
+if (NOT node_js)
+  message(FATAL_ERROR "Failed to find nodejs. Did you install nodejs and set the PATH variable to the executable directory?")
+endif()
+
 include_directories(
   ${qtof_sd}
 )
@@ -51,11 +54,8 @@ list(APPEND qtof_sources
   ${qtof_sd}/qtof/UiMessages.cpp
 )
 
-add_library(qtof${debug_flag} STATIC ${qtof_sources})
-target_link_libraries(qtof${debug_flag} of ${qtof_libs})
-install(TARGETS qtof${debug_flag} DESTINATION lib)
-
 # ------------------------------------------------
+
 macro(qtof_application_create appName appSources)
   add_executable(${appName} ${appSources})
   target_link_libraries(${appName} qtof${debug_flag} ${qtof_libs})
@@ -65,7 +65,32 @@ endmacro()
 macro(qtof_widget_create widgetName widgetSources)
   add_library(${widgetName} STATIC ${widgetSources})
   install(TARGETS ${widgetName} DESTINATION lib)
-#  target_link_libraries(${widgetName} qtof${debug_flag})
+endmacro()
+
+macro(qtof_generate_message_types customMessageTypesHeaderFile)
+  add_custom_target(
+    generate_message_types
+    ALL
+    COMMAND ${node_js} CodeGenerator.js --message-type-headers UiMessageTypes.h ${customMessageTypesHeaderFile}
+    WORKING_DIRECTORY ${qtof_sd}/qtof
+    COMMENT "Generating Qt message type header and source."
+    )
+endmacro()
+
+macro(qtof_generate_widget_types customWidgetTypesHeaderFile)
+
+  add_custom_target(
+    generate_widget_types
+    ALL
+    COMMAND ${node_js} CodeGenerator.js --widget-type-headers WidgetTypes.h ${customWidgetTypesHeaderFile}
+    WORKING_DIRECTORY ${qtof_sd}/qtof
+    COMMENT "Generating Qt widget type header and source."
+    )
 endmacro()
 
 # ------------------------------------------------
+
+add_library(qtof${debug_flag} STATIC ${qtof_sources})
+target_link_libraries(qtof${debug_flag} of ${qtof_libs})
+install(TARGETS qtof${debug_flag} DESTINATION lib)
+add_dependencies(qtof${debug_flag} generate_message_types generate_widget_types)

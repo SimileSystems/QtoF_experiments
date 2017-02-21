@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import HelperWidgets 2.0
 import QtQuick.Layouts 1.0
+import "QtOfWidgetNames.js" as WidgetNames
 
 Column {
   anchors.left: parent.left
@@ -18,7 +19,8 @@ Column {
 
       SecondColumnLayout {
         ComboBox {
-          model: ["HISTOGRAM", "WEBCAM", "DEPTHKIT", "D3", "DEBUG", "TIM"]
+          /* model: ["HISTOGRAM", "WEBCAM", "DEPTHKIT", "D3", "DEBUG", "TIM"] */
+          model: WidgetNames.get_widget_names()
           /* model: ["Histogram", "Webcam", "DepthKit", "D3", "Debug", "Tim"]*/
           backendValue: backendValues.widget
           scope: "QtWidgetType"
@@ -46,12 +48,10 @@ Column {
 
         }
       }
-      
-
-
-      
     }
+  }
 
-    
+  Component.onCompleted: {
+    console.log(QtOfWidgetNames.names);
   }
 }

@@ -84,3 +84,7 @@ build_unix.Release/
 
 # of/
 install/bin/
+
+# qtof generated files
+WidgetTypeUtils.h
+QtOfWidgetNames.js

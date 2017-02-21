@@ -11,7 +11,6 @@ void Widget3d::Widget3d::setup() {
   box.set(100.0);
   perc_x = 0.0f;
   perc_y = 0.0f;
-
 }
 
 void Widget3d::update() {

@@ -1,7 +1,5 @@
 <RCC>
   <qresource prefix="/">
     <file>TestMockup.qml</file>
-    <file>img/depthkit.png</file>
-    <file>img/of-logo.png</file>  
   </qresource> 
 </RCC>

@@ -11,8 +11,10 @@ QtOfExternal::QtOfExternal(QQuickItem* parent)
 }
 
 void QtOfExternal::paint(QPainter* p) {
-  setWidth(128);
-  setHeight(67);
+  setWidth(250);
+  setHeight(75);
+
   p->fillRect(contentsBoundingRect(),QColor(238, 57, 135));
   p->drawImage(contentsBoundingRect(), img);
+  p->drawText(10, 20, "Qt openFrameworks");
 }
