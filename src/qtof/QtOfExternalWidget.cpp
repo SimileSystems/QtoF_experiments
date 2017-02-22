@@ -110,7 +110,6 @@ void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
 
 void QtOfExternalWidget::onSync() {
 
-  printf("onSycn\n");
   if (false == is_created) {
 
     if (WIDGET_TYPE_NONE == widget) {
@@ -129,6 +128,9 @@ void QtOfExternalWidget::onSync() {
     notifySize();
     notifyPixelRatio();
     notifyPosition();
+    callOnSetupQmlHandler();
+    
+    /* Flush the messages */
     widgets_update_instance_with_ref(ref);
 
     if (0 != widgets_setup_instance_with_ref(ref)) {
@@ -254,6 +256,24 @@ void QtOfExternalWidget::notifyPixelRatio() {
 void QtOfExternalWidget::resetOpenGlState() {
   window()->resetOpenGLState();
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+}
+
+/*
+  This function doesn't do much, but it's used to allow the GUI
+  programmer to initialize the Widget. E.g. if it's a camera widget,
+  this allows the user to select the default camera id. To use this,
+  you create a `onSetup()` function in your QML `QtOfExternalWidget`
+  component which will be called by us. In this function, you can
+  setup your widget using
+  e.g. `idname.sendUiMessage(QtUiMessage.USE_BLUE)`. We created this
+  callback because our previous approach (using the
+  Component.onCompleted handler) resulted in synchronisation issues
+  between Windows and Mac: on Windows the onCompleted handler was
+  called before the widget was actually created.
+
+ */
+void QtOfExternalWidget::callOnSetupQmlHandler() {
+  QMetaObject::invokeMethod(this, "onSetup", Qt::QueuedConnection);
 }
 
 /* ---------------------------------------------------- */
