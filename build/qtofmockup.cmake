@@ -41,16 +41,16 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 
 # -------------------------------------------------------------
 
-add_custom_target(copy_qtof_mockup
-  ALL
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:qtof_mockup> ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sd}/qtof/mockup/imports ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sd}/qtof/mockup/designer ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/designer
-  COMMAND ${QT_PATH}/bin/qmlplugindump -dependencies ${sd}/qtof/mockup/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 ${CMAKE_CURRENT_BINARY_DIR}/plugins/ > ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/plugins.qmltypes 
-  COMMENT "Copying qtof_mockup plugin to binary dir destination"
-  DEPENDS qtof_mockup
-  )
+#add_custom_target(copy_qtof_mockup
+#  ALL
+#  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
+#  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:qtof_mockup> ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
+#  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sd}/qtof/mockup/imports ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/
+#  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sd}/qtof/mockup/designer ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/designer
+#  COMMAND ${QT_PATH}/bin/qmlplugindump -dependencies ${sd}/qtof/mockup/imports/dependency.json -noforceqtquick -nonrelocatable qtof 1.0 ${CMAKE_CURRENT_BINARY_DIR}/plugins/ > ${CMAKE_CURRENT_BINARY_DIR}/plugins/qtof/plugins.qmltypes 
+#  COMMENT "Copying qtof_mockup plugin to binary dir destination"
+#  DEPENDS qtof_mockup
+#  )
 
 set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
 

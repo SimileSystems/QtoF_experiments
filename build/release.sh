@@ -60,16 +60,9 @@ if [ ! -d ${bd}/of ] ; then
 fi
 
 if [ -d ${bd}/of ] ; then
-    git submodule update
     git submodule init
+    git submodule update
 fi
-
-
-#if [ ! -d ${of} ] ; then
-#    mkdir ${of}
-#    cd ${of}
-#    git clone --depth 1 git@github.com:SimileSystems/openFrameworks.git -b qt-integration .
-#fi
 
 if [ ! -d ${of}/libs/boost ] ; then
     if [ "${os}" == "mac" ] ; then

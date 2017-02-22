@@ -239,7 +239,7 @@ install(TARGETS of DESTINATION lib)
 
 # -------------------------------------------------------------
 
-macro(install_of_for_target targetName)
+macro(of_install_for_target targetName)
 
   if (APPLE)
 
@@ -260,6 +260,7 @@ macro(install_of_for_target targetName)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_shared_lib} $<TARGET_FILE_DIR:${targetName}>
         COMMENT "Copying ${of_shared_lib}"
         )
+      install(FILES ${of_shared_lib} DESTINATION bin/${targetName})
     endforeach()
     
     install(FILES ${of_shared_libs} DESTINATION bin)

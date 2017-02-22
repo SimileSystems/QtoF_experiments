@@ -109,7 +109,8 @@ void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
 }
 
 void QtOfExternalWidget::onSync() {
-  
+
+  printf("onSycn\n");
   if (false == is_created) {
 
     if (WIDGET_TYPE_NONE == widget) {

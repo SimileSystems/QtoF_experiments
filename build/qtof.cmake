@@ -32,6 +32,22 @@ list(APPEND qtof_libs
   Qt5::Quick
   )
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+  foreach(qtof_lib ${qtof_libs})
+    get_target_property(qtof_lib_dll ${qtof_lib} LOCATION_Debug)
+    list(APPEND qtof_dlls ${qtof_lib_dll})
+  endforeach()
+endif()
+
+list(APPEND qtof_dlls
+  $<TARGET_FILE:Qt5::Widgets>
+  $<TARGET_FILE:Qt5::Core>
+  $<TARGET_FILE:Qt5::Gui>
+  $<TARGET_FILE:Qt5::Qml>
+  $<TARGET_FILE:Qt5::Quick>
+  $<TARGET_FILE:Qt5::Network>
+  )
+
 find_program(node_js node)
 if (NOT node_js)
   message(FATAL_ERROR "Failed to find nodejs. Did you install nodejs and set the PATH variable to the executable directory?")
@@ -67,6 +83,7 @@ macro(qtof_application_create appName appSources)
   add_executable(${appName} ${appSources})
   target_link_libraries(${appName} qtof${debug_flag} ${qtof_libs})
   install(TARGETS ${appName} DESTINATION bin/${appName}/)
+  install(FILES ${qtof_dlls} DESTINATION bin/${appName}/)
 endmacro()
 
 macro(qtof_widget_create widgetName widgetSources)
