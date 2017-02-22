@@ -125,7 +125,10 @@
          widget->onPaint()
       }
       ````
-    
+
+  TODO:
+   - @todo describe the onSetup QML callback
+  
   REFERENCES:
 
     [0]: https://en.wikipedia.org/wiki/Opaque_pointer "Opaque pointer; aka PIMPL."
@@ -183,6 +186,7 @@ private:
   void notifyPosition();                                              /* Notifies the widget about it's position; is (also) called before we call `setup()` on the widget. */
   void notifyPixelRatio();                                            /* Notifies the widget about the current pixel ratio (e.g. to handle retina). is (also) called before we call `setup()` on the widget. */
   void resetOpenGlState();                                            /* After rendering our own things using openFrameworks, we have to reset the GL state because Qt will run into rendering issues. Qt provides a function for this which sets some of the default state; but not all. We use or own wrapper to reset some other state too. */
+  void callOnSetupQmlHandler();                                       /* This function will call `onSetup()` on the QML object; this is where the user should initialize the object; we call `onSetup` before the `setup()` of the widget itself. */
 
 protected:
   void mousePressEvent(QMouseEvent* ev);
@@ -197,7 +201,7 @@ protected:
 private:
   int ref;
   int level;
-  int widget;  /* The widget type, see WidgetTypes.h */
+  int widget;                                                        /* The widget type, see WidgetTypes.h */
   bool is_created; 
 };
 
