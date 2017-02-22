@@ -178,7 +178,7 @@ void QtOfExternalWidget::onPaint() {
     return;
   }
 
-  notifyPosition();
+  notifyPosition(); 
   
   of_external_start_render();
   {
@@ -234,6 +234,7 @@ void QtOfExternalWidget::notifySize() {
   we pass `0` to map the position to the root item.
  */
 void QtOfExternalWidget::notifyPosition() {
+
   QPointF pos = mapToItem(0, QPointF(0,0));
   UiMessage msg;
   msg.type = UI_MSG_POSITION_CHANGED;

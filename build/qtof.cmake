@@ -47,12 +47,19 @@ list(APPEND qtof_sources
   ${qtof_sd}/qtof/ofExternalWidget.cpp
   ${qtof_sd}/qtof/QtOfExternal.cpp
   ${qtof_sd}/qtof/QtOfExternalWidget.cpp
-#  ${qtof_sd}/qtof/QtOfExternalPlugin.cpp
   ${qtof_sd}/qtof/QtUiMessage.cpp
   ${qtof_sd}/qtof/QtWidgetType.cpp
   ${qtof_sd}/qtof/Widgets.cpp
   ${qtof_sd}/qtof/UiMessages.cpp
 )
+
+if (NOT EXISTS ${qtof_sd}/qtof/QtUiMessage.cpp)
+  set_source_files_properties(${qtof_sd}/qtof/QtUiMessage.cpp PROPERTIES GENERATED TRUE)
+endif()
+
+if (NOT EXISTS ${qtof_sd}/qtof/QtWidgetType.cpp)
+  set_source_files_properties(${qtof_sd}/qtof/QtWidgetType.cpp PROPERTIES GENERATED TRUE)
+endif()
 
 # ------------------------------------------------
 
@@ -78,7 +85,6 @@ macro(qtof_generate_message_types customMessageTypesHeaderFile)
 endmacro()
 
 macro(qtof_generate_widget_types customWidgetTypesHeaderFile)
-
   add_custom_target(
     generate_widget_types
     ALL
@@ -93,4 +99,4 @@ endmacro()
 add_library(qtof${debug_flag} STATIC ${qtof_sources})
 target_link_libraries(qtof${debug_flag} of ${qtof_libs})
 install(TARGETS qtof${debug_flag} DESTINATION lib)
-add_dependencies(qtof${debug_flag} generate_message_types generate_widget_types)
+#add_dependencies(qtof${debug_flag} generate_message_types generate_widget_types)

@@ -43,9 +43,6 @@ void UiMessages::notify() {
   
   std::lock_guard<std::mutex> lg(mtx);
   for (size_t i = 0; i < messages.size(); ++i) {
-    if (messages[i].type == 1001) {
-      printf("Notifying message type 1001\n");
-    }
     listener->onUiMessage(messages[i]);
   }
 
