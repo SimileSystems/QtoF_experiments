@@ -81,19 +81,22 @@ endif()
 
 macro(qtof_application_create appName appSources)
 
-  add_executable(${appName} ${appSources})
+  add_executable(${appName} MACOSX_BUNDLE ${appSources})
   target_link_libraries(${appName} qtof${debug_flag} ${qtof_libs})
   install(TARGETS ${appName} DESTINATION bin/${appName}/)
-  install(FILES ${qtof_dlls} DESTINATION bin/${appName}/)
 
-  foreach(qtof_dll ${qtof_dlls})
-    string(MD5 target ${qtof_dll})
-    add_custom_target(${target}
-      ALL
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_dll} $<TARGET_FILE_DIR:${appName}>
-      COMMENT "Copying ${qtof_dll}"
-      )
-  endforeach()
+  # Copy the Qt DLLs.
+  if (WIN32)
+    install(FILES ${qtof_dlls} DESTINATION bin/${appName}/)
+    foreach(qtof_dll ${qtof_dlls})
+      string(MD5 target ${qtof_dll})
+      add_custom_target(${target}
+        ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_dll} $<TARGET_FILE_DIR:${appName}>
+        COMMENT "Copying ${qtof_dll}"
+        )
+    endforeach()
+  endif()
 
 endmacro()
 

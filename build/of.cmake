@@ -260,15 +260,26 @@ macro(of_install_for_target targetName pathToDataDir)
         )
       install(FILES ${of_shared_lib} DESTINATION bin/${targetName})
     endforeach()
+    
   endif()
 
   # Install the data to the current build directory and install dir.
+  # @todo test if we need this only on Win. Not necessary for Mac.
   add_custom_target(copy_data
     ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} $<TARGET_FILE_DIR:${targetName}>/data
     COMMENT "Copying data dir to build dir."
     )
-  
+
+  # Install the data to the current build directory and install dir.
+  # @todo test if we need this on win. we need this on Mac.
+  add_custom_target(copy_data_binary_dir
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} ${CMAKE_CURRENT_BINARY_DIR}/data
+    COMMENT "Copying data dir to build dir."
+    )
+
+  # Copies the data dir to the install dir.
   install(DIRECTORY ${pathToDataDir} DESTINATION bin/${targetName}/)
 
 endmacro()
