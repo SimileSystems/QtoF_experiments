@@ -22,6 +22,10 @@ QtOfExternalWidget::QtOfExternalWidget()
   ,widget(WIDGET_TYPE_NONE)
   ,is_created(false)
 {
+  static int instance_counter = 0;
+  instance_counter++;
+  ref = instance_counter;
+  
   connect(this, &QQuickItem::windowChanged, this, &QtOfExternalWidget::onWindowChanged);
   setAcceptedMouseButtons(Qt::AllButtons);
   setAcceptHoverEvents(true);
@@ -154,6 +158,15 @@ void QtOfExternalWidget::onSync() {
     else {
       qFatal("The level you provided for the QtOfExternalWidget must be either 0 or 1.");
     }
+
+    /* 
+       Listen to screen change event so we can update the pixel ratio.
+       We only connect to this slot after we've initialized because
+       otherwise the widget won't exist yet so there is nothing that
+       can receive the message. See `QtOfExternal.h` for more info about
+       the screen changed event.
+     */
+    connect(window(), &QQuickWindow::screenChanged, this, &QtOfExternalWidget::onScreenChanged);
   }
 }
 
@@ -213,7 +226,6 @@ void QtOfExternalWidget::onWindowChanged(QQuickWindow* win) {
 
   connect(win, &QQuickWindow::beforeSynchronizing, this, &QtOfExternalWidget::onSync, Qt::DirectConnection);
   connect(win, &QQuickWindow::sceneGraphInvalidated, this, &QtOfExternalWidget::onCleanup, Qt::DirectConnection);
-  connect(win, &QQuickWindow::screenChanged, this, &QtOfExternalWidget::onScreenChanged);
 
   win->setClearBeforeRendering(false);
 }

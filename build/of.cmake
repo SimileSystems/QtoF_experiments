@@ -239,7 +239,7 @@ install(TARGETS of DESTINATION lib)
 
 # -------------------------------------------------------------
 
-macro(of_install_for_target targetName)
+macro(of_install_for_target targetName pathToDataDir)
 
   if (APPLE)
 
@@ -249,22 +249,27 @@ macro(of_install_for_target targetName)
       install(FILES ${of_shared_lib} DESTINATION $<TARGET_FILE_DIR:${targetName}>)
     endforeach()
 
-    # Install the data to the current build directory
-    add_custom_command(TARGET ${targetName} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/../install/bin/data ${CMAKE_CURRENT_BINARY_DIR}/data)
-
   elseif(WIN32)
 
     foreach(of_shared_lib ${of_shared_libs})
-      add_custom_target(copy_shared_lib
+      string(MD5 target ${of_shared_lib})
+      add_custom_target(${target}
         ALL
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${of_shared_lib} $<TARGET_FILE_DIR:${targetName}>
         COMMENT "Copying ${of_shared_lib}"
         )
       install(FILES ${of_shared_lib} DESTINATION bin/${targetName})
     endforeach()
-    
-    install(FILES ${of_shared_libs} DESTINATION bin)
   endif()
+
+  # Install the data to the current build directory and install dir.
+  add_custom_target(copy_data
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} $<TARGET_FILE_DIR:${targetName}>/data
+    COMMENT "Copying data dir to build dir."
+    )
+  
+  install(DIRECTORY ${pathToDataDir} DESTINATION bin/${targetName}/)
 
 endmacro()
 

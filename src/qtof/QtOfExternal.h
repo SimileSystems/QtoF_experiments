@@ -66,7 +66,19 @@
     To be able to receive mouse events, we have to call
     `setAcceptedMouseButtons()` and `setAcceptHoverEvents()`. The
     hover events are used to detect mouse-moves.
+
+  SCREEN CHANGED EVENT:
   
+    We are handling the screen-changed events which gives us the
+    opportunity to get the pixel ratio for the current screen. We need
+    to be aware of a funny situation where we receive a screen-changed
+    event from Qt, but no window, and no openGL context has been
+    created yet. When this happens we should ignore this screen
+    changed event. We use `of_external_is_init()` to check if we
+    should handle the screen changed event or not.  When
+    `of_external_is_init()` returns 0, it means it's initialized and
+    that the openGL context has been created.
+
   REFERENCES:
 
     [0]: http://doc.qt.io/qt-5/qtquick-index.html "Qt Quick"
@@ -110,6 +122,7 @@ private slots:
   void onWidthChanged(int w);
   void onHeightChanged(int h);
   void onScreenChanged(QScreen* screen);
+  void notifyPixelRatio();                                 /* This function will send a `UI_MSG_PIXEL_RATIO_CHANGED` message when the screen on which the window sits is changed. */
 
 public:
   void setGlMinorVersion(int v);

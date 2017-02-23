@@ -27,18 +27,15 @@
     The `QtOfExternalWidget` is like a bridge between this custom QML
     item and your OF based widget.
 
-    The `Widgets` creates, sets up, updates, draws, etc... our
-    custom OF based widgets. Using this setup, we don't have to create
-    and define a new QML item for each widget we want to
-    create. Though because this `QtOfExternalWidget` still needs to
-    know what OF-based widget it needs to update, render, etc.. we are
-    using a numeric identifier, that we call `ref`. For example we can
-    define the ref number `1` to a custom widget with type
-    `DepthKitHistogramWidget`. Once we've registered this reference
-    number with the `DepthKithHistogramWidget` type, this class
-    (`QtOfExternalWidget`) will make sure that the
-    `DepthKitHistogramWidget` will be created, updated, drawn,
-    etc.. at the right moments. See `Widgets.h` for more info.
+    The `Widgets` creates, sets up, updates, draws, etc... our custom
+    OF based widgets. Using this setup, we don't have to create and
+    define a new QML item for each widget we want to create. Though
+    because this `QtOfExternalWidget` still needs to know what
+    OF-based widget it needs to update, render, etc.. we are using a
+    numeric identifier, that we call `ref`. The first draft of this
+    class required the user to set the `ref` property through QML.  We
+    removed this requirement and we simply generate a reference in the
+    constructor.
 
 
     +----------------------+
@@ -67,6 +64,18 @@
     |      ofWidget        o---| This is your OF based widget, which is
     |                      |     exposed though your `ofWidgetPimpl`. 
     +----------------------+
+
+  SETTING UP YOUR WIDGET:
+
+    For certain widget you would like to set some properties before
+    the `setup()` function of the widget is called. For example, lets
+    say we have a webcam widget and you want to tell it what camera-id
+    to use. For these kind of setup/configure options you create a
+    `onSetup()` function in your QML that will be called before we
+    call the `setup()` function of your widget. In `onSetup()` you can
+    use the messaging functions to pass data into your C++ widget.
+    Use e.g. `sendUiMessage()` or `sendUiMessageString()` in your QML
+    to communicate with the C++ widget.
 
   EVENTS:
   
@@ -126,9 +135,6 @@
       }
       ````
 
-  TODO:
-   - @todo describe the onSetup QML callback
-  
   REFERENCES:
 
     [0]: https://en.wikipedia.org/wiki/Opaque_pointer "Opaque pointer; aka PIMPL."
@@ -152,7 +158,6 @@
 class QtOfExternalWidget : public QQuickItem,
                            public UiMessagesListener {
   Q_OBJECT
-  Q_PROPERTY(int ref WRITE setRef READ getRef)
   Q_PROPERTY(int level WRITE setLevel READ getLevel)                  /* The level onto which we draw, 0: background, 1: foreground */
   Q_PROPERTY(int widget WRITE setWidget READ getWidget)
   
@@ -167,10 +172,8 @@ public slots:
   void onCleanup();
 
 public:
-  int getRef();
   int getLevel();
   int getWidget();
-  void setRef(const int& v);
   void setLevel(const int& v);
   void setWidget(const int& t);
   
@@ -207,20 +210,12 @@ private:
 
 /* ---------------------------------------------------- */
 
-inline int QtOfExternalWidget::getRef() {
-  return ref;
-}
-
 inline int QtOfExternalWidget::getLevel() {
   return level;
 }
 
 inline int QtOfExternalWidget::getWidget() {
   return widget;
-}
-
-inline void QtOfExternalWidget::setRef(const int& v) {
-  ref = v;
 }
 
 inline void QtOfExternalWidget::setLevel(const int& v) {

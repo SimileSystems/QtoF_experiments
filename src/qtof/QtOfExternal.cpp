@@ -14,6 +14,14 @@ QtOfExternal::QtOfExternal()
 
 /* ---------------------------------------------------- */
 
+/* 
+   This is where we setup the openFrameworks programmable renderer (by
+   using the of_external_*() functions.). We also call
+   `notifyPixelRatio()` to make sure that the pixel ratio has been set
+   correctly. In some cases we will receive a screen changed event
+   before we're initialized; see the SCREEN CHANGED EVENT
+   documentation in the header.
+ */
 void QtOfExternal::onSync() {
 
   if (0 != of_external_is_init()) {
@@ -30,7 +38,10 @@ void QtOfExternal::onSync() {
       return;
     }
 
+    notifyPixelRatio();
+    
     connect(window(), &QQuickWindow::beforeRendering, this, &QtOfExternal::onPaint, Qt::DirectConnection);
+    connect(window(), &QQuickWindow::screenChanged, this, &QtOfExternal::onScreenChanged);
   }
 }
 
@@ -101,7 +112,6 @@ void QtOfExternal::onWindowChanged(QQuickWindow* win) {
   connect(win, &QQuickWindow::sceneGraphInvalidated, this, &QtOfExternal::onCleanup, Qt::DirectConnection);
   connect(win, &QQuickWindow::widthChanged, this, &QtOfExternal::onWidthChanged);
   connect(win, &QQuickWindow::heightChanged, this, &QtOfExternal::onHeightChanged);
-  connect(win, &QQuickWindow::screenChanged, this, &QtOfExternal::onScreenChanged);
 }
 
 void QtOfExternal::onWidthChanged(int w) {
@@ -121,6 +131,18 @@ void QtOfExternal::onHeightChanged(int h) {
 }
 
 void QtOfExternal::onScreenChanged(QScreen* screen) {
+  notifyPixelRatio();
+}
+
+/* ---------------------------------------------------- */
+
+void QtOfExternal::notifyPixelRatio() {
+  
+  if (nullptr == window()) {
+    qFatal("Cannot notify pixel ratio because window() returns a nullptr. (exiting).");
+    exit(EXIT_FAILURE);
+  }
+
   UiMessage msg;
   msg.type = UI_MSG_PIXEL_RATIO_CHANGED;
   msg.f[0] = window()->devicePixelRatio();

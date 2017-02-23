@@ -80,10 +80,21 @@ endif()
 # ------------------------------------------------
 
 macro(qtof_application_create appName appSources)
+
   add_executable(${appName} ${appSources})
   target_link_libraries(${appName} qtof${debug_flag} ${qtof_libs})
   install(TARGETS ${appName} DESTINATION bin/${appName}/)
   install(FILES ${qtof_dlls} DESTINATION bin/${appName}/)
+
+  foreach(qtof_dll ${qtof_dlls})
+    string(MD5 target ${qtof_dll})
+    add_custom_target(${target}
+      ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${qtof_dll} $<TARGET_FILE_DIR:${appName}>
+      COMMENT "Copying ${qtof_dll}"
+      )
+  endforeach()
+
 endmacro()
 
 macro(qtof_widget_create widgetName widgetSources)
@@ -116,4 +127,4 @@ endmacro()
 add_library(qtof${debug_flag} STATIC ${qtof_sources})
 target_link_libraries(qtof${debug_flag} of ${qtof_libs})
 install(TARGETS qtof${debug_flag} DESTINATION lib)
-#add_dependencies(qtof${debug_flag} generate_message_types generate_widget_types)
+

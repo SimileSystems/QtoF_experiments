@@ -163,7 +163,9 @@ void ofExternal::onUiMessage(const UiMessage& msg) {
     }
 
     default: {
-      printf("Warning: ofExternal::onUiMessge() - unhandled UiMessage.\n");
+#if !defined(NDEBUG)      
+      printf("Warning: ofExternal::onUiMessge() - unhandled UiMessage: %d.\n", msg.type);
+#endif      
       break;
     }
   }
