@@ -81,6 +81,7 @@ public:
   int setListener(UiMessagesListener* lis);
   void notify();
   void addMessage(const UiMessage& m);
+  size_t size();
 
 private:
   UiMessagesListener* listener;
@@ -89,4 +90,11 @@ private:
 };
 
 /* ------------------------------------------------------ */
+
+inline size_t UiMessages::size() {
+  return messages.size();
+}
+
+/* ------------------------------------------------------ */
+
 #endif

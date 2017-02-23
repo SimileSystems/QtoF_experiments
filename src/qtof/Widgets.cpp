@@ -30,8 +30,6 @@ int Widgets::addFactoryForType(int type, WidgetFactoryBase* factory) {
 
 int Widgets::createInstanceForTypeAndRef(int type, int ref) {
 
-  printf("createInstanceForTypeAndref: %d\n", ref);
-  
   std::unordered_map<int, WidgetFactoryBase*>::iterator fit = factories.find(type);
   if (fit == factories.end()) {
     qFatal("No factory found for given type: %d. We have %zu factories, this: %p.", type, factories.size(), this);
@@ -99,10 +97,8 @@ int Widgets::sendUiMessageToInstanceWithRef(int ref, const UiMessage& msg) {
 
   std::unordered_map<int, WidgetInstanceBase*>::iterator it = instances.find(ref);
   if (it == instances.end()) {
-    //  qFatal("Widgets::sendUiMessage() failed, no instance found for reference: %d", ref);
-    printf("Widgets::sendUiMessageToInstanceWithRef - failed, no instance id found: %d\n", ref);
-    return 0;
-    //  return -1;
+    qFatal("Widgets::sendUiMessage() failed, no instance found for reference: %d", ref);
+    return -1;
   }
 
   if (0 != it->second->sendUiMessage(msg)) {

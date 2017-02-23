@@ -165,6 +165,7 @@ inline int WidgetInstance<T>::setUiMessageListener(UiMessagesListener* lis) {
     return -1;
   }
 
+  printf("Set ui message listner\n");
   obj->setUiMessageListener(lis);
 
   return 0;
@@ -177,7 +178,7 @@ inline void WidgetInstance<T>::onUiMessage(const UiMessage& m) {
     qFatal("Received a UiMessage but obj is nullptr.");
     return;
   }
-  
+
   obj->onUiMessage(m);
 }
 

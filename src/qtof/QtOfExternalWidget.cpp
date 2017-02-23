@@ -87,6 +87,8 @@ QtOfExternalWidget::~QtOfExternalWidget() {
  */
 void QtOfExternalWidget::onUiMessage(const UiMessage& msg) {
 
+  printf("Recieved a onUiMessage from a widget, type: %d\n", msg.type);
+  
   QVariantMap js_msg;
   js_msg["type"] = msg.type;
   js_msg["s"] = QString(msg.s.c_str());
