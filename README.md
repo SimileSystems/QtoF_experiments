@@ -18,6 +18,7 @@ This repository has been tested with the following setups.
 
 - Make sure you can access the *QtoF_experiments* repository
 - Make sure you can access the *openFrameworks* repository
+- On Windows, make sure to compile a 64bit *Qt Creator* 
 
 # Installing
 
@@ -29,14 +30,39 @@ environment. `release.sh` will setup openFrameworks for you. To make
 this work cross platform, you have to create an environment variable
 (on both Win and Mac).
 
-**1. Create QT_PATH environment variable**
+**1. Set environment variables**
 
-- On Win e.g.something like: `C:\Qt\5.8\msvc2015_64\`
+- On Win create a QT_PATH variable to your Qt install dir, e.g.something like: `C:\Qt\5.8\msvc2015_64\`
+- On Win change your PATH environment variable and make sure that the first entry points to your `%QT_PATH%\bin` directory.
 - On Mac, edit your .bash_profile: `export QT_PATH="/Applications/Qt/5.7/clang_64/`
 
 **2. Install the latest CMake**
 
-**3. Setup development environment**
+**3. Windows only: Compile 64bit Qt Creator**
+
+- Open _Git Bash_
+- Create directories and clone source
+
+        # c:
+        # mkdir qtcreator-source
+        # mkdir qtcreator-build
+        # mkdir qtcreator-installed
+        
+        # cd qtcreator-source
+        # git clone --recursive https://code.qt.io/qt-creator/qt-creator.git .
+       
+
+
+- Copy `build/qtcreator.bat` into the `qtcreator-build` directory.
+- Open a _Developer Command Prompt for VS2015_ and go to `qtcreator_build`
+
+        # cd qtcreator-build
+        # qmake -r ../qtcreator-source/qtcreator.pro
+        # nmake
+        # nmake install INSTALL_ROOT="c:\qtcreator-installed"
+
+
+**4. Setup development environment**
 
 ````sh
 - Open Git Bash on Win or a terminal on Mac
@@ -89,8 +115,8 @@ I only had to do this on Mac.
 
 # Creating a new Widget
 
-_Scroll down if you want to skip the background and get to the steps
-to create a widget._A widget is a piece of code that you write that
+Scroll down if you want to skip the background and get to the steps
+to create a widget. A widget is a piece of code that you write that
 implements some feature that you want to use in Qt. It typically has a
 `setup()`, `update()` and a `draw()` function. For this project we
 implement a widget using openFrameworks, but it can be anything you

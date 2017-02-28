@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.7.1)
 set(bd ${CMAKE_CURRENT_LIST_DIR}/../)
 set(of_bd ${bd}/of)
 set(of_ld ${of_bd}/libs)
@@ -264,21 +265,23 @@ macro(of_install_for_target targetName pathToDataDir)
   endif()
 
   # Install the data to the current build directory and install dir.
-  # @todo test if we need this only on Win. Not necessary for Mac.
-  add_custom_target(copy_data
-    ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} $<TARGET_FILE_DIR:${targetName}>/data
-    COMMENT "Copying data dir to build dir."
-    )
+  if (WIN32)
+    add_custom_target(copy_data
+      ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} $<TARGET_FILE_DIR:${targetName}>/data
+      COMMENT "Copying data dir to build dir."
+      )
+  endif()
 
   # Install the data to the current build directory and install dir.
-  # @todo test if we need this on win. we need this on Mac.
-  add_custom_target(copy_data_binary_dir
-    ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} ${CMAKE_CURRENT_BINARY_DIR}/data
-    COMMENT "Copying data dir to build dir."
-    )
-
+  if (APPLE)
+    add_custom_target(copy_data_binary_dir
+      ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${pathToDataDir} ${CMAKE_CURRENT_BINARY_DIR}/data
+      COMMENT "Copying data dir to build dir."
+      )
+  endif()
+  
   # Copies the data dir to the install dir.
   install(DIRECTORY ${pathToDataDir} DESTINATION bin/${targetName}/)
 

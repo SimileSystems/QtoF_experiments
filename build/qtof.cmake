@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.7.1)
 if (NOT QT_PATH)
   message(FATAL_ERROR "QT_PATH not set. Set QT_PATH to your Qt base install dir, e.g. /Qt/5.8/clang_64")
 endif()
