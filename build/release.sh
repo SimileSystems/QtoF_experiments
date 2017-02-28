@@ -14,6 +14,7 @@ debug_flag=""
 debugger=""
 cmake_generator=""
 
+
 # Detect OS.
 if [ "$(uname)" == "Darwin" ]; then
     if [ "${cmake_generator}" = "" ] ; then
