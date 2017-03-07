@@ -52,7 +52,6 @@ this work cross platform, you have to create an environment variable
         # git clone --recursive https://code.qt.io/qt-creator/qt-creator.git .
        
 
-
 - Copy `build/qtcreator.bat` into the `qtcreator-build` directory.
 - Open a _Developer Command Prompt for VS2015_ and go to `qtcreator_build`
 
@@ -128,7 +127,7 @@ using opaque pointers (PIMPL idom).  One of the reasons why we did
 this was to overcome the issues with openGL includes and overcoming
 linker issues. Also this approach forces us to make sure our widgets
 could potentially be used in other software. This does mean that for
-every widget you need to create a thiny pimpl wrapper. I created some
+every widget you need to create a tiny pimpl wrapper. I created some
 javascript which does most of the work for you. The file
 `experimental/CodeGenerator.js` generates a widget class and wrapper
 around it for you. For now you have to open the file and edit the
@@ -151,7 +150,7 @@ some code that implements the basics of a widget.
 Before you can use the widget you have to do a bit of more work.  We
 have to define the widget type in the `qtof/WidgetTypes.h` file.  Make
 sure that you don't use a number as the first character as we use the
-type to generatea an enum with the same name; and they are not allowed
+type to generate an enum with the same name; and they are not allowed
 to start with a number. So open this file and add your type. After
 that open a terminal and execute our *second* different code generator
 in `qtof/CodeGenerator.js` (_not that this is a different code
@@ -179,15 +178,6 @@ a new widgets:
 - Open a terminal and go into `src/qtof/` 
 - Execute `node CodeGenerator.js` 
 
-# TODO
-
-- Move the includes of QtOf cmake files underneath the CMAKE_PREFIX_PATH
-- Remove the `ref` member from QML. 
-- Figure out why the mesassge queue is called multiple times
-- Check out if we can remove QtOfExternalPlugin
-- Create the directory structure for DepthKit; use plugin.cmake
-  - Where to store assets
-  - Where to store plugin code
 
 =======
 >>>>>>> 7fe74cf... Cleaning up

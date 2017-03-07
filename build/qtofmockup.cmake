@@ -42,23 +42,12 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 
 # -------------------------------------------------------------
   
-<<<<<<< HEAD
-  # For Mac we copy the plugin into a directory
-  # next to the binary dir (build dir) so that
-  # Qt Creator can load the plugin.
-if (CREATE_WIN_PLUGIN)
-
-=======
 # For Mac we copy the plugin into a directory
 # next to the binary dir (build dir) so that
 # Qt Creator can load the plugin.
-#
+
 # Update 2017.03.07 - we need to do this for Mac too! 
 #if (CREATE_WIN_PLUGIN)
-<<<<<<< HEAD
->>>>>>> 7fe74cf... Cleaning up
-=======
->>>>>>> 7fe74cf... Cleaning up
 
   add_custom_target(copy_qtof_mockup
     ALL
@@ -77,16 +66,9 @@ if (CREATE_WIN_PLUGIN)
 if (APPLE)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
 endif()  
-<<<<<<< HEAD
-#else()
-=======
->>>>>>> 7fe74cf... Cleaning up
 
 if (WIN32)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/../plugins/" CACHE string "" FORCE)
 endif()
-
-
-
 
 # -------------------------------------------------------------
