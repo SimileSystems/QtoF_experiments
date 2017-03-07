@@ -106,26 +106,6 @@ macro(qtof_widget_create widgetName widgetSources)
   install(TARGETS ${widgetName} DESTINATION lib)
 endmacro()
 
-macro(qtof_generate_message_types customMessageTypesHeaderFile)
-  add_custom_target(
-    generate_message_types
-    ALL
-    COMMAND ${node_js} CodeGenerator.js --message-type-headers UiMessageTypes.h ${customMessageTypesHeaderFile}
-    WORKING_DIRECTORY ${qtof_sd}/qtof
-    COMMENT "Generating Qt message type header and source."
-    )
-endmacro()
-
-macro(qtof_generate_widget_types customWidgetTypesHeaderFile)
-  add_custom_target(
-    generate_widget_types
-    ALL
-    COMMAND ${node_js} CodeGenerator.js --widget-type-headers WidgetTypes.h ${customWidgetTypesHeaderFile}
-    WORKING_DIRECTORY ${qtof_sd}/qtof
-    COMMENT "Generating Qt widget type header and source."
-    )
-endmacro()
-
 # ------------------------------------------------
 
 add_library(qtof${debug_flag} STATIC ${qtof_sources})

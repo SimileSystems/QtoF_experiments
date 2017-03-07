@@ -44,9 +44,9 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 # -------------------------------------------------------------
 
   
-  # For Mac we copy the plugin into a directory
-  # next to the binary dir (build dir) so that
-  # Qt Creator can load the plugin.
+# For Mac we copy the plugin into a directory
+# next to the binary dir (build dir) so that
+# Qt Creator can load the plugin.
 if (CREATE_WIN_PLUGIN)
 
 
@@ -67,7 +67,6 @@ endif()
 if (APPLE)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
 endif()  
-#else()
 
 
 # On Windows we have to compile a release version of the
