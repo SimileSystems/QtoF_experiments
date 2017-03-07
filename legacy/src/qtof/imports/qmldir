@@ -1,4 +1,0 @@
-module qtof
-plugin qtof
-classname QtExternalPlugin
-depends QtQuick 2.0

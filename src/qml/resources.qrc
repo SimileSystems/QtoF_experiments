@@ -1,5 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file>TestMockup.qml</file>
-  </qresource> 
-</RCC>

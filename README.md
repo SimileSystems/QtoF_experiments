@@ -113,6 +113,7 @@ I only had to do this on Mac.
 - Open the `CMakeLists.txt` file and change the _project()_ value.
 - _Build_ > _Build All_ 
 
+<<<<<<< HEAD
 # Creating a new Widget
 
 Scroll down if you want to skip the background and get to the steps
@@ -187,4 +188,6 @@ a new widgets:
   - Where to store assets
   - Where to store plugin code
 
+=======
+>>>>>>> 7fe74cf... Cleaning up
 

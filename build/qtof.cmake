@@ -70,14 +70,6 @@ list(APPEND qtof_sources
   ${qtof_sd}/qtof/UiMessages.cpp
 )
 
-if (NOT EXISTS ${qtof_sd}/qtof/QtUiMessage.cpp)
-  set_source_files_properties(${qtof_sd}/qtof/QtUiMessage.cpp PROPERTIES GENERATED TRUE)
-endif()
-
-if (NOT EXISTS ${qtof_sd}/qtof/QtWidgetType.cpp)
-  set_source_files_properties(${qtof_sd}/qtof/QtWidgetType.cpp PROPERTIES GENERATED TRUE)
-endif()
-
 # ------------------------------------------------
 
 macro(qtof_application_create appName appSources)
