@@ -35,20 +35,19 @@ list(APPEND qtof_mockup_sources
   ${sd}/qtof/mockup/QtOfPlugin.cpp
   ${sd}/qtof/QtUiMessage.cpp
   ${sd}/qtof/QtWidgetType.cpp
-  ${sd}/qml/resources.qrc
   )
 
 add_library(qtof_mockup SHARED ${qtof_mockup_sources})
 target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 
 # -------------------------------------------------------------
-
   
-  # For Mac we copy the plugin into a directory
-  # next to the binary dir (build dir) so that
-  # Qt Creator can load the plugin.
-if (CREATE_WIN_PLUGIN)
+# For Mac we copy the plugin into a directory
+# next to the binary dir (build dir) so that
+# Qt Creator can load the plugin.
 
+# Update 2017.03.07 - we need to do this for Mac too! 
+#if (CREATE_WIN_PLUGIN)
 
   add_custom_target(copy_qtof_mockup
     ALL
@@ -62,26 +61,14 @@ if (CREATE_WIN_PLUGIN)
     )
 
   install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/plugins/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../plugins)
-endif()
+#endif()
 
 if (APPLE)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
 endif()  
-#else()
-
-
-# On Windows we have to compile a release version of the
-# mockup plugin because otherwise it cannot be loaded
-# by Qt Creator.
-if (CREATE_WIN_PLUGIN)
-
-endif()
 
 if (WIN32)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/../plugins/" CACHE string "" FORCE)
 endif()
-
-
-
 
 # -------------------------------------------------------------

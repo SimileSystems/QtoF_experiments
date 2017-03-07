@@ -70,14 +70,6 @@ list(APPEND qtof_sources
   ${qtof_sd}/qtof/UiMessages.cpp
 )
 
-if (NOT EXISTS ${qtof_sd}/qtof/QtUiMessage.cpp)
-  set_source_files_properties(${qtof_sd}/qtof/QtUiMessage.cpp PROPERTIES GENERATED TRUE)
-endif()
-
-if (NOT EXISTS ${qtof_sd}/qtof/QtWidgetType.cpp)
-  set_source_files_properties(${qtof_sd}/qtof/QtWidgetType.cpp PROPERTIES GENERATED TRUE)
-endif()
-
 # ------------------------------------------------
 
 macro(qtof_application_create appName appSources)
@@ -104,26 +96,6 @@ endmacro()
 macro(qtof_widget_create widgetName widgetSources)
   add_library(${widgetName} STATIC ${widgetSources})
   install(TARGETS ${widgetName} DESTINATION lib)
-endmacro()
-
-macro(qtof_generate_message_types customMessageTypesHeaderFile)
-  add_custom_target(
-    generate_message_types
-    ALL
-    COMMAND ${node_js} CodeGenerator.js --message-type-headers UiMessageTypes.h ${customMessageTypesHeaderFile}
-    WORKING_DIRECTORY ${qtof_sd}/qtof
-    COMMENT "Generating Qt message type header and source."
-    )
-endmacro()
-
-macro(qtof_generate_widget_types customWidgetTypesHeaderFile)
-  add_custom_target(
-    generate_widget_types
-    ALL
-    COMMAND ${node_js} CodeGenerator.js --widget-type-headers WidgetTypes.h ${customWidgetTypesHeaderFile}
-    WORKING_DIRECTORY ${qtof_sd}/qtof
-    COMMENT "Generating Qt widget type header and source."
-    )
 endmacro()
 
 # ------------------------------------------------

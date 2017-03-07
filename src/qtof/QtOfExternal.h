@@ -90,8 +90,6 @@
 
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickItem>
-//#include <QQuickWindow>
-//#include <QQuickItem>
 #include <QScreen>
 
 /* ---------------------------------------------------- */
