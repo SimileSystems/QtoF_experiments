@@ -114,6 +114,7 @@ I only had to do this on Mac.
 - _Build_ > _Build All_ 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Creating a new Widget
 
 Scroll down if you want to skip the background and get to the steps
@@ -188,6 +189,8 @@ a new widgets:
   - Where to store assets
   - Where to store plugin code
 
+=======
+>>>>>>> 7fe74cf... Cleaning up
 =======
 >>>>>>> 7fe74cf... Cleaning up
 
