@@ -46,8 +46,11 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
 # next to the binary dir (build dir) so that
 # Qt Creator can load the plugin.
 
-# Update 2017.03.07 - we need to do this for Mac too! 
-#if (CREATE_WIN_PLUGIN)
+# Update 2017.03.07 - we need to do this for Mac too!
+# On Windows we can only create this by using the ./release.sh
+# file. When we execute this target Qt Creator on Windows will
+# hang.
+if (CREATE_WIN_PLUGIN OR APPLE)
 
   add_custom_target(copy_qtof_mockup
     ALL
@@ -61,7 +64,7 @@ target_link_libraries(qtof_mockup ${qtof_mockup_libs})
     )
 
   install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/plugins/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../plugins)
-#endif()
+endif()
 
 if (APPLE)
   set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/plugins/" CACHE string "" FORCE)
