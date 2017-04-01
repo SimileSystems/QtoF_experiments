@@ -197,6 +197,7 @@ void QtOfExternalWidget::onPaint() {
   }
 
   notifyPosition(); 
+  notifySize();
   
   of_external_start_render();
   {
@@ -316,6 +317,8 @@ void QtOfExternalWidget::mousePressEvent(QMouseEvent* ev) {
   msg.i[0] = ev->x();
   msg.i[1] = ev->y();
   widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(true);
+  forceActiveFocus();
 }
 
 void QtOfExternalWidget::mouseReleaseEvent(QMouseEvent* ev) {
@@ -324,6 +327,7 @@ void QtOfExternalWidget::mouseReleaseEvent(QMouseEvent* ev) {
   msg.i[0] = ev->x();
   msg.i[1] = ev->y();
   widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(true);
 }
 
 void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
@@ -332,6 +336,7 @@ void QtOfExternalWidget::hoverEnterEvent(QHoverEvent* ev) {
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
   widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(true);
 }
 
 void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
@@ -340,6 +345,7 @@ void QtOfExternalWidget::hoverLeaveEvent(QHoverEvent* ev) {
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
   widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(false);
 }
 
 void QtOfExternalWidget::hoverMoveEvent(QHoverEvent* ev) {
@@ -348,6 +354,17 @@ void QtOfExternalWidget::hoverMoveEvent(QHoverEvent* ev) {
   msg.i[0] = ev->pos().x();
   msg.i[1] = ev->pos().y();
   widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(true);
+}
+
+
+void QtOfExternalWidget::mouseMoveEvent(QMouseEvent* ev) {
+  UiMessage msg;
+  msg.type = UI_MSG_MOUSE_MOVE;
+  msg.i[0] = ev->x();
+  msg.i[1] = ev->y();
+  widgets_send_message_to_instance_with_ref(ref, msg);
+  setFocus(true);
 }
 
 void QtOfExternalWidget::keyPressEvent(QKeyEvent* ev) {

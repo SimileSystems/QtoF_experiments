@@ -2,6 +2,7 @@
 #define OF_EXTERNAL_WIDGET_H
 
 #include <qtof/UiMessages.h>
+#include <ofRectangle.h>
 
 /* ------------------------------------------------------ */
 
@@ -18,6 +19,7 @@ public:
   int getWidgetHeight();
   int getWidgetX();
   int getWidgetY();
+  ofRectangle getWidgetRectangle();
   float getPixelRatio();
 
   /* Pixel ratio corrected. */
@@ -25,11 +27,15 @@ public:
   int getWidgetDrawHeight();
   int getWidgetDrawX();
   int getWidgetDrawY();
+  ofRectangle getWidgetDrawRectangle();
 
   /* Message I/O */
   int setUiMessageListener(UiMessagesListener* lis);
   void addUiMessage(const UiMessage& msg);
   void notifyUiMessages();                                            /* This will notify the listener of our `widget_messages` about any of the added events; should be called in `update()`. */
+
+protected:
+  void updateBoundingRectangles();
 
 private:
   UiMessages widget_messages;                                         /* Messages that are dispatched from this widget to the `Gui` layer. In this case (during development for DepthKit) these are the messages that a widget sends back to `qml`. */
@@ -39,6 +45,7 @@ private:
   int widget_y;
   float widget_pixel_ratio;
   bool widget_is_mouse_inside;
+  ofRectangle widget_rect, widget_draw_rect;
 };
 
 /* ------------------------------------------------------ */
@@ -65,6 +72,10 @@ inline int ofExternalWidget::getWidgetY() {
   return widget_y;
 }
 
+inline ofRectangle ofExternalWidget::getWidgetRectangle() {
+  return widget_rect;
+}
+
 inline float ofExternalWidget::getPixelRatio() {
   return widget_pixel_ratio;
 }
@@ -85,6 +96,10 @@ inline int ofExternalWidget::getWidgetDrawX() {
 
 inline int ofExternalWidget::getWidgetDrawY() {
   return widget_y * widget_pixel_ratio;
+}
+
+inline ofRectangle ofExternalWidget::getWidgetDrawRectangle() {
+  return widget_draw_rect;
 }
 
 /* ------------------------------------------------------ */

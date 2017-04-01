@@ -22,6 +22,12 @@ int ofExternalWidget::setUiMessageListener(UiMessagesListener* lis) {
   return widget_messages.setListener(lis);
 }
 
+void ofExternalWidget::updateBoundingRectangles() {
+  widget_rect = ofRectangle(widget_x, widget_y, widget_width, widget_height);
+  widget_draw_rect = widget_rect;
+  widget_draw_rect.scale(widget_pixel_ratio);
+}
+
 void ofExternalWidget::onUiMessage(const UiMessage& msg) {
   
   switch (msg.type) {
@@ -29,17 +35,20 @@ void ofExternalWidget::onUiMessage(const UiMessage& msg) {
     case UI_MSG_SIZE_CHANGED: {
       widget_width = msg.i[0];
       widget_height = msg.i[1];
+      updateBoundingRectangles();
       break;
     }
       
     case UI_MSG_POSITION_CHANGED: {
       widget_x = msg.i[0];
       widget_y = msg.i[1];
+      updateBoundingRectangles();
       break;
     }
 
     case UI_MSG_PIXEL_RATIO_CHANGED: {
       widget_pixel_ratio = msg.f[0];
+      updateBoundingRectangles();
       break;
     }
 
