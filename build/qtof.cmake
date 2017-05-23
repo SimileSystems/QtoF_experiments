@@ -60,14 +60,7 @@ include_directories(
 
 list(APPEND qtof_sources
   ${qtof_sd}/qtof/ofAppExternalWindow.cpp
-  ${qtof_sd}/qtof/ofExternal.cpp
-  ${qtof_sd}/qtof/ofExternalWidget.cpp
-  ${qtof_sd}/qtof/QtOfExternal.cpp
-  ${qtof_sd}/qtof/QtOfExternalWidget.cpp
-  ${qtof_sd}/qtof/QtUiMessage.cpp
-  ${qtof_sd}/qtof/QtWidgetType.cpp
-  ${qtof_sd}/qtof/Widgets.cpp
-  ${qtof_sd}/qtof/UiMessages.cpp
+  ${qtof_sd}/qtof/QtOfBaseApp.cpp
 )
 
 # ------------------------------------------------
@@ -91,11 +84,6 @@ macro(qtof_application_create appName appSources)
     endforeach()
   endif()
 
-endmacro()
-
-macro(qtof_widget_create widgetName widgetSources)
-  add_library(${widgetName} STATIC ${widgetSources})
-  install(TARGETS ${widgetName} DESTINATION lib)
 endmacro()
 
 # ------------------------------------------------

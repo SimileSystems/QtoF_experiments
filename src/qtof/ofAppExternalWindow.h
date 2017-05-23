@@ -32,66 +32,17 @@
     `ofAppExternalWindow` is managed externally, we do not rely on the
     returns values of these static functions. While creating this
     class we followed the `ofAppGLFWWindow` class.
-    
-  IMPORTANT:
-  
-    It's most likely that you don't create a `ofAppExternalWindow`
-    directly.  Instead you will use the `of_external_*` functions that
-    are defined in `ofExternal.h`. The `of_external_init()` function
-    will create a `ofAppExternalWindow` for you and it will call
-    `ofGetMainLoop()->addWindow(win)` to add the instance to the
-    mainloop.  The global `ofGetCurrentRenderer()` calls
-    `ofGetMainLoop()->getCurrentWindow()->renderer()` to retrieve the
-    current renderer, which is why we have to do this. So if you want to
-    create an instance of `ofAppExternalWindow` yourself, have a look
-    at `of_eternal_init()`.
-
-    See the `QtOfExternal.cpp` file where we're using these
-    `of_external_*()` functions to setup and use the openFrameworks
-    features using this `ofAppExternalWindow` type.
 
   USAGE:
   
-    As described in `IMPORTANT` you most likely want to use the
-    `of_external_*()` functions which provide an opaque way that you
-    can use in your own window managing layer (like Qt). The
-    `ofExternal.h` header contains everything that you need to use to
-    initialize this `ofAppExternalWindow`. The `ofExternal` is
-    basically the pimpl around `ofAppExternalWindow`. To initialize
-    the `ofAppExternalWindow` object, you call `of_external_init()`
-    with an `ofExternalSettings` object which describes what kind of
-    openGL context you've created, your pixel ratio and the window
-    size. Using these settings we will setup the
-    `ofGLProgrammableRenderer`. This is done in
-    `ofAppExternalWindow::setup()` which receives a `ofWindowSettings`
-    object. 
-
-    Once initialized (by calling `of_external_init()`), you want to
-    notify the `ofAppExternalWindow` instance about window size
-    changes, pixel ratio changes, mouse press etc. You do this by
-    sending `UiMessage` objects using `of_external_send_message()`,
-    which is thread safe. When you call `of_external_update()` the
-    messages will be handled and the appropriate openFrameworks /
-    ofAppExternalWindow functions will be called. Make sure to call
-    `of_external_update()` for each frame and make sure that you call
-    this from the same thread where you called `of_external_init()`
-    and that the openGL context has been made current.
-
-    Every time you want to render something, you have to call:
-
-    ````c++
-     of_external_start_render();
-     // THIS IS WHERE YOU DRAW YOUR OWN CONTENT
-     of_external_finish_render()
-
-   ````
+    See `QtOfBaseApp` for an example of how to use this class.
 
  */
 #ifndef OF_APP_EXTERNAL_WINDOW_H
 #define OF_APP_EXTERNAL_WINDOW_H
 
 #include <assert.h>
-#include <glad/glad.h>
+// #include <glad/glad.h>
 #include <ofPoint.h>
 #include <ofTypes.h>
 #include <ofEvents.h>
@@ -157,8 +108,6 @@ inline void ofAppExternalWindow::startRender() {
   /* Bind the default shaders and setup the viewport. */
   programmable_renderer->startRender();
   programmable_renderer->setupScreen();
-
-  core_events.notifyDraw();
 }
 
 inline void ofAppExternalWindow::finishRender() {

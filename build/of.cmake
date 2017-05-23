@@ -87,7 +87,7 @@ include_directories(
   ${of_ld}/cairo/include/cairo/
   ${of_ld}/curl/include
   ${of_ld}/freetype/include/freetype2/
-  ${of_ld}/glew/include
+#  ${of_ld}/glew/include
   ${of_ld}/glfw/include
   ${of_ld}/glm/include
   ${of_ld}/json/include

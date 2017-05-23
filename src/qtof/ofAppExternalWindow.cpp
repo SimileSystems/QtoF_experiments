@@ -1,10 +1,12 @@
 #include <qtof/ofAppExternalWindow.h>
 
+//std::shared_ptr<ofBaseRenderer> ofAppExternalWindow::programmable_renderer = NULL;
+
 ofAppExternalWindow::ofAppExternalWindow()
-  :programmable_renderer(nullptr)
-  ,pixel_ratio(1.0f)
+  :pixel_ratio(1.0f)
   ,win_width(-1)
   ,win_height(-1)
+  , programmable_renderer(NULL)
 {
 }
 
@@ -49,10 +51,12 @@ void ofAppExternalWindow::setup(const ofGLWindowSettings& settings) {
   setWindowSize(settings.width, settings.height);
 
   /* Create the renderer. */
-  ofGLProgrammableRenderer* gl = NULL;
-  gl = new ofGLProgrammableRenderer(this);
-  gl->setup(settings.glVersionMajor, settings.glVersionMinor);
-  programmable_renderer = std::shared_ptr<ofGLProgrammableRenderer>(gl);
+  if (programmable_renderer == NULL) {
+    ofGLProgrammableRenderer* gl = NULL;
+    gl = new ofGLProgrammableRenderer(this);
+    gl->setup(settings.glVersionMajor, settings.glVersionMinor);
+    programmable_renderer = std::shared_ptr<ofGLProgrammableRenderer>(gl);
+  }
 
   /*
 
@@ -83,7 +87,7 @@ void ofAppExternalWindow::draw() { }
 
 void ofAppExternalWindow::loop() { }
 bool ofAppExternalWindow::doesLoop() { return false; }
-bool ofAppExternalWindow::allowsMultiWindow() { return false; }
+bool ofAppExternalWindow::allowsMultiWindow() { return true; }
 bool ofAppExternalWindow::needsPolling() { return false; }
 void ofAppExternalWindow::pollEvents() { }
 
