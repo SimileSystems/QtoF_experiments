@@ -68,7 +68,9 @@ void ofAppExternalWindow::setup(const ofGLWindowSettings& settings) {
     evertything that Qt has rendered.
 
    */
-  ofSetBackgroundAuto(false);
+
+  // NOTE: This appears to no longer be the case now that each widget draws to its own FBO
+  // ofSetBackgroundAuto(false);
 
   /*
     After some debugging issues with loading an image on Windows I

@@ -139,7 +139,8 @@ void QtOfBaseApp::paint(QPainter * p) {
     p->beginNativePainting();
 
     preRender();
-    internalFboTexture->draw(0, 0);
+    ofClear(0, 0, 0, 0);
+    internalFboTexture->draw(ofGetWindowRect());
     postRender();
 
     p->endNativePainting();
@@ -164,10 +165,14 @@ void QtOfBaseApp::onWindowChanged(QQuickWindow* win) {
 }
 
 void QtOfBaseApp::onWidthChanged(int w) {
+    ofWindow->setWindowSize(width(), height());
+    ofWindow->events().notifyWindowResized(width(), height());
     triggerRepaint();
 }
 
 void QtOfBaseApp::onHeightChanged(int h) {
+    ofWindow->setWindowSize(width(), height());
+    ofWindow->events().notifyWindowResized(width(), height());
     triggerRepaint();
 }
 
