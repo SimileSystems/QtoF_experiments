@@ -20,6 +20,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Qml REQUIRED)
 find_package(Qt5Quick REQUIRED)
+find_package(Qt5QuickControls2 REQUIRED)
 
 if (Qt5Core_NOTFOUND)
   message(FATAL_ERROR "Qt5Core not found. Make sure that you've set the QT_PATH variable to your Qt install directory; e.g. /Applications/Qt/5.8/clang_64")
@@ -31,6 +32,7 @@ list(APPEND qtof_libs
   Qt5::Gui
   Qt5::Qml
   Qt5::Quick
+  Qt5::QuickControls2
   )
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -46,6 +48,7 @@ list(APPEND qtof_dlls
   $<TARGET_FILE:Qt5::Gui>
   $<TARGET_FILE:Qt5::Qml>
   $<TARGET_FILE:Qt5::Quick>
+  $<TARGET_FILE:Qt5::QuickControls2>
   $<TARGET_FILE:Qt5::Network>
   )
 
