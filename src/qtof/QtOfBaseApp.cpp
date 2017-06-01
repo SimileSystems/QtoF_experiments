@@ -15,7 +15,7 @@ QtOfBaseApp::QtOfBaseApp(QQuickItem *parent)
     connect(this, &QQuickItem::windowChanged, this, &QtOfBaseApp::onWindowChanged);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
-    setRenderTarget(QQuickPaintedItem::RenderTarget::InvertedYFramebufferObject);
+    setRenderTarget(QQuickPaintedItem::RenderTarget::FramebufferObject);
 }
 
 QtOfBaseApp::~QtOfBaseApp() {
@@ -140,7 +140,9 @@ void QtOfBaseApp::paint(QPainter * p) {
 
     preRender();
     ofClear(0, 0, 0, 0);
-    internalFboTexture->draw(ofGetWindowRect());
+    ofRectangle fboWindow = ofGetWindowRect();
+    fboWindow.scaleFromCenter(1.0,-1.0);
+    internalFboTexture->draw(fboWindow);
     postRender();
 
     p->endNativePainting();
