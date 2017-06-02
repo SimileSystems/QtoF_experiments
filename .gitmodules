@@ -1,4 +1,4 @@
 [submodule "of"]
 	path = of
-	url = git@github.com:SimileSystems/openFrameworks.git
+	url = git@bitbucket.org:DepthKit/openframeworks.git
 	branch = qt-integration

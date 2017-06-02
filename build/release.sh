@@ -54,12 +54,6 @@ do
     fi
 done
 
-# Clone OF as submodule
-if [ ! -d ${bd}/of ] ; then 
-    cd ${bd}
-    git submodule add -b qt-integration git@github.com:SimileSystems/openFrameworks.git of
-fi
-
 if [ -d ${bd}/of ] ; then
     git submodule init
     git submodule update
